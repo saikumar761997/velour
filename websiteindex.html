@@ -1,0 +1,3010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Persimmon Nails & Spa — Manchester, NH</title>
+<meta name="description" content="Red Persimmon Nails & Spa in Manchester, NH — premium nail care, lash extensions, waxing, and spa treatments. Walk-ins welcome. Call (603) 621-7469.">
+<meta name="keywords" content="nail salon Manchester NH, nail spa Manchester, lash extensions Manchester NH, waxing Manchester NH, pedicure Manchester, manicure Manchester">
+<meta property="og:title" content="Red Persimmon Nails & Spa — Manchester, NH">
+<meta property="og:description" content="Premium nail care, lash extensions, waxing, and spa treatments in Manchester, NH. Walk-ins welcome!">
+<meta property="og:type" content="business.business">
+<meta name="geo.region" content="US-NH">
+<meta name="geo.placename" content="Manchester">
+<link rel="canonical" href="https://redpersimmon-nails.netlify.app">
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --crimson:    #8B1A1A;
+  --crimson-dk: #5C0F0F;
+  --crimson-lt: #C04040;
+  --crimson-xs: #F5E8E8;
+  --gold:       #C9963A;
+  --gold-lt:    #E8C27A;
+  --gold-pale:  #FAF0DC;
+  --gold-xs:    #FDF8EE;
+  --cream:      #FBF8F4;
+  --warm-white: #FFFDF9;
+  --charcoal:   #1C1A18;
+  --text-mid:   #4A3F35;
+  --text-muted: #8A7A6A;
+  --border:     rgba(139,26,26,0.10);
+  --border-gold:rgba(201,150,58,0.20);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--charcoal); -webkit-font-smoothing: antialiased; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(92,15,15,0.97);
+  backdrop-filter: blur(12px);
+  padding: 0 5%;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #fff; letter-spacing: 0.02em; line-height: 1.2; }
+.nav-logo span { display: block; font-size: 10px; font-weight: 400; font-family: 'Inter', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-lt); }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { font-size: 12px; color: rgba(255,255,255,0.75); text-decoration: none; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.nav-links a:hover { color: var(--gold-lt); }
+.nav-book { background: var(--gold) !important; color: var(--crimson-dk) !important; padding: 8px 20px; border-radius: 2px; font-weight: 600 !important; }
+.nav-book:hover { background: var(--gold-lt) !important; }
+
+/* HERO */
+.hero { min-height: 94vh; display: grid; grid-template-columns: 1.25fr 0.9fr; align-items: center; max-width: 1200px; margin: 0 auto; padding: 60px 5%; gap: 80px; }
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; display: flex; align-items: center; gap: 14px; }
+.hero-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); }
+h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 5.5vw, 72px); font-weight: 500; line-height: 1.06; letter-spacing: -0.5px; color: var(--crimson-dk); margin-bottom: 22px; }
+h1 em { font-style: italic; color: var(--crimson-lt); }
+.hero-sub { font-size: 16px; color: var(--text-mid); line-height: 1.8; margin-bottom: 36px; max-width: 420px; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-primary { background: var(--crimson); color: #fff; padding: 14px 32px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: background 0.15s; font-family: 'Inter', sans-serif; }
+.btn-primary:hover { background: var(--crimson-dk); }
+.btn-gold { background: var(--gold); color: var(--crimson-dk); padding: 14px 32px; border-radius: 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; }
+.btn-gold:hover { background: var(--gold-lt); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(201,150,58,0.28); }
+.btn-ghost { border: 1px solid rgba(139,26,26,0.25); color: var(--text-mid); padding: 13px 28px; border-radius: 2px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: all 0.15s; }
+.btn-ghost:hover { border-color: var(--crimson); color: var(--crimson); }
+.hero-badges { margin-top: 36px; display: flex; gap: 24px; flex-wrap: wrap; }
+.hero-badge { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.hero-badge::before { content: '✦'; color: var(--gold); font-size: 10px; }
+
+/* CHAT WIDGET */
+.chat-wrap { background: var(--crimson-dk); border-radius: 6px; overflow: hidden; box-shadow: 0 40px 100px rgba(92,15,15,0.3), 0 8px 24px rgba(0,0,0,0.15); }
+.chat-header { background: linear-gradient(135deg, var(--crimson-dk), var(--crimson)); padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--crimson-dk); flex-shrink: 0; }
+.chat-header-name { font-size: 14px; font-weight: 600; color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+.chat-header-status { font-size: 11px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+.chat-header-status::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.chat-live { margin-left: auto; background: var(--gold); color: var(--crimson-dk); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; }
+.chat-messages { padding: 16px; height: 290px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: linear-gradient(180deg, #3a0808 0%, var(--crimson-dk) 100%); }
+.chat-messages::-webkit-scrollbar { width: 3px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--crimson-lt); border-radius: 2px; }
+.msg { max-width: 85%; font-size: 13.5px; line-height: 1.6; }
+.msg-bot { align-self: flex-start; background: rgba(255,255,255,0.09); color: #f8e8e8; padding: 10px 14px; border-radius: 2px 14px 14px 14px; }
+.msg-user { align-self: flex-end; background: var(--gold); color: var(--crimson-dk); padding: 10px 14px; border-radius: 14px 2px 14px 14px; font-weight: 500; }
+.msg-typing { align-self: flex-start; background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.4); padding: 10px 18px; border-radius: 2px 14px 14px 14px; font-size: 20px; letter-spacing: 4px; display: none; }
+.chat-suggestions { padding: 10px 16px; background: rgba(92,15,15,0.8); display: flex; gap: 6px; flex-wrap: wrap; }
+.suggestion { background: transparent; border: 1px solid rgba(201,150,58,0.35); color: var(--gold-lt); font-size: 11px; padding: 5px 10px; border-radius: 2px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; letter-spacing: 0.02em; }
+.suggestion:hover { background: rgba(201,150,58,0.15); border-color: var(--gold); color: var(--gold); }
+.chat-footer { padding: 12px 16px; background: var(--crimson-dk); display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); }
+.chat-input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+.chat-input::placeholder { color: rgba(255,255,255,0.3); }
+.chat-input:focus { border-color: var(--gold); }
+.chat-send { background: var(--gold); border: none; border-radius: 2px; padding: 10px 18px; cursor: pointer; font-size: 13px; color: var(--crimson-dk); transition: background 0.15s; font-weight: 700; }
+.chat-send:hover { background: var(--gold-lt); }
+
+/* GOLD DIVIDER */
+.gold-rule { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+/* STRIP STATS */
+.stats-strip { background: var(--crimson-dk); padding: 36px 5%; display: flex; justify-content: center; align-items: center; gap: 60px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 600; color: var(--gold-lt); line-height: 1; }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+.stat-div { width: 1px; height: 40px; background: rgba(255,255,255,0.1); }
+
+/* SECTIONS */
+.section { padding: 90px 5%; max-width: 1200px; margin: 0 auto; }
+.section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 500; color: var(--crimson-dk); letter-spacing: -0.3px; line-height: 1.12; margin-bottom: 14px; }
+.section-sub { font-size: 16px; color: var(--text-mid); max-width: 500px; line-height: 1.75; margin-bottom: 52px; }
+
+/* SERVICE TABS */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; flex-wrap: wrap; }
+.tab-btn { padding: 13px 22px; font-size: 12px; font-weight: 500; color: var(--text-muted); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.15s; margin-bottom: -1px; }
+.tab-btn:hover { color: var(--crimson); }
+.tab-btn.active { color: var(--crimson); border-bottom-color: var(--crimson); font-weight: 600; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* SERVICE ITEMS WITH EXPAND */
+.services-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.service-row { border-bottom: 1px solid var(--border); background: var(--warm-white); }
+.service-row:last-child { border-bottom: none; }
+.service-header { display: flex; align-items: center; padding: 16px 20px; gap: 16px; cursor: pointer; transition: background 0.15s; }
+.service-header:hover { background: var(--crimson-xs); }
+.service-header.open { background: var(--crimson-xs); }
+.service-main { flex: 1; display: flex; align-items: baseline; gap: 16px; justify-content: space-between; }
+.service-name { font-size: 14px; font-weight: 500; color: var(--charcoal); line-height: 1.4; }
+.service-note-inline { font-size: 12px; color: var(--text-muted); margin-left: 6px; font-weight: 400; }
+.service-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--crimson); white-space: nowrap; flex-shrink: 0; }
+.expand-btn { width: 26px; height: 26px; border-radius: 50%; background: transparent; border: 1.5px solid var(--border-gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 14px; font-weight: 700; flex-shrink: 0; transition: all 0.2s; cursor: pointer; }
+.service-header.open .expand-btn { background: var(--crimson); border-color: var(--crimson); color: #fff; transform: rotate(45deg); }
+.service-desc { max-height: 0; opacity: 0; overflow: hidden; padding: 0 20px; font-size: 13.5px; color: var(--text-mid); line-height: 1.75; border-top: 0 solid var(--border); background: var(--crimson-xs); transition: max-height 0.28s ease, opacity 0.22s ease, padding 0.28s ease, border-top-width 0.28s ease; }
+.service-desc.open { max-height: 600px; opacity: 1; padding: 14px 20px 16px; border-top-width: 1px; }
+
+/* STAFF */
+.staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.staff-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px; padding: 36px 24px; text-align: center; transition: all 0.2s; }
+.staff-card:hover { border-color: var(--crimson); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(139,26,26,0.1); }
+.staff-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--crimson), var(--crimson-lt)); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #fff; font-weight: 600; margin: 0 auto 18px; border: 3px solid var(--gold-pale); }
+.staff-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--crimson-dk); margin-bottom: 8px; }
+.staff-spec { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; letter-spacing: 0.03em; }
+.staff-book { display: block; background: var(--crimson); color: #fff; padding: 11px 20px; border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; transition: background 0.15s; }
+.staff-book:hover { background: var(--crimson-dk); }
+
+.staff-avail {
+  font-size: 11px; color: var(--crimson); font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin: 4px 0 14px; padding: 4px 10px;
+  background: var(--crimson-xs); border-radius: 20px;
+  display: inline-block;
+}
+
+
+/* INFO STRIP */
+.info-strip { background: linear-gradient(135deg, var(--crimson-dk) 0%, #3a0808 100%); padding: 72px 5%; }
+.info-strip-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 48px; }
+.info-block h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--gold-lt); font-weight: 500; margin-bottom: 12px; }
+.info-block p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.85; }
+.info-block a { color: var(--gold-lt); text-decoration: none; }
+.info-block a:hover { color: var(--gold); }
+
+/* BOOKING */
+.booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.booking-features { display: flex; flex-direction: column; gap: 14px; margin: 28px 0 36px; }
+.booking-feature { display: flex; gap: 12px; font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+.booking-feature::before { content: '✦'; color: var(--gold); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+.booking-card { background: linear-gradient(135deg, var(--gold-pale), var(--gold-xs)); border: 1px solid var(--border-gold); border-radius: 6px; padding: 48px 40px; text-align: center; }
+.booking-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--crimson-dk); margin-bottom: 12px; font-weight: 500; }
+.booking-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.65; }
+.booking-divider { border: none; border-top: 1px solid var(--border-gold); margin: 24px 0; }
+
+/* FOOTER */
+footer { background: var(--charcoal); padding: 48px 5%; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold-lt); font-weight: 500; }
+.footer-logo span { display: block; font-size: 11px; font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
+footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
+
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; gap: 48px; padding: 48px 5%; min-height: auto; }
+  .nav-links { display: none; }
+  .booking-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stats-strip { gap: 32px; }
+  .stat-div { display: none; }
+}
+
+/* STAFF EXPAND */
+.staff-expand-btn {
+  background: transparent;
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  transition: all 0.15s;
+  width: 100%;
+}
+.staff-expand-btn:hover { background: var(--gold-pale); }
+.staff-expand-btn.open { background: var(--crimson-xs); border-color: var(--crimson); color: var(--crimson); }
+.staff-detail {
+  display: none;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  background: var(--gold-xs);
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+.staff-detail.open { display: block; }
+
+/* REVIEWS */
+.review-card { background: #fff; border: 1px solid var(--border-gold); border-radius: 4px; padding: 28px 24px; }
+.review-stars { color: var(--gold); font-size: 16px; margin-bottom: 12px; letter-spacing: 2px; }
+.review-text { font-size: 14px; color: var(--text-mid); line-height: 1.75; margin-bottom: 20px; font-style: italic; }
+.review-author { display: flex; align-items: center; gap: 12px; }
+.review-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--crimson), var(--crimson-lt)); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+.review-name { font-size: 14px; font-weight: 600; color: var(--charcoal); }
+.review-source { font-size: 12px; color: var(--text-muted); }
+
+/* FAQ */
+.faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+.faq-q { font-size: 15px; font-weight: 600; color: var(--charcoal); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.faq-q:hover { color: var(--crimson); }
+.faq-icon { font-size: 20px; color: var(--gold); transition: transform 0.2s; flex-shrink: 0; }
+.faq-q.open .faq-icon { transform: rotate(45deg); }
+.faq-a { font-size: 14px; color: var(--text-mid); line-height: 1.75; max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; transition: max-height 0.28s ease, opacity 0.22s ease, margin-top 0.28s ease; }
+.faq-a.open { max-height: 500px; opacity: 1; margin-top: 12px; }
+
+/* HAMBURGER */
+.hamburger { display: none; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: all 0.2s; }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  #navLinks { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--crimson-dk); flex-direction: column; padding: 20px; gap: 16px; z-index: 99; border-top: 1px solid rgba(255,255,255,0.1); }
+  #navLinks.open { display: flex; }
+  #navLinks a { font-size: 14px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .maps-grid { grid-template-columns: 1fr !important; }
+}
+
+
+/* ===== SERVICE ADD BUTTONS & BOOKING BAR ===== */
+.svc-add-btn {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--border-gold); background: transparent;
+  color: var(--gold); font-size: 20px; font-weight: 300;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; line-height: 1; margin-right: 6px;
+  font-family: 'Inter', sans-serif;
+}
+.svc-add-btn:hover { background: var(--gold); color: var(--crimson-dk); border-color: var(--gold); transform: scale(1.1); }
+.svc-add-btn.svc-added { background: var(--crimson); color: #fff; border-color: var(--crimson); font-size: 14px; }
+
+/* Booking bar */
+#booking-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 994;
+  background: var(--charcoal);
+  border-top: 2px solid var(--gold);
+  padding: 14px 5%; display: flex; align-items: center;
+  gap: 14px; flex-wrap: wrap;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(.34,1.2,.64,1);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+}
+#booking-bar.bb-visible { transform: translateY(0); }
+.bb-info { flex: 1; min-width: 180px; }
+.bb-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+.bb-services-list { font-size: 13px; font-weight: 500; color: #fff; line-height: 1.4; }
+.bb-select {
+  background: rgba(255,255,255,0.07); color: #fff;
+  border: 1px solid rgba(255,255,255,0.18); border-radius: 4px;
+  padding: 10px 14px; font-family: 'Inter', sans-serif; font-size: 13px;
+  cursor: pointer; outline: none; min-width: 200px; transition: border-color 0.15s;
+}
+.bb-select option { background: #1a0a0a; color: #fff; }
+.bb-select:focus, .bb-select.bb-error { border-color: var(--gold); }
+.bb-select.bb-error { border-color: #ef4444; }
+.bb-book-btn {
+  background: var(--gold); color: var(--crimson-dk);
+  border: none; border-radius: 4px; padding: 11px 22px;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s; white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+.bb-book-btn:hover { background: var(--gold-lt); }
+.bb-clear-btn {
+  background: transparent; color: rgba(255,255,255,0.35); border: none;
+  cursor: pointer; font-size: 12px; padding: 4px 8px;
+  transition: color 0.15s; font-family: 'Inter', sans-serif; white-space: nowrap;
+}
+.bb-clear-btn:hover { color: rgba(255,255,255,0.75); }
+.bb-count-badge {
+  background: var(--crimson); color: #fff; border-radius: 50%;
+  width: 20px; height: 20px; font-size: 11px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 6px; vertical-align: middle;
+}
+@media (max-width: 640px) {
+  #booking-bar { padding: 12px 4%; gap: 10px; }
+  .bb-select { min-width: 140px; font-size: 12px; }
+  .bb-book-btn { padding: 10px 14px; font-size: 12px; }
+}
+
+/* ===== WIZARD BOOKING FLOW ===== */
+.wizard-start-btn {
+  background: var(--gold); color: var(--crimson-dk);
+  border: none; border-radius: 4px; padding: 10px 14px;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; width: 100%; transition: background 0.15s;
+}
+.wizard-start-btn:hover { background: var(--gold-lt); }
+.wizard-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.wizard-chip {
+  background: rgba(201,150,58,0.12);
+  border: 1px solid rgba(201,150,58,0.35);
+  color: var(--gold-lt); padding: 7px 11px; border-radius: 20px;
+  font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: all 0.15s; white-space: nowrap; line-height: 1.4;
+}
+.wizard-chip:hover { background: var(--gold); border-color: var(--gold); color: var(--crimson-dk); }
+.wizard-chip:disabled { opacity: 0.4; cursor: default; }
+.wizard-tech-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,150,58,0.3);
+  border-radius: 8px; padding: 12px; cursor: pointer;
+  transition: all 0.15s; margin-top: 8px;
+  display: flex; align-items: center; gap: 12px;
+}
+.wizard-tech-card:hover { background: rgba(201,150,58,0.15); border-color: var(--gold); }
+.wizard-tech-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--crimson), var(--crimson-lt));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  color: #fff; font-weight: 600; flex-shrink: 0;
+}
+.wizard-back-btn {
+  background: transparent; border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.5); padding: 5px 10px; border-radius: 4px;
+  font-size: 11px; cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: all 0.15s; margin-top: 10px; display: inline-block;
+}
+.wizard-back-btn:hover { border-color: rgba(255,255,255,0.45); color: rgba(255,255,255,0.85); }
+.wizard-book-btn {
+  margin-left: auto; background: var(--gold); color: var(--crimson-dk);
+  padding: 7px 13px; border-radius: 4px; font-size: 11px;
+  font-weight: 700; border: none; cursor: pointer;
+  font-family: 'Inter', sans-serif; white-space: nowrap;
+}
+/* Drag handle */
+.ivy-widget-hdr { cursor: grab; }
+.ivy-widget-hdr.dragging { cursor: grabbing; }
+/* Gallery images */
+.gallery-img-card {
+  aspect-ratio: 1; border-radius: 4px; overflow: hidden;
+  position: relative; border: 1px solid var(--border);
+}
+.gallery-img-card img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.gallery-img-card:hover img { transform: scale(1.06); }
+.gallery-img-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 8px 10px 6px;
+  background: linear-gradient(transparent, rgba(92,15,15,0.85));
+  color: var(--gold-lt); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.gallery-img-fallback {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, var(--crimson-xs), var(--gold-pale));
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; color: var(--text-muted);
+}
+
+/* ===== IVY FLOATING WIDGET ===== */
+#ivy-fab {
+  position: fixed; bottom: 96px; right: 24px; z-index: 998;
+  width: 56px; height: 56px;
+  background: var(--crimson); border: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 24px;
+  box-shadow: 0 4px 20px rgba(139,26,26,0.45);
+  transition: transform 0.2s, background 0.2s;
+}
+#ivy-fab:hover { transform: scale(1.1); background: var(--crimson-dk); }
+#ivy-fab.ivy-fab-open { background: var(--crimson-dk); }
+.ivy-fab-dot {
+  position: absolute; top: 3px; right: 3px;
+  width: 13px; height: 13px;
+  background: #4ade80; border-radius: 50%;
+  border: 2px solid var(--cream);
+  animation: pulse 2s infinite;
+}
+#ivy-widget {
+  position: fixed; bottom: 168px; right: 24px; z-index: 997;
+  width: 360px;
+  background: var(--crimson-dk);
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
+  transform: translateY(16px) scale(0.96);
+  opacity: 0; pointer-events: none;
+  transition: transform 0.22s cubic-bezier(.34,1.4,.64,1), opacity 0.2s ease;
+}
+#ivy-widget.ivy-open {
+  transform: translateY(0) scale(1);
+  opacity: 1; pointer-events: all;
+}
+.ivy-widget-hdr {
+  background: linear-gradient(135deg, var(--crimson-dk), var(--crimson));
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+}
+.ivy-close-btn {
+  margin-left: auto; background: rgba(255,255,255,0.1);
+  border: none; color: rgba(255,255,255,0.7);
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; line-height: 1;
+}
+.ivy-close-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.ivy-typing {
+  display: none; flex-direction: row; align-items: center;
+  gap: 4px; padding: 10px 14px; margin: 4px 16px;
+  background: rgba(255,255,255,0.09);
+  border-radius: 2px 14px 14px 14px;
+  width: fit-content;
+}
+.dot {
+  width: 7px; height: 7px;
+  background: rgba(255,255,255,0.5); border-radius: 50%;
+  animation: dotBounce 1.2s ease infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.15s; }
+.dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dotBounce {
+  0%,60%,100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+.msg-booking-btn {
+  display: inline-block;
+  background: var(--gold); color: var(--crimson-dk) !important;
+  padding: 9px 16px; border-radius: 4px;
+  font-size: 12px; font-weight: 700; text-decoration: none;
+  letter-spacing: 0.04em; margin-top: 6px;
+  transition: background 0.15s;
+}
+.msg-booking-btn:hover { background: var(--gold-lt); }
+@media (max-width: 640px) {
+  #ivy-widget {
+    width: 100vw !important;
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    border-radius: 20px 20px 0 0;
+    max-height: 72vh;
+    transform: translateY(100%);
+  }
+  #ivy-widget.ivy-open {
+    transform: translateY(0) scale(1);
+  }
+  #ivyMessages {
+    height: 38vh !important;
+    max-height: 38vh !important;
+  }
+  #ivy-fab { right: 12px; bottom: 90px; }
+}
+
+/* ===== STAFF SERVICE PICKER MODAL ===== */
+#staff-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+#staff-modal-overlay.modal-open { display: flex; }
+#staff-modal-box {
+  background: #fff; border-radius: 8px; width: 100%; max-width: 460px;
+  max-height: 80vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+  animation: modalSlideIn 0.22s ease;
+}
+@keyframes modalSlideIn { from { transform: translateY(16px) scale(0.97); opacity:0; } to { transform: none; opacity:1; } }
+.modal-header {
+  background: linear-gradient(135deg, var(--crimson-dk), var(--crimson));
+  padding: 20px 24px; display: flex; align-items: center; gap: 12px;
+  border-radius: 8px 8px 0 0;
+}
+.modal-header-avatar {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  color: var(--crimson-dk); font-weight: 700; flex-shrink: 0;
+}
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #fff; font-weight: 500; flex: 1; }
+.modal-close-btn {
+  background: rgba(255,255,255,0.15); border: none; color: rgba(255,255,255,0.8);
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+}
+.modal-close-btn:hover { background: rgba(255,255,255,0.25); color: #fff; }
+.modal-body { padding: 20px 24px; }
+.modal-instruction { font-size: 13px; color: var(--text-mid); margin-bottom: 14px; line-height: 1.5; }
+.modal-service-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 6px; margin-bottom: 6px;
+  border: 1.5px solid var(--border); cursor: pointer; transition: all 0.15s;
+  background: var(--warm-white);
+}
+.modal-service-row:hover { border-color: var(--crimson-lt); background: var(--crimson-xs); }
+.modal-service-row.modal-svc-selected { border-color: var(--crimson); background: var(--crimson-xs); }
+.modal-service-row input[type=checkbox] { accent-color: var(--crimson); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+.modal-svc-name { flex: 1; font-size: 13px; color: var(--charcoal); font-weight: 500; }
+.modal-svc-price { font-size: 13px; color: var(--crimson); font-weight: 600; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
+.modal-footer { padding: 0 24px 24px; }
+.modal-selected-summary {
+  background: var(--gold-xs); border: 1px solid var(--border-gold); border-radius: 4px;
+  padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: var(--text-mid);
+  display: none; line-height: 1.5;
+}
+.modal-selected-summary strong { color: var(--crimson-dk); }
+.modal-book-btn {
+  background: var(--crimson); color: #fff; border: none; border-radius: 4px;
+  padding: 13px 24px; font-family: 'Inter', sans-serif; font-size: 13px;
+  font-weight: 700; cursor: pointer; width: 100%; transition: background 0.15s;
+  letter-spacing: 0.04em;
+}
+.modal-book-btn:hover { background: var(--crimson-dk); }
+.modal-book-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+.modal-cancel-link {
+  display: block; text-align: center; margin-top: 10px;
+  font-size: 12px; color: var(--text-muted); cursor: pointer;
+  text-decoration: underline;
+}
+.modal-cancel-link:hover { color: var(--crimson); }
+
+/* ===== BOOKING MODAL ===== */
+#bm-overlay {
+  display: none; position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+#bm-overlay.bm-open { display: flex; }
+#bm-box {
+  background: #fff; border-radius: 12px;
+  width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+  animation: bmIn 0.25s ease;
+}
+@keyframes bmIn { from { transform: translateY(16px) scale(0.97); opacity:0; } to { opacity:1; transform:none; } }
+.bm-hdr {
+  background: linear-gradient(135deg, var(--crimson-dk), var(--crimson));
+  padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+  border-radius: 12px 12px 0 0; position: sticky; top: 0; z-index: 2;
+}
+.bm-hdr-title { font-family: 'Cormorant Garamond',serif; font-size: 18px; color: #fff; font-weight: 600; }
+.bm-hdr-sub { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+.bm-hdr-close { background: rgba(255,255,255,0.15); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bm-prog { display: flex; align-items: center; padding: 16px 20px 0; }
+.bm-ps {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid #ddd; color: #bbb; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s;
+}
+.bm-ps.active { border-color: var(--crimson); background: var(--crimson); color: #fff; }
+.bm-ps.done { border-color: var(--crimson); background: var(--crimson-xs); color: var(--crimson); font-size: 13px; }
+.bm-pl { flex: 1; height: 2px; background: #eee; transition: background 0.2s; }
+.bm-pl.done { background: var(--crimson-lt); }
+.bm-pane { padding: 16px 20px 20px; display: none; }
+.bm-pane.bm-on { display: block; }
+.bm-pane h3 { font-family: 'Cormorant Garamond',serif; font-size: 22px; color: var(--charcoal); margin-bottom: 4px; }
+.bm-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
+/* Calendar */
+.bm-cal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.bm-cal-month { font-size: 14px; font-weight: 600; color: var(--charcoal); }
+.bm-cal-nav { background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 3px 10px; cursor: pointer; color: #666; font-size: 16px; }
+.bm-cal-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.bm-cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-bottom: 16px; }
+.bm-cal-dn { text-align: center; font-size: 10px; font-weight: 700; color: #bbb; text-transform: uppercase; padding: 4px 0; }
+.bm-day {
+  aspect-ratio: 1; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 500; background: transparent; color: var(--charcoal);
+  transition: all 0.12s; display: flex; align-items: center; justify-content: center;
+}
+.bm-day:hover:not(.bm-dis):not(.bm-empty) { background: var(--crimson-xs); color: var(--crimson); }
+.bm-day.bm-sel { background: var(--crimson) !important; color: #fff !important; }
+.bm-day.bm-dis { color: #ddd; cursor: not-allowed; }
+.bm-day.bm-today { font-weight: 800; }
+/* Time slots */
+.bm-dur-info { background: #fff8f0; border: 1px solid #fde3c0; border-radius: 6px; padding: 9px 13px; font-size: 13px; color: #8a4a00; margin-bottom: 14px; }
+.bm-slots { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; max-height: 240px; overflow-y: auto; margin-bottom: 16px; }
+.bm-slot { padding: 9px 6px; border: 1.5px solid #e5e5e5; border-radius: 6px; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.12s; color: var(--charcoal); background: #fff; }
+.bm-slot:hover { border-color: var(--crimson); color: var(--crimson); }
+.bm-slot.bm-slot-sel { background: var(--crimson); border-color: var(--crimson); color: #fff; }
+.bm-no-slots { text-align: center; color: #999; font-size: 13px; padding: 24px; }
+.bm-spin-wrap { text-align: center; padding: 28px; color: #999; font-size: 13px; }
+.bm-spinner { width: 28px; height: 28px; border: 3px solid #eee; border-top-color: var(--crimson); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+.bm-state { text-align: center; padding: 30px 18px; }
+.bm-state-ic { font-size: 34px; line-height: 1; margin-bottom: 12px; }
+.bm-state-t { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: #2A1B26; margin-bottom: 6px; }
+.bm-state-m { color: #7a6b74; font-size: 13.5px; line-height: 1.6; max-width: 300px; margin: 0 auto 16px; }
+.bm-state-btn { background: var(--crimson); color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+.bm-state-btn:hover { opacity: .9; }
+.bm-cerr { color: #b3341a; background: #FDECE7; border: 1px solid #F5C9BC; border-radius: 10px; padding: 11px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 12px; display: none; }
+.bm-cerr.show { display: block; }
+.bm-cerr a { color: #b3341a; font-weight: 700; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Form */
+.bm-inp { width: 100%; padding: 11px 13px; border: 1.5px solid #e5e5e5; border-radius: 6px; font-family: 'Inter',sans-serif; font-size: 14px; color: var(--charcoal); margin-bottom: 10px; box-sizing: border-box; transition: border-color 0.15s; }
+.bm-inp:focus { outline: none; border-color: var(--crimson); }
+.bm-inp.bm-err { border-color: #ef4444; }
+.bm-ta { height: 80px; resize: none; }
+/* Summary */
+.bm-sum-card { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+.bm-sum-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #f0f0f0; }
+.bm-sum-row:last-child { border-bottom: none; }
+.bm-sum-lbl { color: #999; }
+.bm-sum-val { color: var(--charcoal); font-weight: 500; text-align: right; max-width: 58%; }
+.bm-sum-price { color: var(--crimson); font-weight: 700; font-size: 15px; }
+/* Nav */
+.bm-nav { display: flex; gap: 8px; }
+.bm-btn-back { background: #fff; color: #777; border: 1.5px solid #ddd; border-radius: 6px; padding: 10px 16px; font-family: 'Inter',sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.bm-btn-back:hover { border-color: #aaa; }
+.bm-btn-next { flex: 1; background: var(--crimson); color: #fff; border: none; border-radius: 6px; padding: 11px 16px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.bm-btn-next:hover { background: var(--crimson-dk); }
+.bm-btn-next:disabled { background: #ddd; cursor: not-allowed; }
+/* Success */
+.bm-success { text-align: center; padding: 28px 20px; }
+.bm-suc-icon { font-size: 52px; margin-bottom: 12px; }
+.bm-suc-h { font-family: 'Cormorant Garamond',serif; font-size: 26px; color: var(--charcoal); margin-bottom: 6px; }
+.bm-suc-p { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 18px; }
+.bm-suc-det { background: var(--crimson-xs); border-radius: 8px; padding: 12px 14px; text-align: left; margin-bottom: 20px; font-size: 13px; color: var(--charcoal); line-height: 1.9; }
+.bm-done-btn { background: var(--crimson); color: #fff; border: none; border-radius: 6px; padding: 12px 32px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+@media (max-width: 480px) {
+  #bm-overlay { align-items: flex-end; padding: 0; }
+  #bm-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
+}
+</style>
+</head>
+<body>
+<!-- ===== VELOUR customer "Manage my appointment" overlay (shows only for ?manage=token) ===== -->
+<style>
+  #mg-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;
+    background:radial-gradient(1000px 500px at 50% -10%, #FDEFE9, #FBF6F3);padding:20px;
+    font-family:'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#2A1B26}
+  #mg-overlay.on{display:flex}
+  #mg-overlay .mg-card{background:#fff;border:1px solid #EDE1DB;border-radius:18px;
+    box-shadow:0 12px 40px -16px rgba(59,34,51,.3);width:100%;max-width:420px;padding:30px;text-align:center}
+  #mg-overlay .mg-wm{font-family:'Fraunces',serif;font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#E75A34;margin-bottom:14px}
+  #mg-overlay h2{font-family:'Fraunces',serif;font-weight:500;font-size:24px;margin:0 0 4px;color:#2A1B26}
+  #mg-overlay p{color:#6A4E60;font-size:14px;margin:8px 0}
+  #mg-overlay .mg-details{background:#F6EDE8;border-radius:12px;padding:16px;text-align:left;margin:18px 0;font-size:14px;line-height:1.9;color:#3B2233}
+  #mg-overlay .mg-details b{color:#2A1B26}
+  #mg-overlay .mg-btn{display:block;width:100%;border:none;border-radius:11px;padding:13px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+  #mg-overlay .mg-primary{background:#3B2233;color:#fff}
+  #mg-overlay .mg-primary:hover{background:#2A1B26}
+  #mg-overlay .mg-danger{background:#fff;color:#C6431F;border:1px solid #EBC9BE}
+  #mg-overlay .mg-danger:hover{background:#C6431F;color:#fff}
+  #mg-overlay .mg-link{display:inline-block;margin-top:14px;color:#6A4E60;font-size:13px;text-decoration:underline;cursor:pointer}
+  #mg-overlay .mg-muted{color:#9A8791;font-size:13px}
+  #mg-overlay .mg-spin{width:26px;height:26px;border:3px solid #EDE1DB;border-top-color:#E75A34;border-radius:50%;margin:14px auto;animation:mgspin .8s linear infinite}
+  @keyframes mgspin{to{transform:rotate(360deg)}}
+</style>
+<div id="mg-overlay"><div class="mg-card">
+  <div class="mg-wm">Red Persimmon</div>
+  <div id="mg-body"><div class="mg-spin"></div><p class="mg-muted">Loading your appointment…</p></div>
+</div></div>
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var token = params.get('manage');
+  if(!token) return; // normal site for everyone else
+  var URL_ = 'https://hydhezpeuhqhcugnpupu.supabase.co';
+  var KEY_ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5ZGhlenBldWhxaGN1Z25wdXB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDIzNzAsImV4cCI6MjA5ODUxODM3MH0.pMtwRJNK1lS3wgxhgdUfx856QDGFnEtv4LoBA9fJXIQ';
+  var SITE = location.origin;
+  var ov = document.getElementById('mg-overlay');
+  var body = document.getElementById('mg-body');
+  ov.classList.add('on');
+  document.documentElement.style.overflow = 'hidden';
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+  async function rpc(fn,args){
+    var r = await fetch(URL_+'/rest/v1/rpc/'+fn,{method:'POST',
+      headers:{apikey:KEY_,Authorization:'Bearer '+KEY_,'Content-Type':'application/json'},
+      body:JSON.stringify(args)});
+    var t = await r.text();
+    if(!r.ok) throw new Error(t||('rpc '+r.status));
+    return t?JSON.parse(t):null;
+  }
+  function details(d){
+    return '<div class="mg-details"><div>📅 <b>'+esc(d.date)+'</b> at <b>'+esc(d.time)+'</b></div>'+
+      '<div>👤 With '+esc(d.technician)+'</div><div>💅 '+esc(d.services||'Service')+'</div></div>';
+  }
+  async function load(){
+    try{
+      var d = await rpc('get_booking_by_token',{p_token:token});
+      if(!d || !d.found){ body.innerHTML='<h2>Appointment not found</h2><p>This link may be invalid or expired.</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; return; }
+      if(d.status==='cancelled'){ body.innerHTML='<h2>Already cancelled</h2>'+details(d)+'<p>This appointment has been cancelled.</p><a class="mg-link" href="'+SITE+'">Book a new appointment</a>'; return; }
+      if(d.status==='completed'){ body.innerHTML='<h2>All done</h2>'+details(d)+'<p>Hope you loved it! 💅</p><a class="mg-link" href="'+SITE+'">Book again</a>'; return; }
+      if(!d.can_manage){ body.innerHTML='<h2>Your appointment</h2>'+details(d)+'<p>This appointment is soon — to change it, please call us'+(d.salon_phone?' at <b>'+esc(d.salon_phone)+'</b>':'')+'.</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; return; }
+      body.innerHTML='<h2>Your appointment</h2>'+details(d)+
+        '<button class="mg-btn mg-primary" id="mg-resched">Reschedule</button>'+
+        '<button class="mg-btn mg-danger" id="mg-cancel">Cancel appointment</button>'+
+        '<p class="mg-muted">Questions? Call us'+(d.salon_phone?' at '+esc(d.salon_phone):'')+'.</p>';
+      document.getElementById('mg-cancel').onclick = doCancel;
+      document.getElementById('mg-resched').onclick = doResched;
+    }catch(e){ body.innerHTML='<h2>Something went wrong</h2><p>Please try again, or call us.</p>'; }
+  }
+  async function doCancel(){
+    if(!confirm('Cancel this appointment?')) return;
+    body.innerHTML='<div class="mg-spin"></div><p class="mg-muted">Cancelling…</p>';
+    try{
+      var r = await rpc('cancel_booking_by_token',{p_token:token});
+      if(r && r.ok){ body.innerHTML='<h2>Cancelled</h2><p>Your appointment has been cancelled. We hope to see you soon!</p><a class="mg-link" href="'+SITE+'">Book a new appointment</a>'; }
+      else{ var m = (r&&r.error==='TOO_LATE')?'This appointment is too soon to cancel online — please call us.':'We could not cancel this. Please call us.'; body.innerHTML='<h2>Unable to cancel</h2><p>'+m+'</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; }
+    }catch(e){ body.innerHTML='<h2>Something went wrong</h2><p>Please try again or call us.</p>'; }
+  }
+  async function doResched(){
+    if(!confirm('To reschedule, we\u2019ll cancel this appointment so you can book a new time. Continue?')) return;
+    body.innerHTML='<div class="mg-spin"></div><p class="mg-muted">One moment…</p>';
+    try{
+      var r = await rpc('cancel_booking_by_token',{p_token:token});
+      if(r && r.ok){ window.location = SITE; }
+      else{ var m=(r&&r.error==='TOO_LATE')?'This appointment is too soon to change online — please call us.':'We could not do that. Please call us.'; body.innerHTML='<h2>Unable to reschedule</h2><p>'+m+'</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; }
+    }catch(e){ body.innerHTML='<h2>Something went wrong</h2><p>Please try again or call us.</p>'; }
+  }
+  load();
+})();
+</script>
+<!-- ===== end Manage overlay ===== -->
+
+<!-- ===== VELOUR technician schedule overlay (shows only for ?tech=token) ===== -->
+<style>
+  #ts-overlay{position:fixed;inset:0;z-index:99998;display:none;flex-direction:column;align-items:center;
+    background:radial-gradient(1000px 500px at 50% -10%, #FDEFE9, #FBF6F3);padding:20px 16px 40px;overflow:auto;
+    font-family:'Hanken Grotesk',system-ui,-apple-system,sans-serif;color:#2A1B26}
+  #ts-overlay.on{display:flex}
+  #ts-overlay .ts-card{background:#fff;border:1px solid #EDE1DB;border-radius:18px;
+    box-shadow:0 12px 40px -16px rgba(59,34,51,.3);width:100%;max-width:440px;padding:24px;margin-top:10px}
+  #ts-overlay .ts-wm{font-family:'Fraunces',serif;font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:#E75A34;text-align:center;margin-bottom:6px}
+  #ts-overlay h2{font-family:'Fraunces',serif;font-weight:500;font-size:24px;margin:0 0 2px;color:#2A1B26;text-align:center}
+  #ts-overlay .ts-sub{color:#9A8791;font-size:12.5px;text-align:center;margin-bottom:16px}
+  #ts-overlay .ts-day{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#6A4E60;margin:16px 0 8px;border-bottom:1px solid #F0E4DE;padding-bottom:5px}
+  #ts-overlay .ts-appt{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F6EDE8}
+  #ts-overlay .ts-appt:last-child{border-bottom:none}
+  #ts-overlay .ts-time{font-weight:700;color:#3B2233;white-space:nowrap;min-width:78px;font-size:14px}
+  #ts-overlay .ts-info{flex:1;min-width:0}
+  #ts-overlay .ts-cust{font-weight:600;color:#2A1B26;font-size:14px}
+  #ts-overlay .ts-svc{color:#6A4E60;font-size:13px;margin-top:2px}
+  #ts-overlay .ts-dur{color:#9A8791;font-size:12px;margin-top:2px}
+  #ts-overlay .ts-empty{text-align:center;color:#9A8791;font-size:14px;padding:24px 0}
+  #ts-overlay .ts-spin{width:26px;height:26px;border:3px solid #EDE1DB;border-top-color:#E75A34;border-radius:50%;margin:24px auto;animation:mgspin .8s linear infinite}
+  #ts-overlay .ts-foot{text-align:center;color:#9A8791;font-size:11.5px;margin-top:18px}
+</style>
+<div id="ts-overlay"><div class="ts-card" id="ts-card">
+  <div class="ts-wm">Red Persimmon</div>
+  <div id="ts-body"><div class="ts-spin"></div></div>
+</div></div>
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var token = params.get('tech');
+  if(!token) return;
+  var URL_ = 'https://hydhezpeuhqhcugnpupu.supabase.co';
+  var KEY_ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5ZGhlenBldWhxaGN1Z25wdXB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDIzNzAsImV4cCI6MjA5ODUxODM3MH0.pMtwRJNK1lS3wgxhgdUfx856QDGFnEtv4LoBA9fJXIQ';
+  var ov = document.getElementById('ts-overlay');
+  var body = document.getElementById('ts-body');
+  ov.classList.add('on');
+  document.documentElement.style.overflow = 'hidden';
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+  async function rpc(fn,args){
+    var r = await fetch(URL_+'/rest/v1/rpc/'+fn,{method:'POST',
+      headers:{apikey:KEY_,Authorization:'Bearer '+KEY_,'Content-Type':'application/json'},
+      body:JSON.stringify(args)});
+    var t = await r.text(); if(!r.ok) throw new Error(t||('rpc '+r.status)); return t?JSON.parse(t):null;
+  }
+
+  async function load(){
+    try{
+      var d = await rpc('get_tech_schedule',{p_token:token});
+      if(!d || !d.found){
+        document.getElementById('ts-card').innerHTML =
+          '<div class="ts-wm">Red Persimmon</div><h2>Schedule not found</h2><div class="ts-sub">This link may be invalid or was reset. Please ask the salon for a new one.</div>';
+        return;
+      }
+      var appts = d.appointments || [];
+      var header = '<h2>'+esc(d.tech)+"'s schedule</h2><div class=\"ts-sub\">Next 7 days · updates automatically</div>";
+      if(!appts.length){ body.innerHTML = header + '<div class="ts-empty">No appointments in the next 7 days. 🌸</div>'; return; }
+      // group by date (already ordered)
+      var html = header, curDate = null;
+      appts.forEach(function(a){
+        if(a.date !== curDate){ curDate = a.date; html += '<div class="ts-day">'+esc(a.date)+'</div>'; }
+        html += '<div class="ts-appt"><div class="ts-time">'+esc(a.time)+'</div>'+
+          '<div class="ts-info"><div class="ts-cust">'+esc(a.customer)+'</div>'+
+          '<div class="ts-svc">'+esc(a.services||'Service')+'</div>'+
+          (a.duration?'<div class="ts-dur">'+esc(a.duration)+' min</div>':'')+'</div></div>';
+      });
+      html += '<div class="ts-foot">Read-only · your appointments only</div>';
+      body.innerHTML = html;
+    }catch(e){
+      document.getElementById('ts-card').innerHTML =
+        '<div class="ts-wm">Red Persimmon</div><h2>Something went wrong</h2><div class="ts-sub">Please try again in a moment.</div>';
+    }
+  }
+  load();
+})();
+</script>
+<!-- ===== end technician schedule overlay ===== -->
+
+<!-- ANNOUNCEMENT BAR -->
+<div id="announcebar" style="background:linear-gradient(90deg,var(--gold),#E8C27A,var(--gold));padding:9px 5%;text-align:center;position:relative;">
+  <p style="font-size:13px;font-weight:600;color:var(--crimson-dk);letter-spacing:0.03em;">🎉 New clients get <strong>10% off</strong> their first visit! &nbsp;·&nbsp; 👆 Tap on a service to book in store &nbsp;·&nbsp; Walk-ins always welcome · Call <a href="tel:6036217469" style="color:var(--crimson-dk);text-decoration:underline;">(603) 621-7469</a></p>
+  <button onclick="document.getElementById('announcebar').style.display='none'" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--crimson-dk);font-weight:700;">×</button>
+</div>
+<nav>
+  <div class="nav-logo">
+    Red Persimmon
+    <span>Nails & Spa · Manchester, NH</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#services" onclick="closeMenu()">Services</a>
+    <a href="#team" onclick="closeMenu()">Our Team</a>
+    <a href="#faq" onclick="closeMenu()">FAQ</a>
+    <a href="#visit" onclick="closeMenu()">Visit Us</a>
+    <a href="#" class="nav-ivy" onclick="openIvyChat();closeMenu();return false;">Ask Aivy 💅</a>
+    <a href="#booking" class="nav-book" onclick="closeMenu()">Book Appointment</a>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:1200px;margin:0 auto;">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">1500 S. Willow St · Across American Eagle · Manchester, NH</div>
+    <h1>Where every nail<br>tells <em>your story.</em></h1>
+    <p class="hero-sub">Premium nail care, lash extensions, waxing, and spa treatments. Expert technicians, warm atmosphere, results that speak for themselves.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-gold">Book Appointment</a>
+      <a href="#services" class="btn-ghost">View Services</a>
+    </div>
+    <div class="hero-badges">
+      <div class="hero-badge">Walk-ins Welcome</div>
+      <div class="hero-badge">Gift Certificates</div>
+      <div class="hero-badge">Mon–Thu 10am–8pm</div>
+      <div class="hero-badge">Fri–Sat 10am–9pm</div>
+      <div class="hero-badge">Sun 11am–6pm</div>
+    </div>
+  </div>
+
+  <!-- IVY INTRO CARD -->
+  <div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;text-align:center;">AI-Powered · Available 24/7 · Instant answers</div>
+    <div style="background:#fff;border:1px solid var(--crimson-xs);border-radius:10px;overflow:hidden;box-shadow:0 18px 44px rgba(92,15,15,0.12);">
+      <div style="background:linear-gradient(135deg,var(--crimson-dk),var(--crimson));padding:18px 22px;display:flex;align-items:center;gap:14px;">
+        <div class="chat-avatar" style="flex-shrink:0;">I</div>
+        <div>
+          <div style="font-size:17px;font-weight:600;color:#fff;font-family:'Cormorant Garamond',serif;">Aivy — Your AI Assistant</div>
+          <div class="chat-header-status">Online now · Here whenever you need</div>
+        </div>
+        <span class="chat-live">LIVE</span>
+      </div>
+      <div style="padding:22px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;gap:13px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">💅</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Services &amp; Pricing</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Ask about any service and get instant pricing and details</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">📅</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Book the right technician</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Tell Aivy what you need — she matches you with the perfect specialist</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">⚡</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Answers 24/7, no hold music</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Aivy knows everything about Red Persimmon — available any hour</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 22px 22px;">
+        <button onclick="openIvyChat()" onmouseover="this.style.background='var(--gold-xs)'" onmouseout="this.style.background='transparent'" style="width:100%;background:transparent;color:var(--crimson-dk);border:1.5px solid var(--gold);border-radius:3px;padding:13px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;cursor:pointer;transition:background 0.15s;">
+          💬 Ask Aivy →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat"><div class="stat-num">10</div><div class="stat-label">Expert Technicians</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Services Offered</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">7</div><div class="stat-label">Days a Week</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Ivy Always Available</div></div>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- SERVICES -->
+<div class="section" id="services">
+  <div class="section-eyebrow">Our Services</div>
+  <h2>Crafted for you,<br>priced honestly.</h2>
+  <p class="section-sub">Tap the <strong style="color:var(--gold);">+</strong> on any service to learn more about what's included. Every treatment is performed by our expert technicians with premium products.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('nails', this)">Nail Care</button>
+    <button class="tab-btn" onclick="showTab('enhancements', this)">Enhancements</button>
+    <button class="tab-btn" onclick="showTab('polish', this)">Polish Change</button>
+    <button class="tab-btn" onclick="showTab('lashes', this)">Lashes & Brows</button>
+    <button class="tab-btn" onclick="showTab('waxing', this)">Waxing</button>
+    <button class="tab-btn" onclick="showTab('additional', this)">Additional</button>
+  </div>
+
+  <!-- NAIL CARE -->
+  <div class="tab-content active" id="tab-nails">
+    <div class="services-list">
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Natural Manicure <span class="service-note-inline">+$15 for Gel/Shellac</span></div>
+            <div class="service-price">$25</div>
+          </div>
+        </div>
+        <div class="service-desc">A relaxing, nourishing hand massage and detailed grooming of the nails and cuticles follows. Hydrating nail soak prepares hands for a detailed grooming of nails and cuticles. A nourishing hand massage and perfect polish finish leaves your nails looking naturally beautiful and stronger.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Spa Me Perfect Manicure</div>
+            <div class="service-price">$40</div>
+          </div>
+        </div>
+        <div class="service-desc">Intensive therapy for dry, parched hands. After detailed grooming of the nails and cuticles, dead skin cells will be exfoliated. Your hands will then be cocooned in aromatherapy paraffin and nestled in warm mitts. Your hands will feel so soft and luxurious — the result is stronger, more beautiful looking natural nails.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Scrub Me Pedicure</div>
+            <div class="service-price">$45</div>
+          </div>
+        </div>
+        <div class="service-desc">A complete foot treatment with invigorating scrub and nourishment at your tired feet. The treatment and nourishment will leave your feet so refreshed. Pampering is completed with a hot towel and deeply hydrated with warm therapeutic massage. With combination of BYE-EE CALLUSES for additional $10. Includes a beautiful nail polish finish with combination of nail polish for additional $10.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">I Am Classy Pedicure</div>
+            <div class="service-price">$38</div>
+          </div>
+        </div>
+        <div class="service-desc">Relax in our hydrotherapy tubs and enjoy a detailed grooming of the nails and cuticles. Feet will be revitalized by a moisturizing foot massage. Final touch with nail polish for a beautiful finish. With combination of BYE-EE CALLUSES for additional $10.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Spa Me Perfect Pedicure</div>
+            <div class="service-price">$55</div>
+          </div>
+        </div>
+        <div class="service-desc">An invigorating scrub and nourishment at your tired feet. The treatment will leave your feet so refreshed and energized. Pampering is completed with a hot towel then be deeply hydrated with warm therapeutic massage. With combination of BYE-EE CALLUSES for additional $10.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Rock and Roll Pedicure</div>
+            <div class="service-price">$75</div>
+          </div>
+        </div>
+        <div class="service-desc">This is the ultimate therapy in foot care! Exfoliation, intensive hydrating treatment, callus treatment, hydrating mask, and paraffin treatment. For an exquisite experience, therapeutic hot stones are massaged on the lower legs and feet, enhancing circulation and reducing stress and tension. With combination of BYE-EE CALLUSES for additional $5.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">I Am So Beautiful Pedicure</div>
+            <div class="service-price">$85</div>
+          </div>
+        </div>
+        <div class="service-desc">This treatment is a special blend of organic minerals to comfort overworked feet at all organic nature blend at massage with limit edition lotion and nature blend at organic French oils, vitamins, and Honey. Start with the clean and exfoliating, then collagen cream mask rejuvenate follow by organic lotion massage. Isn't that enough to make your feet beautiful? Please ask for choices at different type of collagen/organic we have. With combination of BYE-EE CALLUSES for additional $5.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Bye-EE Calluses Treatment</div>
+            <div class="service-price">$5–$10</div>
+          </div>
+        </div>
+        <div class="service-desc">Say Bye-EE to calluses and hello to soft, smooth skin in seconds. Our machine plus extra strength formula works to gently take away tough, stubborn calluses and is enhanced with vanilla extract lotion to leave feet soft and smooth. This fast acting formula quickly breaks down thick calluses for soft, smooth skin in seconds.</div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main">
+            <div class="service-name">Henna</div>
+            <div class="service-price">From $20</div>
+          </div>
+        </div>
+        <div class="service-desc">Beautiful traditional henna art applied by our skilled technicians. Perfect for special occasions, events, or just to express your personal style. Please ask for details on designs and pricing based on complexity.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ENHANCEMENTS -->
+  <div class="tab-content" id="tab-enhancements">
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – White Tips</div><div class="service-price">$50+</div></div>
+        </div>
+        <div class="service-desc">Classic white tip nail enhancements. Price may vary due to the length, shape, and design chosen. Our technicians will create the perfect set tailored to your style.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – Pink Only</div><div class="service-price">$45+</div></div>
+        </div>
+        <div class="service-desc">Natural-looking pink nail enhancements, perfect for a clean and polished everyday look. Price varies by length and shape.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – Pink & White</div><div class="service-price">$55+</div></div>
+        </div>
+        <div class="service-desc">The classic pink and white combination — timeless, elegant, and always on trend. Perfect for any occasion. Price varies by length and design.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – Acrylic w/Gel/Shellac</div><div class="service-price">$60+</div></div>
+        </div>
+        <div class="service-desc">Durable acrylic enhancements finished with a gel or shellac topcoat for extra shine and long-lasting color. Price varies by length, shape, and design.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Refill – Pink & White</div><div class="service-price">$45+</div></div>
+        </div>
+        <div class="service-desc">Maintenance refill to keep your pink & white nails looking fresh and beautiful. Recommended every 2-3 weeks.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Refill – Acrylic w/Gel/Shellac</div><div class="service-price">$45+</div></div>
+        </div>
+        <div class="service-desc">Maintenance refill for your acrylic nails with a fresh gel or shellac color update. Recommended every 2-3 weeks for best results.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – Gel Builder</div><div class="service-price">$60+</div></div>
+        </div>
+        <div class="service-desc">Gel builder nails are a strong, flexible alternative to acrylic — lighter weight with a more natural feel. Great for those wanting durable enhancements without the thickness of acrylic.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Full Set – Ombre</div><div class="service-price">$65+</div></div>
+        </div>
+        <div class="service-desc">Beautiful gradient ombre nail enhancements — a seamless blend from one color to another. Our technicians are skilled in creating smooth, stunning ombre effects in any color combination.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Dipping Powder</div><div class="service-price">$55+</div></div>
+        </div>
+        <div class="service-desc">Dipping powder nails are odorless, lightweight, and extremely durable. No UV light needed — the powder adheres directly to your natural nail for a long-lasting, chip-resistant finish that can last 3-4 weeks.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Dipping – Pink & White</div><div class="service-price">$60+</div></div>
+        </div>
+        <div class="service-desc">Classic pink and white in dipping powder form — combining the timeless French look with the durability and ease of dipping powder technology.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Dipping with Extensions</div><div class="service-price">$55+</div></div>
+        </div>
+        <div class="service-desc">Dipping powder applied over nail extensions for those who want extra length. Combines the strength of extensions with the durability and natural look of dipping powder.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Dipping – Ombre</div><div class="service-price">$65+</div></div>
+        </div>
+        <div class="service-desc">Stunning ombre gradient effect using dipping powder — a long-lasting and chip-resistant way to achieve the popular fade look. Available in any color combination.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POLISH CHANGE -->
+  <div class="tab-content" id="tab-polish">
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Reg Polish on Natural Nails <span class="service-note-inline">Includes trim & file</span></div><div class="service-price">$15</div></div>
+        </div>
+        <div class="service-desc">Fresh regular polish applied on your natural nails. Service includes a trim and file to shape your nails before the polish is applied. A quick, affordable way to keep your nails looking neat and polished.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">French Manicure by Hand</div><div class="service-price">$15</div></div>
+        </div>
+        <div class="service-desc">Classic French manicure painted by hand — a timeless, clean look with a natural pink base and crisp white tips. Our technicians are skilled at creating precise, even French lines.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Polish Change Gel/Shellac on Acrylic</div><div class="service-price">$30</div></div>
+        </div>
+        <div class="service-desc">Update the color on your existing acrylic nails with a fresh gel or shellac polish. Long-lasting, chip-resistant color in any shade from our collection.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Polish Change Gel/Shellac on Natural</div><div class="service-price">$30</div></div>
+        </div>
+        <div class="service-desc">Fresh gel or shellac polish applied to your natural nails. Lasts up to 2-3 weeks without chipping. Cured under UV/LED light for a glossy, durable finish.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Take Off Gel/Shellac</div><div class="service-price">$5</div></div>
+        </div>
+        <div class="service-desc">Safe and gentle removal of gel or shellac polish. Our technicians use proper techniques to protect the health of your natural nails during removal.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Take Off Dip/Acrylic</div><div class="service-price">$15</div></div>
+        </div>
+        <div class="service-desc">Professional removal of dipping powder or acrylic nails. We take care to preserve the integrity of your natural nails throughout the removal process.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LASHES & BROWS -->
+  <div class="tab-content" id="tab-lashes">
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Hybrid Full Set</div><div class="service-price">$150</div></div>
+        </div>
+        <div class="service-desc">Eyelash extensions are cosmetic enhancements where individual natural fibers are glued to your natural eyelashes, creating a fuller, longer, and darker lash look without the need for mascara. The lash extension creates effortlessly beautiful eye line, curl, and length of the lashes. Hybrid combines classic and volume lashes for a natural yet dramatic effect.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Volume Full Set</div><div class="service-price">$170</div></div>
+        </div>
+        <div class="service-desc">Volume lashes use multiple lightweight extensions per natural lash, creating a fuller, more dramatic look. You will love skipping the morning makeup routine — no more mascara! They will make your eyes pop and noticeably more feminine yet dramatic.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Mega Volume Full Set</div><div class="service-price">$190</div></div>
+        </div>
+        <div class="service-desc">The most dramatic lash look available — maximum fullness and volume using the finest, most lightweight extensions. Perfect for those who want a bold, glamorous look that commands attention.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Fill Every 2 Weeks</div><div class="service-price">$80</div></div>
+        </div>
+        <div class="service-desc">Regular maintenance fills to keep your lash extensions looking full and beautiful. Fills every 2 weeks are recommended to replace extensions that have naturally shed with your lash growth cycle.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Fill Every 3 Weeks</div><div class="service-price">$90</div></div>
+        </div>
+        <div class="service-desc">Maintenance fills every 3 weeks for lash extension upkeep. Slightly more work required at this interval due to natural lash shedding, hence the slightly higher price than 2-week fills.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Natural Curve Lashes Lift <span class="service-note-inline">Lasts 3–4 weeks</span></div><div class="service-price">$85</div></div>
+        </div>
+        <div class="service-desc">A lash lift curls and lifts your natural lashes from the base, creating the appearance of longer, more lifted lashes without extensions. Results last 3-4 weeks. No maintenance fills needed — just beautiful natural lashes.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Microblading – Initial Session</div><div class="service-price">$500+</div></div>
+        </div>
+        <div class="service-desc">Microblading and Nano strokes have gained immense popularity in the beauty industry as a technique to achieve natural looking and defined, fuller, more defined, smudge-proof, water-proof, effortless brows. "Don't let your brows hold you back — Shine bright!" Initial session includes the first treatment. Results last significantly longer than traditional makeup.</div>
+      </div>
+      <div class="service-row">
+        <div class="service-header" onclick="toggleService(this)">
+          <div class="service-main"><div class="service-name">Microblading – 2nd Touch Up</div><div class="service-price">FREE</div></div>
+        </div>
+        <div class="service-desc">A complimentary touch-up session included with your initial microblading treatment. This follow-up appointment perfects and refines the results after your skin has healed from the initial session.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAXING -->
+  <div class="tab-content" id="tab-waxing">
+    <div class="services-list">
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Eyebrows</div><div class="service-price">$15+</div></div></div><div class="service-desc">Precise eyebrow waxing to define and shape your brows beautifully. Our technicians take time to understand your desired shape before waxing.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Lip or Chin</div><div class="service-price">$10</div></div></div><div class="service-desc">Quick and effective waxing for the upper lip or chin area. Removes unwanted hair for a smooth, clean finish that lasts weeks longer than shaving.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Face</div><div class="service-price">$15+</div></div></div><div class="service-desc">Complete facial waxing covering all areas of the face including forehead, cheeks, lip, chin, and sides. Leaves skin smooth and hair-free for weeks.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Arms</div><div class="service-price">$50+</div></div></div><div class="service-desc">Complete arm waxing from wrist to shoulder. Smooth, hair-free arms that last significantly longer than shaving. Results typically last 3-6 weeks.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Half Arms</div><div class="service-price">$40+</div></div></div><div class="service-desc">Waxing from the wrist to the elbow. A great option for those who prefer partial arm hair removal. Long-lasting smooth results.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Underarms</div><div class="service-price">$40+</div></div></div><div class="service-desc">Underarm waxing for smooth, clean results that last 3-6 weeks. Far longer-lasting than shaving with less irritation over time.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Legs</div><div class="service-price">$65+</div></div></div><div class="service-desc">Complete leg waxing from ankle to upper thigh. Smooth, silky legs that stay hair-free for weeks. One of our most popular services.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Half Legs</div><div class="service-price">$40+</div></div></div><div class="service-desc">Waxing from the ankle to the knee. Perfect for those who prefer lower leg hair removal or as a more affordable leg waxing option.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Bikini</div><div class="service-price">$40+</div></div></div><div class="service-desc">Bikini line waxing for a clean, confident look. Our technicians ensure your comfort and privacy throughout the service.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Brazilian / Playboy</div><div class="service-price">$55–$60+</div></div></div><div class="service-desc">Complete intimate waxing performed with care and professionalism. Our experienced technicians prioritize your comfort throughout the entire service.</div></div>
+    </div>
+  </div>
+
+  <!-- ADDITIONAL -->
+  <div class="tab-content" id="tab-additional">
+    <div class="services-list">
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Children's Manicure <span class="service-note-inline">10 and under</span></div><div class="service-price">$20</div></div></div><div class="service-desc">A fun, gentle manicure experience designed especially for our youngest clients (age 10 and under). Includes nail shaping and polish in their favorite color. A wonderful way to introduce children to nail care.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Children's Pedicure</div><div class="service-price">$35</div></div></div><div class="service-desc">A gentle, fun pedicure experience for children. Includes a foot soak, nail trim, and polish in their favorite color. Perfect for a special mother-daughter or family outing.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Paraffin on Hands</div><div class="service-price">$10</div></div></div><div class="service-desc">Warm paraffin wax treatment for the hands — deeply moisturizing and great for relieving joint stiffness. Hands are dipped in warm paraffin and wrapped to let the heat and moisture absorb into the skin.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Paraffin on Feet</div><div class="service-price">$15</div></div></div><div class="service-desc">Warm paraffin wax treatment for the feet — intensely hydrating and softening. Especially beneficial for dry, cracked heels. Feet are wrapped in paraffin and warm towels for maximum absorption.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Nail Repair</div><div class="service-price">$5+ each</div></div></div><div class="service-desc">Professional repair for broken or damaged nails. Our technicians can fix chips, cracks, or broken extensions to restore your nails to their full beauty.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Nail Design</div><div class="service-price">$7+ each</div></div></div><div class="service-desc">Custom nail art and designs created by our talented technicians. From simple accents to detailed artwork — tell us your vision and we'll bring it to life. Price varies by complexity of design.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Remove Gel/Shellac</div><div class="service-price">$15</div></div></div><div class="service-desc">Safe, professional removal of gel or shellac polish using proper techniques that protect your natural nail health. No harsh scraping or damaging methods.</div></div>
+      <div class="service-row"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Remove Dipping Powder</div><div class="service-price">$15</div></div></div><div class="service-desc">Professional and safe removal of dipping powder. Our technicians use gentle soaking methods to preserve the health and integrity of your natural nails.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- TEAM -->
+<div class="section" id="team">
+  <div class="section-eyebrow">Our Team</div>
+  <h2>Book with your<br>favourite technician.</h2>
+  <p class="section-sub">Every client deserves a technician they trust. Choose your preferred artist and book directly — your appointment goes straight into their calendar, no overlap, no surprises.</p>
+
+  <div class="staff-grid">
+    <div class="staff-card">
+      <div class="staff-avatar">K</div>
+      <div class="staff-name">Kristy</div>
+      <div class="staff-spec">Nail Enhancements · Waxing · Lash Extensions · Microblading</div>
+      <div class="staff-avail">📅 Mon – Wed, Fri – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kristy</button>
+      <div class="staff-detail">
+        <p>Kristy is our versatile multi-specialist — from nail enhancements, waxing, and lash extensions to microblading. She brings precision and care to every service. Not available Thursdays.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Acrylics · Lash Extensions · Microblading · Waxing</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('kristy','Kristy')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">K</div>
+      <div class="staff-name">Kevin</div>
+      <div class="staff-spec">Nail Enhancements · Nail Art & Design</div>
+      <div class="staff-avail">📅 Thu – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kevin</button>
+      <div class="staff-detail">
+        <p>Kevin is our nail art and enhancement expert. From custom designs and acrylics to dipping and gel sets, he brings creativity and precision to every client. Available Thursday through Sunday.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Nail Art · Acrylics · Dipping · Gel X</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('kevin','Kevin')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">P</div>
+      <div class="staff-name">Peter</div>
+      <div class="staff-spec">Nail Enhancements · Pedicures · Manicures</div>
+      <div class="staff-avail">📅 Every Day</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Peter</button>
+      <div class="staff-detail">
+        <p>Peter is available every single day of the week. He specializes in nail enhancements and offers a wide range of services including pedicures, manicures, acrylics, and gel sets.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Nail Enhancements · Pedicures · Acrylics · Gel</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('peter','Peter')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">T</div>
+      <div class="staff-name">Tina</div>
+      <div class="staff-spec">Pedicures · Nail Enhancements · Waxing · Henna</div>
+      <div class="staff-avail">📅 Every Day</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Tina</button>
+      <div class="staff-detail">
+        <p>Tina is available every day and is loved for her thorough pedicures, nail enhancements, and waxing services. She also offers henna art. A great all-rounder for multiple services in one visit.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Enhancements · Waxing · Henna</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('tina','Tina')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">A</div>
+      <div class="staff-name">Alex</div>
+      <div class="staff-spec">Pedicure Specialist</div>
+      <div class="staff-avail">📅 Mon – Wed & Fri</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Alex</button>
+      <div class="staff-detail">
+        <p>Alex specializes in pedicures and nail care. Available Monday, Tuesday, Wednesday, and Friday. Ideal for clients wanting a relaxing and thorough pedicure experience.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Manicures · Polish</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('alex','Alex')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">S</div>
+      <div class="staff-name">Sweety</div>
+      <div class="staff-spec">Pedicures · Manicures · Waxing · Henna</div>
+      <div class="staff-avail">📅 Thu – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Sweety</button>
+      <div class="staff-detail">
+        <p>Sweety is known for her gentle touch and detailed work in pedicures, manicures, henna, and waxing. Available Thursday through Sunday — book early as she fills up fast!</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Waxing · Henna · Manicures</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('sweety','Sweety')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">S</div>
+      <div class="staff-name">Sony</div>
+      <div class="staff-spec">Pedicures · Henna · Manicures</div>
+      <div class="staff-avail">📅 Tuesday Only</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Sony</button>
+      <div class="staff-detail">
+        <p>Sony specializes in pedicures and henna art. Available Tuesdays only — a hidden gem for clients who want a calm, focused appointment. Slots go quickly so book ahead!</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Henna · Manicures</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('sony','Sony')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">A</div>
+      <div class="staff-name">Ammu</div>
+      <div class="staff-spec">Pedicures · Nail Enhancements · Henna</div>
+      <div class="staff-avail">📅 Sat – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Ammu</button>
+      <div class="staff-detail">
+        <p>Ammu is our weekend specialist offering pedicures, nail enhancements, and henna on Saturdays and Sundays. Perfect for clients with busy weekday schedules.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Nail Enhancements · Henna</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('ammu','Ammu')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">K</div>
+      <div class="staff-name">Kim</div>
+      <div class="staff-spec">Pedicures · Nail Enhancements · Waxing</div>
+      <div class="staff-avail">📅 Wed – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kim</button>
+      <div class="staff-detail">
+        <p>Kim offers pedicures, nail enhancements, and waxing with great attention to detail. Available Wednesday through Sunday — a reliable choice for a wide range of nail and waxing services.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Acrylics · Dipping · Waxing</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('kim','Kim')">Select Service & Book →</button>
+    </div>
+
+    <div class="staff-card">
+      <div class="staff-avatar">L</div>
+      <div class="staff-name">Lori</div>
+      <div class="staff-spec">Pedicures · Manicures</div>
+      <div class="staff-avail">📅 Mon & Wed – Sun</div>
+      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Lori</button>
+      <div class="staff-detail">
+        <p>Lori specializes in relaxing pedicures and manicures. Available most days of the week (closed Tuesdays). Perfect for clients looking for a calm and thorough nail care experience.</p>
+        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Manicures · Polish · Nail Care</p>
+      </div>
+      <button class="staff-book" onclick="openStaffModal('lori','Lori')">Select Service & Book →</button>
+    </div>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- INFO STRIP -->
+<div class="info-strip" id="visit">
+  <div class="info-strip-inner">
+    <div class="info-block">
+      <h3>Hours</h3>
+      <p>Mon – Thu: 10:00 AM – 8:00 PM<br>Fri – Sat: 10:00 AM – 9:00 PM<br>Sun: 11:00 AM – 6:00 PM</p>
+    </div>
+    <div class="info-block">
+      <h3>Location</h3>
+      <p>1500 S. Willow Street<br>Across from American Eagle<br>Close to Food Court<br>Manchester, NH 03103<br><br><a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH">Get directions →</a></p>
+    </div>
+    <div class="info-block">
+      <h3>Contact</h3>
+      <p><a href="tel:6036217469">(603) 621-7469</a><br><a href="mailto:red_persimmon@gmail.com">red_persimmon@gmail.com</a><br><br>Walk-ins always welcome!</p>
+    </div>
+    <div class="info-block">
+      <h3>Gift Certificates</h3>
+      <p>Give the gift of beauty.<br>Available in any amount.<br><br>Ask us in store or call to purchase. Never expires.</p>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<div class="section" id="booking">
+  <div class="booking-grid">
+    <div>
+      <div class="section-eyebrow">Book an Appointment</div>
+      <h2>Ready for<br>your next visit?</h2>
+      <p style="font-size:16px;color:var(--text-mid);line-height:1.8;">Book online in seconds. Choose your technician, pick your time, and we'll take care of the rest. Your appointment syncs directly to their calendar.</p>
+      <div class="booking-features">
+        <div class="booking-feature">Instant confirmation — no waiting for a callback</div>
+        <div class="booking-feature">Book with your favourite technician directly</div>
+        <div class="booking-feature">Real-time availability — no double bookings ever</div>
+        <div class="booking-feature">Walk-ins also always welcome!</div>
+      </div>
+      <a href="#services" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'});return false;" class="btn-gold" style="display:inline-block;margin-bottom:12px;">+ Browse & Add Services →</a>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">Pick your services from the menu above, choose your professional, and your appointment arrives pre-filled in their calendar. Or chat with Ivy 24/7 — she'll guide you to the right technician! 💅</p>
+    </div>
+    <div class="booking-card">
+      <h3>Prefer to call?</h3>
+      <p>Our team is happy to help you book the perfect appointment over the phone during business hours.</p>
+      <a href="tel:6036217469" class="btn-primary" style="display:block;text-align:center;">(603) 621-7469</a>
+      <div class="booking-divider"></div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Or ask Ivy above — she can answer any question and guide you to the right service and technician 24/7!</p>
+      <p style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.06em;">GIFT CERTIFICATES AVAILABLE ✦</p>
+    </div>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      Red Persimmon Nails & Spa
+      <span>1500 S. Willow Street · Across American Eagle · Manchester, NH 03103</span>
+    </div>
+    <p>(603) 621-7469 · red_persimmon@gmail.com</p>
+    <p>© 2025 Red Persimmon Nails & Spa. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+const SYSTEM_PROMPT = `You are Aivy, the warm and friendly AI assistant for Red Persimmon Nails & Spa in Manchester, NH.
+
+PERSONALITY: Warm, knowledgeable, genuinely helpful. Never salesy. 2-3 sentences max. End with a helpful next step. Use emojis occasionally: 💅 ✨ 🌸
+
+ABOUT:
+Red Persimmon Nails & Spa — 1500 S. Willow Street (across from American Eagle, close to Food Court), Manchester, NH 03103
+Phone: (603) 621-7469 | Email: red_persimmon@gmail.com
+Walk-ins always welcome. Gift certificates available. Free parking.
+
+HOURS: Monday–Thursday 10am–8pm | Friday–Saturday 10am–9pm | Sunday 11am–6pm
+
+SERVICES & PRICING:
+NATURAL NAIL CARE:
+- Natural Manicure $25 (+$15 Gel/Shellac) | Spa Me Perfect Manicure $40
+- Scrub Me Pedicure $45 | I Am Classy Pedicure $38 | Spa Me Perfect Pedicure $55
+- Rock and Roll Pedicure $75 (hot stone massage, paraffin, hydrating mask)
+- I Am So Beautiful Pedicure $85 (organic minerals, collagen mask, honey treatment)
+- Bye-EE Calluses $5-$10 | Henna from $20
+
+NAIL ENHANCEMENTS:
+- Full Set White Tips $50+ | Pink Only $45+ | Pink & White $55+
+- Full Set Acrylic w/Gel $60+ | Gel Builder $60+ | Ombre $65+
+- Refills: Pink & White $45+ | Acrylic w/Gel $45+ | Gel Builder $45+ | Ombre $45+
+- Dipping Powder $55+ | Dipping Pink & White $60+ | Dipping Ombre $65+
+
+POLISH CHANGE:
+- Reg Polish Natural Nails (trim & file incl.) $15 | French Manicure by Hand $15
+- Reg Polish Feet $15 | Gel/Shellac Change (Acrylic/Natural/Feet) $30
+- Take Off Gel/Shellac $5 | Take Off Dip/Acrylic $15
+
+LASH EXTENSIONS & MICROBLADING:
+- Hybrid Full Set $150 | Volume Full Set $170 | Mega Volume Full Set $190
+- Fill Every 2 Weeks $80 | Fill Every 3 Weeks $90
+- Lash Lift (lasts 3-4 weeks) $85
+- Microblading Initial Session $500+ | 2nd Touch Up FREE
+
+WAXING:
+- Eyebrows $15+ | Lip or Chin $10 | Full Face $15+ | Side Burn $5
+- Half Arms $40+ | Full Arms $50+ | Underarms $40+
+- Half Legs $40+ | Full Legs $65+ | Chest $50+ | Full Back $65+
+- Bikini $40+ | Brazilian/Playboy $55-60+
+
+ADDITIONAL:
+- Children's Manicure $20 / Pedicure $35 (age 10 and under)
+- Paraffin Hands $10 | Paraffin Feet $15
+- Nail Repair $5+ each | Nail Design $7+ each
+- Remove Gel/Shellac $15 | Remove Dipping Powder $15
+
+TECHNICIANS (name · available days · specializes in):
+- KRISTY · Mon/Tue/Wed/Fri/Sat/Sun (off Thu) · Nail enhancements, waxing, lash extensions, microblading
+- KEVIN · Thu/Fri/Sat/Sun · Nail enhancements, nail art & design
+- PETER · Every day · Nail enhancements, pedicures, manicures
+- TINA · Every day · Pedicures, nail enhancements, waxing, henna
+- ALEX · Mon/Tue/Wed/Fri (off Thu/Sat/Sun) · Pedicure specialist
+- SWEETY · Thu/Fri/Sat/Sun · Pedicures, manicures, waxing, henna
+- SONY · Tuesday only · Pedicures, henna, manicures
+- AMMU · Sat/Sun only · Pedicures, nail enhancements, henna
+- KIM · Wed/Thu/Fri/Sat/Sun · Pedicures, nail enhancements, waxing
+- LORI · Mon/Wed/Thu/Fri/Sat/Sun (off Tue) · Pedicures, manicures
+
+BOOKING — HOW IT WORKS ON OUR WEBSITE:
+We have our own booking system — no Calendly. When a customer wants to book, guide them like this:
+"To book, scroll to our Services section, tap the + button next to the service you want, choose your technician from the dropdown at the bottom, then tap Book Appointment. You can also tap the 📅 Book Step-by-Step button right here in this chat!"
+Always mention the technician's available days when recommending them.
+Never share any Calendly links — all bookings go through our website booking system.
+
+BOOKING FLOW — always follow this sequence:
+Step 1: Ask what service(s) the customer wants if not already stated.
+Step 2: Recommend the right technician and mention their available days.
+Step 3: Direct them to book on the website:
+"To book, go to our Services section, tap + on your service, choose your technician from the dropdown, then tap Book Appointment 📅"
+Or offer the wizard: "You can also tap Book Step-by-Step right here in this chat!"
+If services need different technicians, guide them to book each separately through the website.
+Never share any Calendly or external booking links — all bookings go through our website.
+
+COMMON Q&A:
+- Payment: "We accept cash and all major credit/debit cards!"
+- Duration: Manicure ~30-45 min | Pedicure ~45-60 min | Full acrylic ~60-90 min | Lash extensions ~90-120 min | Microblading ~2 hrs
+- Walk-ins: "Walk-ins are always welcome — no appointment needed!"
+- Reschedule: "Please call us at (603) 621-7469 or email redpersimmon.bookings@gmail.com to reschedule"
+- Parking: "Free and convenient parking at our location — we're on S. Willow St, right across from American Eagle and close to the Food Court. Easy to find!"
+- Allergies: "Please mention allergies in the booking notes — our techs will take great care of you 💅"
+- Kids: "Yes! Children's manicure $20, pedicure $35 for ages 10 and under — great for a mother-daughter visit!"
+
+NATURAL UPSELLS (once, gently, when relevant):
+- Any pedicure → mention Rock & Roll ($75) or I Am So Beautiful ($85) upgrades
+- Basic manicure → mention paraffin add-on ($10)
+- Enhancement → mention nail art from $7/nail
+
+RULES:
+- NEVER use markdown formatting. No **bold**, no *italic*, no bullet dashes. Write in plain conversational sentences only.
+- If a customer expresses a preference for a specific technician, always honor it — even if another technician usually does that service. Just book them with who they asked for. Never redirect someone away from their preferred technician.
+- Never quote walk-in wait times
+- Microblading → recommend calling for consultation
+- Can't help → "Please call (603) 621-7469 or email red_persimmon@gmail.com ✨"`;
+
+let ivyHistory = [];
+let ivyChatOpen = false;
+
+function openIvyChat() {
+  const w = document.getElementById('ivy-widget');
+  if (w) w.classList.add('ivy-open');
+  ivyChatOpen = true;
+  setTimeout(() => { const i = document.getElementById('ivyInput'); if (i) i.focus(); }, 250);
+}
+function closeIvyChat() {
+  const w = document.getElementById('ivy-widget');
+  if (w) w.classList.remove('ivy-open');
+  ivyChatOpen = false;
+}
+function toggleIvyChat() { ivyChatOpen ? closeIvyChat() : openIvyChat(); }
+
+
+
+async function callClaude(userMessage, history) {
+  const messages = history.map(m => ({ role: m.role, content: m.content }));
+  messages.push({ role: 'user', content: userMessage });
+  const res = await fetch(`${SUPA_URL}/functions/v1/aivy-chat`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': `Bearer ${SUPA_KEY}`
+    },
+    body: JSON.stringify({ messages })
+  });
+  const data = await res.json();
+  return data.reply || "I'm having a moment! Please call (603) 621-7469 — we'd love to help 💅";
+}
+
+function renderMessage(text, role, container) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-bot');
+  if (role === 'bot') {
+    const urlRe = /https:\/\/calendly\.com\/[^\s\)\]>]+/g;
+    let last = 0, m;
+    while ((m = urlRe.exec(text)) !== null) {
+      if (m.index > last) {
+        text.slice(last, m.index).split('\n').forEach((line, i) => {
+          if (i > 0) div.appendChild(document.createElement('br'));
+          if (line) div.appendChild(document.createTextNode(line));
+        });
+      }
+      div.appendChild(document.createElement('br'));
+      const a = document.createElement('a');
+      a.href = m[0]; a.target = '_blank'; a.rel = 'noopener';
+      a.className = 'msg-booking-btn';
+      a.textContent = '📅 Tap to Book Appointment →';
+      div.appendChild(a);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) {
+      text.slice(last).split('\n').forEach((line, i) => {
+        if (i > 0) div.appendChild(document.createElement('br'));
+        if (line) div.appendChild(document.createTextNode(line));
+      });
+    }
+  } else {
+    div.textContent = text;
+  }
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendIvyMessage() {
+  const input = document.getElementById('ivyInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = ''; input.disabled = true;
+  const msgBox = document.getElementById('ivyMessages');
+  renderMessage(text, 'user', msgBox);
+  const sugg = document.getElementById('ivySuggestions');
+  if (sugg) sugg.style.display = 'none';
+  const typing = document.getElementById('ivyTyping');
+  typing.style.display = 'flex';
+  msgBox.scrollTop = 9999;
+  try {
+    const reply = await callClaude(text, ivyHistory);
+    ivyHistory.push({ role: 'user', content: text });
+    ivyHistory.push({ role: 'assistant', content: reply });
+    typing.style.display = 'none';
+    renderMessage(reply, 'bot', msgBox);
+  } catch(e) {
+    typing.style.display = 'none';
+    renderMessage("Sorry! Please call (603) 621-7469 — we're here to help!", 'bot', msgBox);
+  } finally {
+    input.disabled = false; input.focus();
+  }
+}
+function sendIvySuggestion(btn) {
+  document.getElementById('ivyInput').value = btn.textContent;
+  sendIvyMessage();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('ivyInput');
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') sendIvyMessage(); });
+});
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleService(header) {
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  header.nextElementSibling.classList.toggle('open', !isOpen);
+}
+function toggleStaff(btn) {
+  const detail = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  detail.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? btn.textContent.replace('− ', '+ ') : btn.textContent.replace('+ ', '− ');
+}
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+
+// ============================================================
+// VELOUR BOOKING ENGINE
+// ============================================================
+const SUPA_URL  = 'https://hydhezpeuhqhcugnpupu.supabase.co';
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5ZGhlenBldWhxaGN1Z25wdXB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDIzNzAsImV4cCI6MjA5ODUxODM3MH0.pMtwRJNK1lS3wgxhgdUfx856QDGFnEtv4LoBA9fJXIQ';
+const SALON_ID  = 'a0000000-0000-0000-0000-000000000001';
+const BUFFER    = 10;
+const MAX_DAYS  = 28;
+const MIN_HRS   = 2;
+const DAY_KEYS  = ['sun','mon','tue','wed','thu','fri','sat'];
+const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+const TECH_DB = {
+  kristy:{id:'b0000000-0000-0000-0001-000000000001',days:['mon','tue','wed','fri','sat','sun']},
+  kevin: {id:'b0000000-0000-0000-0001-000000000002',days:['thu','fri','sat','sun']},
+  peter: {id:'b0000000-0000-0000-0001-000000000003',days:['mon','tue','wed','thu','fri','sat','sun']},
+  tina:  {id:'b0000000-0000-0000-0001-000000000004',days:['mon','tue','wed','thu','fri','sat','sun']},
+  alex:  {id:'b0000000-0000-0000-0001-000000000005',days:['mon','tue','wed','fri']},
+  sweety:{id:'b0000000-0000-0000-0001-000000000006',days:['thu','fri','sat','sun']},
+  sony:  {id:'b0000000-0000-0000-0001-000000000007',days:['tue']},
+  ammu:  {id:'b0000000-0000-0000-0001-000000000008',days:['sat','sun']},
+  kim:   {id:'b0000000-0000-0000-0001-000000000009',days:['wed','thu','fri','sat','sun']},
+  lori:  {id:'b0000000-0000-0000-0001-000000000010',days:['mon','wed','thu','fri','sat','sun']},
+};
+
+const SVC_DUR = {
+  'Natural Manicure':30,'Spa Me Perfect Manicure':40,'I Am Classy Pedicure':30,
+  'Scrub Me Pedicure':40,'Spa Me Perfect Pedicure':50,'Rock and Roll Pedicure':60,
+  'I Am So Beautiful Pedicure':75,'Henna':30,'Bye-EE Calluses':5,
+  "Children's Manicure":15,"Children's Pedicure":25,'Paraffin Hands':10,'Paraffin Feet':10,
+  'Full Set White Tips':60,'Full Set Pink & White':60,'Full Set Acrylic w/Gel':60,
+  'Full Set Gel Builder':60,'Full Set Ombre':70,'Dipping Powder':60,'Dipping Ombre':75,
+  'Gel X':90,'Acrylic Refill':60,'Nail Art & Design':80,'French Manicure by Hand':25,
+  'Regular Polish':15,'Gel/Shellac Change':25,'Remove Gel/Shellac':15,
+  'Remove Dipping Powder':25,'Nail Repair':20,'Hybrid Full Set':90,'Volume Full Set':120,
+  'Mega Volume Full Set':150,'Lash Fill (2-week)':40,'Lash Fill (3-week)':60,'Lash Lift':40,
+  'Microblading':180,'Eyebrows Wax':15,'Lip or Chin Wax':20,'Full Face Wax':20,
+  'Underarms Wax':20,'Half Arms Wax':20,'Full Arms Wax':25,'Half Legs Wax':20,
+  'Full Legs Wax':25,'Bikini Wax':20,'Brazilian Wax':30,
+};
+
+const SALON_HRS = {
+  mon:{o:'10:00',c:'20:00'},tue:{o:'10:00',c:'20:00'},wed:{o:'10:00',c:'20:00'},
+  thu:{o:'10:00',c:'20:00'},fri:{o:'10:00',c:'21:00'},sat:{o:'10:00',c:'21:00'},sun:{o:'11:00',c:'18:00'},
+};
+
+// State
+let bm = { step:1, techKey:'', techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null };
+let calOff = 0;
+
+// DB helpers
+async function dbGet(table, qs='') {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 8000);
+    const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${qs}`, {
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}` },
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+    return r.json();
+  } catch(e) { console.warn('dbGet failed:', e.message); return []; }
+}
+async function dbPost(table, data) {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 10000);
+    const r = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+      method:'POST',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+      body: JSON.stringify(data),
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+    if(!r.ok){ console.warn('dbPost error:', r.status); return null; }
+    const txt = await r.text();
+    return txt ? JSON.parse(txt) : null;
+  } catch(e) { console.warn('dbPost failed:', e.message); return null; }
+}
+async function dbPatch(table, qs, data) {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 8000);
+    await fetch(`${SUPA_URL}/rest/v1/${table}?${qs}`, {
+      method:'PATCH',
+      headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal' },
+      body: JSON.stringify(data),
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+  } catch(e) { console.warn('dbPatch failed (non-critical):', e.message); }
+}
+async function dbRpc(fn, args) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 10000);
+  const r = await fetch(`${SUPA_URL}/rest/v1/rpc/${fn}`, {
+    method:'POST',
+    headers:{ 'apikey':SUPA_KEY, 'Authorization':`Bearer ${SUPA_KEY}`, 'Content-Type':'application/json' },
+    body: JSON.stringify(args),
+    signal: ctrl.signal,
+  });
+  clearTimeout(t);
+  const txt = await r.text();
+  if(!r.ok) throw new Error(txt || ('rpc '+fn+' '+r.status));
+  return txt ? JSON.parse(txt) : null;
+}
+
+// Time helpers
+function t2m(t){ const[h,m]=t.split(':').map(Number); return h*60+m; }
+function m2t(m){ const h=Math.floor(m/60),mn=m%60,ap=h>=12?'PM':'AM',h12=h%12||12; return `${h12}:${mn.toString().padStart(2,'0')} ${ap}`; }
+function m2t24(m){ return `${Math.floor(m/60).toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}`; }
+function dateStr(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+// Open/close
+function openBookingModal() {
+  const sel = document.getElementById('bb-tech-select');
+  bm.techKey  = sel.value;
+  if (sel.value === 'no_preference') {
+    bm.techId   = null;
+    bm.techName = 'Best Available';
+  } else {
+    bm.techId   = TECH_DB[sel.value]?.id;
+    bm.techName = sel.options[sel.selectedIndex].text.split('—')[0].trim();
+  }
+  bm.services = [...bbServices];
+  bm.dur   = bbServices.reduce((s,svc)=>s+(SVC_DUR[svc.name]||30),0);
+  bm.price = bbServices.reduce((s,svc)=>{ const n=parseFloat((svc.price||'0').replace(/[^0-9.]/g,'')); return s+(n||0); },0);
+  bm.date=null; bm.slot=null; bm.slotRaw=null;
+
+  // Reset all buttons and form fields from previous booking
+  const confirmBtn = document.getElementById('bm-confirm-btn');
+  if(confirmBtn){ confirmBtn.disabled=false; confirmBtn.textContent='Confirm Booking 💅'; }
+  const dateNext = document.getElementById('bm-date-next');
+  if(dateNext) dateNext.disabled = true;
+  const timeNext = document.getElementById('bm-time-next');
+  if(timeNext) timeNext.disabled = true;
+  ['bm-name','bm-email','bm-phone','bm-notes'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.value=''; el.classList.remove('bm-err'); }
+  });
+
+  const phoneEl=document.getElementById('bm-phone');
+  if(phoneEl && !phoneEl.dataset.fmt){
+    phoneEl.dataset.fmt='1';
+    phoneEl.setAttribute('maxlength','14'); // fits (XXX) XXX-XXXX
+    phoneEl.addEventListener('input',()=>{
+      const d=phoneEl.value.replace(/\D/g,'').slice(0,10); // digits only, max 10
+      let out=d;
+      if(d.length>6) out=`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+      else if(d.length>3) out=`(${d.slice(0,3)}) ${d.slice(3)}`;
+      else if(d.length>0) out=`(${d}`;
+      phoneEl.value=out;
+      phoneEl.classList.remove('bm-err');
+    });
+  }
+
+  document.getElementById('bm-hdr-title').textContent = 'Book with ' + bm.techName;
+  document.getElementById('bm-hdr-sub').textContent = bm.services.map(s=>s.name).join(' · ');
+  calOff = 0;
+  bmBuildCal();
+  bmShowPane(1);
+  document.getElementById('bm-overlay').classList.add('bm-open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBookingModal() {
+  document.getElementById('bm-overlay').classList.remove('bm-open');
+  document.body.style.overflow = '';
+}
+
+// Progress
+function bmShowPane(n) {
+  bm.step = n;
+  document.querySelectorAll('.bm-pane').forEach(p=>p.classList.remove('bm-on'));
+  const pane = document.getElementById('bm-pane-'+n);
+  if(pane) pane.classList.add('bm-on');
+  for(let i=1;i<=4;i++){
+    const ps=document.getElementById('bm-ps-'+i);
+    const pl=document.getElementById('bm-pl-'+i);
+    if(!ps) continue;
+    ps.classList.remove('active','done');
+    if(i<n){ ps.classList.add('done'); ps.textContent='✓'; }
+    else if(i===n){ ps.classList.add('active'); if(i>1) ps.textContent=i; }
+    else ps.textContent=i;
+    if(pl) pl.classList.toggle('done',i<n);
+  }
+}
+
+// Calendar
+function bmBuildCal() {
+  const tech=TECH_DB[bm.techKey];
+  const today=new Date();
+  const maxD=new Date(today.getTime()+MAX_DAYS*864e5);
+  const vd=new Date(today.getFullYear(),today.getMonth()+calOff,1);
+  document.getElementById('bm-cal-month').textContent=MONTHS[vd.getMonth()]+' '+vd.getFullYear();
+  const grid=document.getElementById('bm-cal-grid');
+  grid.innerHTML='';
+  DAY_NAMES.forEach(d=>{ const el=document.createElement('div'); el.className='bm-cal-dn'; el.textContent=d; grid.appendChild(el); });
+  const first=new Date(vd.getFullYear(),vd.getMonth(),1).getDay();
+  for(let i=0;i<first;i++){ const el=document.createElement('div'); el.className='bm-day bm-empty'; grid.appendChild(el); }
+  const dim=new Date(vd.getFullYear(),vd.getMonth()+1,0).getDate();
+  for(let d=1;d<=dim;d++){
+    const date=new Date(vd.getFullYear(),vd.getMonth(),d);
+    const dk=DAY_KEYS[date.getDay()];
+    const el=document.createElement('button');
+    el.className='bm-day'; el.textContent=d;
+    const isPast=date<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const tooFar=date>maxD;
+    const works = bm.techKey === 'no_preference' ? true : tech?.days?.includes(dk);
+    if(isPast||tooFar||!works){ el.classList.add('bm-dis'); el.disabled=true; }
+    else {
+      if(date.toDateString()===today.toDateString()) el.classList.add('bm-today');
+      if(bm.date&&date.toDateString()===bm.date.toDateString()) el.classList.add('bm-sel');
+      el.onclick=()=>bmSelDate(date,el);
+    }
+    grid.appendChild(el);
+  }
+  document.getElementById('bm-cal-prev').disabled=calOff<=0;
+  document.getElementById('bm-cal-next').disabled=calOff>=1;
+}
+function bmCalPrev(){ calOff=Math.max(0,calOff-1); bmBuildCal(); }
+function bmCalNext(){ calOff=Math.min(1,calOff+1); bmBuildCal(); }
+function bmSelDate(date,el){
+  document.querySelectorAll('.bm-day').forEach(d=>d.classList.remove('bm-sel'));
+  el.classList.add('bm-sel');
+  bm.date=date; bm.slot=null;
+  document.getElementById('bm-date-next').disabled=false;
+}
+
+// Time slots
+async function bmGoToTime(){
+  bm.slot=null;
+  document.getElementById('bm-time-next').disabled=true;
+  document.getElementById('bm-time-sub').textContent=
+    bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('bm-dur-info').textContent=
+    '⏱ Your appointment will take approximately '+bm.dur+' minutes';
+  document.getElementById('bm-slots-wrap').innerHTML=
+    '<div class="bm-spin-wrap"><div class="bm-spinner"></div>Checking availability...</div>';
+  bmShowPane(2);
+  await bmLoadSlots();
+}
+
+function bmEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];}); }
+function bmState(icon,title,msg,btnLabel,btnAction){
+  return '<div class="bm-state"><div class="bm-state-ic">'+icon+'</div>'+
+    '<div class="bm-state-t">'+title+'</div>'+
+    '<div class="bm-state-m">'+msg+'</div>'+
+    (btnLabel?'<button class="bm-state-btn" onclick="'+btnAction+'">'+btnLabel+'</button>':'')+'</div>';
+}
+
+async function bmLoadSlots(){
+  const slotsWrap=document.getElementById('bm-slots-wrap');
+  const dk=DAY_KEYS[bm.date.getDay()];
+  const hrs=SALON_HRS[dk];
+  if(!hrs){ slotsWrap.innerHTML=bmState('🌙','Closed that day',"We're closed then — pick another date and we'll find you a time.",'Choose another day','bmShowPane(1)'); return; }
+  const open=t2m(hrs.o), close=t2m(hrs.c), need=bm.dur+BUFFER;
+  const ds=dateStr(bm.date);
+  let existing=[];
+  try {
+    const res = await dbRpc('get_availability', {
+      p_salon: SALON_ID, p_tech: bm.techId || null, p_date: ds
+    });
+    if(!Array.isArray(res)) throw new Error('bad_availability');
+    existing=res;
+  } catch(e){
+    console.error(e);
+    slotsWrap.innerHTML=bmState('⚠️',"Couldn't load times","Please check your connection and try again.",'Retry','bmLoadSlots()');
+    return;
+  }
+  const now=new Date();
+  const minTime=new Date(now.getTime()+MIN_HRS*3600000);
+  const slots=[];
+  for(let s=open;s+need<=close;s+=15){
+    const slotDT=new Date(bm.date);
+    slotDT.setHours(Math.floor(s/60),s%60,0,0);
+    if(slotDT<minTime) continue;
+    const sEnd=s+need;
+    let clash=false;
+    for(const b of existing){
+      const bs=t2m(b.start_time.slice(0,5)), be=t2m(b.end_time.slice(0,5));
+      if(s<be&&sEnd>bs){ clash=true; break; }
+    }
+    if(!clash) slots.push(s);
+  }
+  if(slots.length===0){
+    slotsWrap.innerHTML=bmState('📅','Fully booked that day',"No open times left here — try another day and we'll get you in. 🌸",'Choose another day','bmShowPane(1)');
+    return;
+  }
+  const grid=document.createElement('div');
+  grid.className='bm-slots';
+  slots.forEach(s=>{
+    const btn=document.createElement('button');
+    btn.className='bm-slot';
+    btn.textContent=m2t(s);
+    if(bm.slotRaw===m2t24(s)) btn.classList.add('bm-slot-sel');
+    btn.onclick=()=>{
+      document.querySelectorAll('.bm-slot').forEach(b=>b.classList.remove('bm-slot-sel'));
+      btn.classList.add('bm-slot-sel');
+      bm.slot=m2t(s); bm.slotRaw=m2t24(s);
+      document.getElementById('bm-time-next').disabled=false;
+    };
+    grid.appendChild(btn);
+  });
+  const wrap=document.getElementById('bm-slots-wrap');
+  wrap.innerHTML='';
+  wrap.appendChild(grid);
+}
+
+// Validate + next
+function bmNext(){
+  if(bm.step===3){
+    if(!bmValidate()) return;
+    bmBuildSummary();
+    bmShowPane(4);
+  }
+}
+function bmValidate(){
+  let ok=true;
+  ['bm-name','bm-email','bm-phone'].forEach(id=>{
+    const el=document.getElementById(id);
+    const empty=!el.value.trim();
+    el.classList.toggle('bm-err',empty);
+    if(empty) ok=false;
+  });
+  const em=document.getElementById('bm-email');
+  if(!bmEmailValid(em.value)){ em.classList.add('bm-err'); ok=false; }
+  const ph=document.getElementById('bm-phone');
+  const digits=(ph.value.match(/\d/g)||[]).length;
+  if(digits!==10){ ph.classList.add('bm-err'); ok=false; }
+  return ok;
+}
+function bmEmailValid(v){
+  const email=(v||'').trim().toLowerCase();
+  // must look like name@domain.tld (letters-only TLD, 2+ chars)
+  if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(email)) return false;
+  const domain=email.split('@')[1];
+  const tld=domain.split('.').pop();
+  // no real TLD repeats a letter 3+ times (catches gmail.commmmm, .coooom, etc.)
+  if(/(.)\1\1/.test(tld)) return false;
+  // gmail has exactly one correct spelling — catch gmail.con, gmail.co, gmail.cm...
+  const stem=domain.split('.')[0];
+  if(stem==='gmail' && domain!=='gmail.com') return false;
+  if(stem==='googlemail' && domain!=='googlemail.com') return false;
+  return true;
+}
+function bmBuildSummary(){
+  const d=bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('bm-s-date').textContent=d;
+  document.getElementById('bm-s-time').textContent=bm.slot;
+  document.getElementById('bm-s-tech').textContent=bm.techName;
+  document.getElementById('bm-s-svcs').textContent=bm.services.map(s=>s.name).join(', ');
+  document.getElementById('bm-s-dur').textContent=bm.dur+' minutes';
+  document.getElementById('bm-s-name').textContent=document.getElementById('bm-name').value;
+  document.getElementById('bm-s-email').textContent=document.getElementById('bm-email').value;
+  document.getElementById('bm-s-price').textContent=bm.price>0?'From $'+bm.price.toFixed(2):'Varies by service';
+}
+
+// Confirm
+async function bmConfirm(){
+  const btn=document.getElementById('bm-confirm-btn');
+  const cerr=document.getElementById('bm-confirm-err');
+  if(cerr){ cerr.textContent=''; cerr.classList.remove('show'); }
+  btn.disabled=true; btn.textContent='Saving...';
+  const name=document.getElementById('bm-name').value.trim();
+  const email=document.getElementById('bm-email').value.trim();
+  const phone=document.getElementById('bm-phone').value.trim();
+  const notes=document.getElementById('bm-notes').value.trim();
+  const ds=dateStr(bm.date);
+  const startM=t2m(bm.slotRaw);
+  const endM=startM+bm.dur+BUFFER;
+  try {
+    // Create customer + booking + services in one safe call
+    const services = bm.services.map(svc => ({
+      name: svc.name,
+      price: parseFloat((svc.price||'0').replace(/[^0-9.]/g,''))||0,
+      duration_minutes: SVC_DUR[svc.name] || 30
+    }));
+    const bookId = await dbRpc('create_booking', {
+      p_salon: SALON_ID, p_name: name, p_email: email, p_phone: phone,
+      p_tech: bm.techId || null, p_date: ds,
+      p_start: m2t24(startM)+':00', p_end: m2t24(endM)+':00',
+      p_duration: bm.dur, p_price: bm.price, p_notes: notes,
+      p_services: services
+    });
+    if(!bookId) throw new Error('Booking failed');
+
+    // Show success
+    const dd=bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    document.getElementById('bm-suc-det').innerHTML=
+      `📅 ${bmEsc(dd)} at ${bmEsc(bm.slot)}<br>👤 With ${bmEsc(bm.techName)}<br>💅 ${bmEsc(bm.services.map(s=>s.name).join(', '))}<br>⏱ ~${bm.dur} minutes<br>📧 ${bmEsc(email)}`;
+    bmShowPane(5);
+    bookingBarClear();
+  } catch(e){
+    console.error(e);
+    btn.disabled=false; btn.textContent='Confirm Booking 💅';
+    const err=document.getElementById('bm-confirm-err');
+    const msg=String(e.message||'');
+    if(msg.includes('SLOT_TAKEN')){
+      err.innerHTML='⚠️ That time was just booked by someone else. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Pick another time →</a>';
+    } else if(msg.includes('NO_TECH_AVAILABLE')){
+      err.innerHTML='⚠️ No technician is free for that exact time. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Choose another time →</a> or call (603) 621-7469.';
+    } else {
+      err.textContent='⚠️ Something went wrong. Please try again, or call (603) 621-7469 to book.';
+    }
+    err.classList.add('show');
+  }
+}
+
+
+// ===== STAFF SERVICE PICKER MODAL =====
+var TECH_SERVICES = {
+  kristy: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],['Full Set Pink & White','$55+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Gel Builder','$60+'],['Full Set Ombre','$65+'],
+    ['Dipping Powder','$55+'],['Dipping Pink & White','$60+'],['Dipping Ombre','$65+'],
+    ['Gel X','$45+'],['Acrylic Refill','$45+'],
+    ['Eyebrows Wax','$15+'],['Lip or Chin Wax','$10'],['Full Face Wax','$15+'],
+    ['Underarms Wax','$40+'],['Full Arms Wax','$50+'],['Full Legs Wax','$65+'],
+    ['Bikini Wax','$40+'],['Brazilian Wax','$55+'],
+    ['Hybrid Full Set','$150'],['Volume Full Set','$170'],['Mega Volume Full Set','$190'],
+    ['Lash Fill','$80+'],['Lash Lift','$85'],['Microblading','$500+'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Art & Design','$7+/nail'],['Nail Repair','$5+'],
+  ],
+  kevin: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],['Full Set Pink & White','$55+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Gel Builder','$60+'],['Full Set Ombre','$65+'],
+    ['Dipping Powder','$55+'],['Dipping Pink & White','$60+'],['Dipping Ombre','$65+'],
+    ['Gel X','$45+'],['Acrylic Refill','$45+'],
+    ['Nail Art & Design','$7+/nail'],['French Manicure by Hand','$15'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Repair','$5+'],['Paraffin Hands','$10'],["Children's Manicure",'$20'],
+  ],
+  peter: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],['Full Set Pink & White','$55+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Gel Builder','$60+'],['Full Set Ombre','$65+'],
+    ['Dipping Powder','$55+'],['Dipping Pink & White','$60+'],['Dipping Ombre','$65+'],
+    ['Gel X','$45+'],['Acrylic Refill','$45+'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Art & Design','$7+/nail'],['Nail Repair','$5+'],
+    ['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  tina: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Gel Builder','$60+'],['Full Set Ombre','$65+'],
+    ['Dipping Powder','$55+'],['Dipping Ombre','$65+'],['Acrylic Refill','$45+'],
+    ['Eyebrows Wax','$15+'],['Lip or Chin Wax','$10'],['Full Face Wax','$15+'],
+    ['Underarms Wax','$40+'],['Full Arms Wax','$50+'],['Full Legs Wax','$65+'],
+    ['Bikini Wax','$40+'],['Brazilian Wax','$55+'],
+    ['Henna','$20+'],['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Art & Design','$7+/nail'],['Nail Repair','$5+'],
+    ['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  alex: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Dipping Powder','$55+'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Repair','$5+'],['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  sweety: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Dipping Powder','$55+'],['Acrylic Refill','$45+'],
+    ['Henna','$20+'],
+    ['Eyebrows Wax','$15+'],['Lip or Chin Wax','$10'],['Full Face Wax','$15+'],
+    ['Underarms Wax','$40+'],['Full Arms Wax','$50+'],['Full Legs Wax','$65+'],
+    ['Bikini Wax','$40+'],['Brazilian Wax','$55+'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Repair','$5+'],['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  sony: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Henna','$20+'],['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Repair','$5+'],['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  ammu: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Gel Builder','$60+'],
+    ['Dipping Powder','$55+'],['Dipping Ombre','$65+'],['Acrylic Refill','$45+'],
+    ['Henna','$20+'],['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Art & Design','$7+/nail'],['Nail Repair','$5+'],
+    ['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  kim: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Full Set White Tips','$50+'],['Full Set Pink Only','$45+'],['Full Set Pink & White','$55+'],
+    ['Full Set Acrylic w/Gel','$60+'],['Full Set Ombre','$65+'],
+    ['Dipping Powder','$55+'],['Dipping Pink & White','$60+'],['Dipping Ombre','$65+'],
+    ['Acrylic Refill','$45+'],
+    ['Eyebrows Wax','$15+'],['Lip or Chin Wax','$10'],['Full Face Wax','$15+'],
+    ['Underarms Wax','$40+'],['Full Arms Wax','$50+'],['Full Legs Wax','$65+'],
+    ['Bikini Wax','$40+'],['Brazilian Wax','$55+'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Art & Design','$7+/nail'],['Nail Repair','$5+'],
+    ['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+  lori: [
+    ['Natural Manicure','$25'],['Spa Me Perfect Manicure','$40'],
+    ['Scrub Me Pedicure','$45'],['I Am Classy Pedicure','$38'],
+    ['Spa Me Perfect Pedicure','$55'],['Rock and Roll Pedicure','$75'],
+    ['I Am So Beautiful Pedicure','$85'],
+    ['Regular Polish','$15'],['Gel/Shellac Change','$30'],
+    ['Nail Repair','$5+'],['Paraffin Hands','$10'],['Paraffin Feet','$15'],
+    ["Children's Manicure",'$20'],["Children's Pedicure",'$35'],
+  ],
+};
+
+var TECH_INITIALS = { kristy:'K', kevin:'K', sweety:'S', ammu:'A', peter:'P', tina:'T', alex:'A', sony:'S', kim:'K', lori:'L' };
+// All bookings use our own booking system
+
+var currentTechId = '';
+var modalSelected = [];
+
+function openStaffModal(techId, techName) {
+  currentTechId = techId;
+  modalSelected = [];
+  document.getElementById('modal-tech-name').textContent = techName;
+  document.getElementById('modal-avatar').textContent = TECH_INITIALS[techId] || techName[0];
+  document.getElementById('modal-book-btn').disabled = true;
+  document.getElementById('modal-summary').style.display = 'none';
+  document.getElementById('modal-summary-text').textContent = '';
+
+  var container = document.getElementById('modal-services-container');
+  container.innerHTML = '';
+  (TECH_SERVICES[techId] || []).forEach(function(svc, i) {
+    var row = document.createElement('label');
+    row.className = 'modal-service-row';
+    row.innerHTML =
+      '<input type="checkbox" id="msvc-' + i + '" value="' + svc[0] + '" onchange="modalToggle(this)">' +
+      '<span class="modal-svc-name">' + svc[0] + '</span>' +
+      '<span class="modal-svc-price">' + svc[1] + '</span>';
+    container.appendChild(row);
+  });
+
+  document.getElementById('staff-modal-overlay').classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStaffModal() {
+  document.getElementById('staff-modal-overlay').classList.remove('modal-open');
+  document.body.style.overflow = '';
+}
+
+function modalToggle(checkbox) {
+  var row = checkbox.closest('.modal-service-row');
+  if (checkbox.checked) {
+    modalSelected.push(checkbox.value);
+    row.classList.add('modal-svc-selected');
+  } else {
+    modalSelected = modalSelected.filter(function(s) { return s !== checkbox.value; });
+    row.classList.remove('modal-svc-selected');
+  }
+  var btn = document.getElementById('modal-book-btn');
+  var summary = document.getElementById('modal-summary');
+  var summaryText = document.getElementById('modal-summary-text');
+  if (modalSelected.length > 0) {
+    btn.disabled = false;
+    btn.textContent = '📅 Book ' + modalSelected.length + ' Service' + (modalSelected.length > 1 ? 's' : '') + ' with ' + document.getElementById('modal-tech-name').textContent + ' →';
+    summary.style.display = 'block';
+    summaryText.textContent = modalSelected.join(' · ');
+  } else {
+    btn.disabled = true;
+    btn.textContent = '📅 Continue to Booking →';
+    summary.style.display = 'none';
+  }
+}
+
+function staffModalBook() {
+  if (modalSelected.length === 0 || !currentTechId) return;
+
+  // Build bbServices from selected services in modal
+  bbServices = modalSelected.map(function(name) {
+    var svcData = (TECH_SERVICES[currentTechId] || []).find(function(s){ return s[0] === name; });
+    return { name: name, price: svcData ? svcData[1] : '' };
+  });
+
+  // Set technician in booking bar dropdown
+  var sel = document.getElementById('bb-tech-select');
+  if (sel) { sel.value = currentTechId; sel.classList.remove('bb-error'); }
+
+  // Update booking bar display
+  bookingBarUpdate();
+
+  // Close staff modal and open booking modal
+  closeStaffModal();
+  openBookingModal();
+}
+
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeStaffModal();
+});
+
+
+// ===== SERVICE BOOKING BAR =====
+let bbServices = []; // [{name, price}]
+
+// Inject "+" buttons onto every service row after DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.service-row').forEach(function(row) {
+    var header = row.querySelector('.service-header');
+    var expandBtn = header ? header.querySelector('.expand-btn') : null;
+    if (!header) return;
+
+    // Get service name (strip the "+$X for Y" note if present)
+    var nameEl = row.querySelector('.service-name');
+    if (!nameEl) return;
+    var rawName = nameEl.childNodes[0] ? nameEl.childNodes[0].textContent.trim() : nameEl.textContent.trim();
+    var priceEl = row.querySelector('.service-price');
+    var price = priceEl ? priceEl.textContent.trim() : '';
+
+    var btn = document.createElement('button');
+    btn.className = 'svc-add-btn';
+    btn.innerHTML = '+';
+    btn.title = 'Add ' + rawName + ' to booking';
+    btn.setAttribute('data-name', rawName);
+    btn.setAttribute('data-price', price);
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      bookingBarToggle(btn, rawName, price);
+    });
+
+    header.appendChild(btn);
+  });
+});
+
+function bookingBarToggle(btn, name, price) {
+  var idx = bbServices.findIndex(function(s) { return s.name === name; });
+  if (idx >= 0) {
+    bbServices.splice(idx, 1);
+    btn.innerHTML = '+';
+    btn.classList.remove('svc-added');
+    btn.title = 'Add ' + name + ' to booking';
+  } else {
+    bbServices.push({ name: name, price: price });
+    btn.innerHTML = '✓';
+    btn.classList.add('svc-added');
+    btn.title = 'Remove ' + name + ' from booking';
+  }
+  bookingBarUpdate();
+}
+
+function bookingBarUpdate() {
+  var bar = document.getElementById('booking-bar');
+  var list = document.getElementById('bb-services-list');
+  var countBadge = document.getElementById('bb-count');
+  if (bbServices.length === 0) {
+    bar.classList.remove('bb-visible');
+    return;
+  }
+  bar.classList.add('bb-visible');
+  countBadge.textContent = bbServices.length;
+  list.textContent = bbServices.map(function(s) { return s.name + ' (' + s.price + ')'; }).join('  ·  ');
+}
+
+function bookingBarBook() {
+  var sel = document.getElementById('bb-tech-select');
+  if (!sel.value) { sel.classList.add('bb-error'); sel.focus(); return; }
+  if (bbServices.length === 0) return;
+  openBookingModal();
+}
+function bookingBarClear() {
+  bbServices = [];
+  document.querySelectorAll('.svc-add-btn.svc-added').forEach(function(btn) {
+    btn.innerHTML = '+';
+    btn.classList.remove('svc-added');
+  });
+  document.getElementById('bb-tech-select').value = '';
+  document.getElementById('bb-tech-select').classList.remove('bb-error');
+  document.getElementById('booking-bar').classList.remove('bb-visible');
+}
+
+
+// ===== WIZARD DATA =====
+const WIZARD_DATA = {
+  categories: [
+    { id: 'nails',        label: '💅 Nail Care' },
+    { id: 'enhancements', label: '✨ Enhancements' },
+    { id: 'polish',       label: '🎨 Polish & Art' },
+    { id: 'lashes',       label: '👁 Lashes & Brows' },
+    { id: 'waxing',       label: '🌸 Waxing' },
+    { id: 'addons',       label: '⭐ Add-ons' },
+  ],
+  services: {
+    nails: [
+      { label: 'Natural Manicure',         price: '$25',    tech: 'sweety' },
+      { label: 'Spa Me Perfect Manicure',  price: '$40',    tech: 'sweety' },
+      { label: 'Scrub Me Pedicure',        price: '$45',    tech: 'sweety' },
+      { label: 'I Am Classy Pedicure',     price: '$38',    tech: 'sweety' },
+      { label: 'Spa Me Perfect Pedicure',  price: '$55',    tech: 'sweety' },
+      { label: 'Rock and Roll Pedicure',   price: '$75',    tech: 'sweety' },
+      { label: 'I Am So Beautiful Pedicure', price: '$85',  tech: 'sweety' },
+    ],
+    enhancements: [
+      { label: 'Full Set White Tips',      price: '$50+',   tech: 'kristy' },
+      { label: 'Full Set Pink & White',    price: '$55+',   tech: 'kristy' },
+      { label: 'Full Set Acrylic w/Gel',   price: '$60+',   tech: 'kristy' },
+      { label: 'Full Set Ombre',           price: '$65+',   tech: 'kristy' },
+      { label: 'Dipping Powder',           price: '$55+',   tech: 'kristy' },
+      { label: 'Gel Builder',              price: '$60+',   tech: 'kristy' },
+      { label: 'Acrylic Refill',           price: '$45+',   tech: 'kristy' },
+    ],
+    polish: [
+      { label: 'Regular Polish',           price: '$15',    tech: 'kevin'  },
+      { label: 'French Manicure by Hand',  price: '$15',    tech: 'kevin'  },
+      { label: 'Gel/Shellac Change',       price: '$30',    tech: 'kevin'  },
+      { label: 'Nail Art & Design',        price: '$7+/nail',tech: 'kevin' },
+      { label: 'Remove Gel/Shellac',       price: '$15',    tech: 'kristy' },
+      { label: 'Remove Dipping Powder',    price: '$15',    tech: 'kristy' },
+    ],
+    lashes: [
+      { label: 'Hybrid Full Set',          price: '$150',   tech: 'ammu'   },
+      { label: 'Volume Full Set',          price: '$170',   tech: 'ammu'   },
+      { label: 'Mega Volume Full Set',     price: '$190',   tech: 'ammu'   },
+      { label: 'Lash Fill (2-week)',        price: '$80',    tech: 'ammu'   },
+      { label: 'Lash Fill (3-week)',        price: '$90',    tech: 'ammu'   },
+      { label: 'Lash Lift',                price: '$85',    tech: 'ammu'   },
+      { label: 'Microblading',             price: '$500+',  tech: 'ammu'   },
+    ],
+    waxing: [
+      { label: 'Eyebrows',                 price: '$15+',   tech: 'sweety' },
+      { label: 'Lip or Chin',              price: '$10',    tech: 'sweety' },
+      { label: 'Full Face',                price: '$15+',   tech: 'sweety' },
+      { label: 'Underarms',                price: '$40+',   tech: 'sweety' },
+      { label: 'Full Arms',                price: '$50+',   tech: 'sweety' },
+      { label: 'Half Legs',                price: '$40+',   tech: 'sweety' },
+      { label: 'Full Legs',                price: '$65+',   tech: 'sweety' },
+      { label: 'Bikini',                   price: '$40+',   tech: 'sweety' },
+      { label: 'Brazilian/Playboy',        price: '$55+',   tech: 'sweety' },
+    ],
+    addons: [
+      { label: 'Paraffin Hands',           price: '$10',    tech: 'sweety' },
+      { label: 'Paraffin Feet',            price: '$15',    tech: 'sweety' },
+      { label: 'Nail Repair',              price: '$5+',    tech: 'kristy' },
+      { label: "Children's Manicure",      price: '$20',    tech: 'sweety' },
+      { label: "Children's Pedicure",      price: '$35',    tech: 'sweety' },
+    ],
+  },
+  technicians: {
+    kristy: { name: 'Kristy', initial: 'K', specialty: 'Nail Enhancements & Pedicures' },
+    kevin:  { name: 'Kevin',  initial: 'K', specialty: 'Nail Art & Design Specialist' },
+    sweety: { name: 'Sweety', initial: 'S', specialty: 'Pedicures, Waxing & Nail Care' },
+    ammu:   { name: 'Ammu',   initial: 'A', specialty: 'Lash Extensions & Microblading' },
+  }
+};
+
+// ===== WIZARD STATE =====
+let wizardActive = false;
+
+function startWizard() {
+  wizardActive = true;
+  const sugg = document.getElementById('ivySuggestions');
+  if (sugg) sugg.style.display = 'none';
+  appendWizardMsg('category', null);
+}
+
+function appendWizardMsg(step, data) {
+  const msgBox = document.getElementById('ivyMessages');
+  const div = document.createElement('div');
+  div.className = 'msg msg-bot wizard-msg';
+
+  if (step === 'category') {
+    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">What would you like to book today? 💅</div>
+      <div class="wizard-chips">${WIZARD_DATA.categories.map(c =>
+        `<button class="wizard-chip" onclick="wizardPickCategory('${c.id}','${c.label.replace(/'/g,"&apos;")}')">${c.label}</button>`
+      ).join('')}</div>`;
+
+  } else if (step === 'service') {
+    const services = WIZARD_DATA.services[data.catId] || [];
+    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">Which service? ✨</div>
+      <div class="wizard-chips">${services.map(s =>
+        `<button class="wizard-chip" onclick="wizardPickService('${s.label.replace(/'/g,"&apos;")}','${s.price}','${s.tech}')">${s.label} <span style="color:var(--gold-lt);font-size:11px;">${s.price}</span></button>`
+      ).join('')}</div>
+      <button class="wizard-back-btn" onclick="wizardBack()">← Back</button>`;
+
+  } else if (step === 'technician') {
+    const t = WIZARD_DATA.technicians[data.techId];
+    div.innerHTML = `<div style="margin-bottom:8px;font-weight:500;">Your specialist for <em>${data.service}</em>:</div>
+      <div class="wizard-tech-card" onclick="wizardBook('${data.techId}','${data.service.replace(/'/g,"&apos;")}')">
+        <div class="wizard-tech-avatar">${t.initial}</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:#fff;">${t.name}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4;">${t.specialty}</div>
+        </div>
+        <button class="wizard-book-btn">Book →</button>
+      </div>
+      <button class="wizard-back-btn" onclick="wizardBack()">← Back</button>`;
+  }
+
+  msgBox.appendChild(div);
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+function wizardAddUserMsg(text) {
+  const msgBox = document.getElementById('ivyMessages');
+  const d = document.createElement('div');
+  d.className = 'msg msg-user';
+  d.textContent = text;
+  msgBox.appendChild(d);
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
+function wizardPickCategory(catId, catLabel) {
+  document.querySelectorAll('.wizard-msg:last-of-type .wizard-chip').forEach(c => c.disabled = true);
+  wizardAddUserMsg(catLabel);
+  setTimeout(() => appendWizardMsg('service', { catId, catLabel }), 380);
+}
+
+function wizardPickService(service, price, techId) {
+  document.querySelectorAll('.wizard-msg:last-of-type .wizard-chip').forEach(c => c.disabled = true);
+  wizardAddUserMsg(service + '  ' + price);
+  setTimeout(() => appendWizardMsg('technician', { service, price, techId }), 380);
+}
+
+function wizardBook(techId, service) {
+  const t = WIZARD_DATA.technicians[techId];
+  // Set services in booking bar
+  var names = service.split(' & ');
+  bbServices = names.map(function(name) {
+    var trimmed = name.trim();
+    var list = TECH_SERVICES[techId] || [];
+    var found = list.find(function(s){ return s[0] === trimmed; });
+    return { name: trimmed, price: found ? found[1] : '' };
+  });
+  // Set technician
+  var sel = document.getElementById('bb-tech-select');
+  if (sel) { sel.value = techId; sel.classList.remove('bb-error'); }
+  bookingBarUpdate();
+  // Show message then open booking modal
+  const msgBox = document.getElementById('ivyMessages');
+  const d = document.createElement('div');
+  d.className = 'msg msg-bot';
+  d.textContent = 'Opening our booking system for ' + t.name + ' 💅 Pick your date and time!';
+  msgBox.appendChild(d);
+  msgBox.scrollTop = msgBox.scrollHeight;
+  wizardActive = false;
+  const sugg = document.getElementById('ivySuggestions');
+  if (sugg) { sugg.style.display = 'flex'; sugg.style.flexDirection = 'column'; }
+  setTimeout(function() { closeIvyChat(); openBookingModal(); }, 800);
+}
+
+function wizardBack() {
+  const msgBox = document.getElementById('ivyMessages');
+  // Remove last wizard bot message
+  const wizardMsgs = msgBox.querySelectorAll('.wizard-msg');
+  if (wizardMsgs.length > 0) wizardMsgs[wizardMsgs.length - 1].remove();
+  // Remove last user message if it was a wizard selection
+  const allMsgs = msgBox.querySelectorAll('.msg');
+  if (allMsgs.length > 0 && allMsgs[allMsgs.length - 1].classList.contains('msg-user')) {
+    allMsgs[allMsgs.length - 1].remove();
+  }
+  // Re-enable chips in the now-visible wizard step
+  const remaining = msgBox.querySelectorAll('.wizard-msg');
+  if (remaining.length > 0) {
+    remaining[remaining.length - 1].querySelectorAll('.wizard-chip').forEach(c => c.disabled = false);
+  } else {
+    wizardActive = false;
+    const sugg = document.getElementById('ivySuggestions');
+    if (sugg) { sugg.style.display = 'flex'; sugg.style.flexDirection = 'column'; }
+  }
+}
+
+// ===== DRAGGABLE WIDGET =====
+function initDrag() {
+  const widget = document.getElementById('ivy-widget');
+  const hdr = document.querySelector('.ivy-widget-hdr');
+  if (!widget || !hdr) return;
+  let dragging = false, ox = 0, oy = 0;
+
+  hdr.addEventListener('mousedown', e => {
+    if (e.target.closest('.ivy-close-btn')) return;
+    dragging = true;
+    const r = widget.getBoundingClientRect();
+    // Switch to top/left
+    widget.style.top    = r.top + 'px';
+    widget.style.left   = r.left + 'px';
+    widget.style.bottom = 'auto';
+    widget.style.right  = 'auto';
+    widget.style.transition = 'opacity 0.2s, transform 0.2s';
+    ox = e.clientX - r.left;
+    oy = e.clientY - r.top;
+    hdr.classList.add('dragging');
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const x = Math.max(0, Math.min(e.clientX - ox, window.innerWidth  - widget.offsetWidth));
+    const y = Math.max(0, Math.min(e.clientY - oy, window.innerHeight - widget.offsetHeight));
+    widget.style.left = x + 'px';
+    widget.style.top  = y + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    hdr.classList.remove('dragging');
+  });
+}
+document.addEventListener('DOMContentLoaded', initDrag);
+
+</script>
+
+
+<!-- GALLERY -->
+<div class="gold-rule"></div>
+<div class="section" id="gallery">
+  <div class="section-eyebrow">Our Work</div>
+  <h2>Results that<br>speak for themselves.</h2>
+  <p class="section-sub">Every set is crafted with care, precision, and premium products. Browse some of our recent work below.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Nail Enhancement" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">💅</div>
+      <div style="font-size:12px;font-weight:500;">Nail Enhancement</div>
+    </div>
+    <div class="gallery-img-label">Nail Enhancement</div>
+  </div>
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1619607146034-5a05296c8f9a?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Ombre Set" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">✨</div>
+      <div style="font-size:12px;font-weight:500;">Ombre Set</div>
+    </div>
+    <div class="gallery-img-label">Ombre Set</div>
+  </div>
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Lash Extensions" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">🌸</div>
+      <div style="font-size:12px;font-weight:500;">Lash Extensions</div>
+    </div>
+    <div class="gallery-img-label">Lash Extensions</div>
+  </div>
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Nail Art" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">💎</div>
+      <div style="font-size:12px;font-weight:500;">Nail Art</div>
+    </div>
+    <div class="gallery-img-label">Nail Art</div>
+  </div>
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Dipping Powder" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">🌺</div>
+      <div style="font-size:12px;font-weight:500;">Dipping Powder</div>
+    </div>
+    <div class="gallery-img-label">Dipping Powder</div>
+  </div>
+  <div class="gallery-img-card">
+    <img src="https://images.unsplash.com/photo-1550159930-40066082a4fc?w=400&h=400&fit=crop&auto=format&q=80"
+         alt="Spa Pedicure" loading="lazy"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="gallery-img-fallback" style="display:none;">
+      <div style="font-size:32px;margin-bottom:6px;">👑</div>
+      <div style="font-size:12px;font-weight:500;">Spa Pedicure</div>
+    </div>
+    <div class="gallery-img-label">Spa Pedicure</div>
+  </div>
+  </div>
+  <p style="font-size:13px;color:var(--text-muted);text-align:center;margin-top:20px;">📸 Real client photos coming soon — ask us to see our portfolio in store!</p>
+</div>
+
+<!-- REVIEWS -->
+<div class="gold-rule"></div>
+<div style="background:var(--gold-xs);padding:90px 5%;">
+<div style="max-width:1200px;margin:0 auto;">
+  <div class="section-eyebrow">Client Love</div>
+  <h2>What our clients say.</h2>
+  <p class="section-sub">Don't just take our word for it — here's what our clients have to say about their Red Persimmon experience.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Absolutely love this place! Kristy did my nails and they came out perfect. The salon is clean, cozy, and everyone is so friendly. My new go-to nail salon in Manchester!"</p>
+      <div class="review-author">
+        <div class="review-avatar">S</div>
+        <div><div class="review-name">Sarah M.</div><div class="review-source">Google Review</div></div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Ammu did my lash extensions and I'm obsessed! They look so natural and full. I've been getting fills every 2 weeks and she always makes them look brand new. Highly recommend!"</p>
+      <div class="review-author">
+        <div class="review-avatar">J</div>
+        <div><div class="review-name">Jessica L.</div><div class="review-source">Google Review</div></div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"The Rock and Roll pedicure is life-changing. Hot stones, the whole treatment — I left feeling completely rejuvenated. Sweety is so thorough and gentle. Worth every penny!"</p>
+      <div class="review-author">
+        <div class="review-avatar">M</div>
+        <div><div class="review-name">Maria R.</div><div class="review-source">Google Review</div></div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Kevin is an artist! I showed him a design I wanted and he nailed it perfectly. The attention to detail is incredible. I get so many compliments on my nails. Will never go anywhere else!"</p>
+      <div class="review-author">
+        <div class="review-avatar">A</div>
+        <div><div class="review-name">Ashley T.</div><div class="review-source">Google Review</div></div>
+      </div>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:36px;">
+    <a href="https://maps.google.com/?q=Red+Persimmon+Nails+Spa+Manchester+NH" target="_blank" class="btn-ghost">Leave us a Google Review ★</a>
+  </div>
+</div>
+</div>
+
+<!-- FAQ -->
+<div class="gold-rule"></div>
+<div class="section" id="faq">
+  <div class="section-eyebrow">FAQ</div>
+  <h2>Questions we<br>hear all the time.</h2>
+  <div style="max-width:700px;">
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you take walk-ins? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! Walk-ins are always welcome at Red Persimmon. However, booking ahead guarantees your preferred technician and time slot. For busy periods like weekends, we recommend booking in advance to avoid wait times.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How long does a full set of nails take? <span class="faq-icon">+</span></div>
+      <div class="faq-a">A full set typically takes 60–90 minutes depending on the style and complexity. Simple sets take closer to an hour, while detailed nail art or ombre sets may take longer. We recommend booking a 90-minute slot for your first visit.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I request a specific technician? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Absolutely! You can book directly with your preferred technician — Kristy, Kevin, Sweety, or Ammu — using their individual booking links on this page. You can also ask Ivy our AI assistant to help match you with the right technician for your service.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is your cancellation policy? <span class="faq-icon">+</span></div>
+      <div class="faq-a">We appreciate as much notice as possible if you need to cancel or reschedule. For groups of 6 or more, we ask for at least 24 hours notice. For individual appointments, please try to give us a heads up so we can offer the slot to another client.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you offer gift certificates? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! Gift certificates are available in any amount and never expire. They make a perfect gift for birthdays, holidays, Mother's Day, or any special occasion. You can purchase them in store or by calling us at (603) 621-7469.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How long do lash extensions last? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Lash extensions typically last 2–3 weeks before needing a fill, depending on your natural lash growth cycle and how well you care for them. We recommend fills every 2 weeks to keep them looking full and beautiful. Avoid oil-based products near your eyes to maximize longevity.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there parking available? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! Free parking is available right at our location — 1500 S. Willow Street, across from American Eagle and close to the Food Court. We're easy to find!</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you do children's nails? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! We offer children's manicures ($20) and pedicures ($35) for kids aged 10 and under. It's a wonderful experience for mother-daughter outings or special occasions. Our technicians are patient and gentle with our youngest clients.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GOOGLE MAPS -->
+<div class="gold-rule"></div>
+<div style="background:var(--charcoal);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:stretch;">
+    <div style="padding:60px 5%;">
+      <div class="section-eyebrow" style="color:var(--gold);">Find Us</div>
+      <h2 style="color:#fff;margin-bottom:16px;">Come visit us<br>in Manchester.</h2>
+      <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.8;margin-bottom:28px;">We're conveniently located on South Willow Street, across from American Eagle and close to the Food Court — easy to find with plenty of free parking.</p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📍</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Address</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.6);">1500 S. Willow Street<br>Across from American Eagle · Near Food Court<br>Manchester, NH 03103</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">🕐</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Hours</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.6);">Mon–Thu: 10am–8pm<br>Fri–Sat: 10am–9pm<br>Sun: 11am–6pm</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📞</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Phone</div>
+            <a href="tel:6036217469" style="font-size:14px;color:var(--gold-lt);text-decoration:none;">(603) 621-7469</a>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:28px;">
+        <a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" target="_blank" class="btn-gold">Get Directions →</a>
+      </div>
+    </div>
+    <div style="min-height:400px;">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.1234!2d-71.4628!3d42.9634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s1500+S+Willow+St%2C+Manchester%2C+NH+03103!5e0!3m2!1sen!2sus!4v1234567890"
+        width="100%" height="100%" style="border:0;display:block;min-height:400px;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+
+<!-- IVY FLOATING WIDGET (opened by hero card button) -->
+<div id="ivy-widget">
+  <div class="ivy-widget-hdr">
+    <div class="chat-avatar" style="width:36px;height:36px;font-size:18px;flex-shrink:0;">I</div>
+    <div>
+      <div style="font-size:15px;font-weight:600;color:#fff;font-family:'Cormorant Garamond',serif;line-height:1.2;">Aivy — Red Persimmon</div>
+      <div class="chat-header-status">Online · 24/7 assistant</div>
+    </div>
+    <button class="ivy-close-btn" onclick="closeIvyChat()">✕</button>
+  </div>
+  <div id="ivyMessages" class="chat-messages" style="height:300px;">
+    <div class="msg msg-bot">Welcome to Red Persimmon! 💅 I'm Aivy, your personal assistant. Ask me about services, pricing, or I can book you with the perfect technician. How can I help?</div>
+  </div>
+  <div id="ivyTyping" class="ivy-typing">
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  </div>
+  <div id="ivySuggestions" style="padding:10px 12px;background:rgba(92,15,15,0.8);display:flex;flex-direction:column;gap:8px;">
+    <button class="wizard-start-btn" onclick="startWizard()">📅 Book Step-by-Step →</button>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="suggestion" onclick="sendIvySuggestion(this)">Nail prices</button>
+      <button class="suggestion" onclick="sendIvySuggestion(this)">Hours & location</button>
+      <button class="suggestion" onclick="sendIvySuggestion(this)">Lash extensions</button>
+      <button class="suggestion" onclick="sendIvySuggestion(this)">Waxing</button>
+    </div>
+  </div>
+  <div class="chat-footer">
+    <input class="chat-input" id="ivyInput" type="text" placeholder="Ask Aivy anything...">
+    <button class="chat-send" onclick="sendIvyMessage()">→</button>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div id="bm-overlay" onclick="if(event.target===this)closeBookingModal()">
+  <div id="bm-box">
+    <div class="bm-hdr">
+      <div style="overflow:hidden;">
+        <div class="bm-hdr-title" id="bm-hdr-title">Book Appointment</div>
+        <div class="bm-hdr-sub" id="bm-hdr-sub"></div>
+      </div>
+      <button class="bm-hdr-close" onclick="closeBookingModal()">✕</button>
+    </div>
+    <div class="bm-prog">
+      <div class="bm-ps active" id="bm-ps-1">1</div>
+      <div class="bm-pl" id="bm-pl-1"></div>
+      <div class="bm-ps" id="bm-ps-2">2</div>
+      <div class="bm-pl" id="bm-pl-2"></div>
+      <div class="bm-ps" id="bm-ps-3">3</div>
+      <div class="bm-pl" id="bm-pl-3"></div>
+      <div class="bm-ps" id="bm-ps-4">4</div>
+    </div>
+
+    <!-- PANE 1: DATE -->
+    <div class="bm-pane bm-on" id="bm-pane-1">
+      <h3>Pick a date</h3>
+      <p class="bm-sub">Available days shown for your chosen technician</p>
+      <div class="bm-cal-hdr">
+        <button class="bm-cal-nav" id="bm-cal-prev" onclick="bmCalPrev()">‹</button>
+        <span class="bm-cal-month" id="bm-cal-month"></span>
+        <button class="bm-cal-nav" id="bm-cal-next" onclick="bmCalNext()">›</button>
+      </div>
+      <div class="bm-cal-grid" id="bm-cal-grid"></div>
+      <div class="bm-nav">
+        <button class="bm-btn-next" id="bm-date-next" onclick="bmGoToTime()" disabled>Choose Time →</button>
+      </div>
+    </div>
+
+    <!-- PANE 2: TIME -->
+    <div class="bm-pane" id="bm-pane-2">
+      <h3>Pick a time</h3>
+      <p class="bm-sub" id="bm-time-sub"></p>
+      <div class="bm-dur-info" id="bm-dur-info"></div>
+      <div id="bm-slots-wrap"></div>
+      <div class="bm-nav">
+        <button class="bm-btn-back" onclick="bmShowPane(1)">← Back</button>
+        <button class="bm-btn-next" id="bm-time-next" onclick="bmShowPane(3)" disabled>Your Details →</button>
+      </div>
+    </div>
+
+    <!-- PANE 3: DETAILS -->
+    <div class="bm-pane" id="bm-pane-3">
+      <h3>Your details</h3>
+      <p class="bm-sub">We'll send your confirmation here</p>
+      <input class="bm-inp" id="bm-name" type="text" placeholder="Full name *">
+      <input class="bm-inp" id="bm-email" type="email" placeholder="Email address *">
+      <input class="bm-inp" id="bm-phone" type="tel" placeholder="Phone number *">
+      <textarea class="bm-inp bm-ta" id="bm-notes" placeholder="Allergies, design ideas, any notes... (optional)"></textarea>
+      <div class="bm-nav">
+        <button class="bm-btn-back" onclick="bmShowPane(2)">← Back</button>
+        <button class="bm-btn-next" onclick="bmNext()">Review Booking →</button>
+      </div>
+    </div>
+
+    <!-- PANE 4: CONFIRM -->
+    <div class="bm-pane" id="bm-pane-4">
+      <h3>Confirm booking</h3>
+      <div class="bm-sum-card">
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Date</span><span class="bm-sum-val" id="bm-s-date"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Time</span><span class="bm-sum-val" id="bm-s-time"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Technician</span><span class="bm-sum-val" id="bm-s-tech"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Services</span><span class="bm-sum-val" id="bm-s-svcs"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Duration</span><span class="bm-sum-val" id="bm-s-dur"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Name</span><span class="bm-sum-val" id="bm-s-name"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Email</span><span class="bm-sum-val" id="bm-s-email"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Est. price</span><span class="bm-sum-val bm-sum-price" id="bm-s-price"></span></div>
+      </div>
+      <div class="bm-cerr" id="bm-confirm-err"></div>
+      <div class="bm-nav">
+        <button class="bm-btn-back" onclick="bmShowPane(3)">← Back</button>
+        <button class="bm-btn-next" id="bm-confirm-btn" onclick="bmConfirm()">Confirm Booking 💅</button>
+      </div>
+    </div>
+
+    <!-- PANE 5: SUCCESS -->
+    <div class="bm-pane" id="bm-pane-5">
+      <div class="bm-success">
+        <div class="bm-suc-icon">💅</div>
+        <div class="bm-suc-h">Booking Confirmed!</div>
+        <p class="bm-suc-p">We can't wait to see you! Check your email for the confirmation.</p>
+        <div class="bm-suc-det" id="bm-suc-det"></div>
+        <button class="bm-done-btn" onclick="closeBookingModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF SERVICE PICKER MODAL -->
+<div id="staff-modal-overlay" onclick="if(event.target===this)closeStaffModal()">
+  <div id="staff-modal-box">
+    <div class="modal-header">
+      <div class="modal-header-avatar" id="modal-avatar">K</div>
+      <div class="modal-title">Book with <span id="modal-tech-name">Kristy</span></div>
+      <button class="modal-close-btn" onclick="closeStaffModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-instruction">Select the service(s) you'd like — we'll pre-fill your booking automatically.</p>
+      <div id="modal-services-container"></div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-selected-summary" id="modal-summary">
+        Selected: <strong id="modal-summary-text"></strong>
+      </div>
+      <button class="modal-book-btn" id="modal-book-btn" onclick="staffModalBook()" disabled>
+        📅 Continue to Booking →
+      </button>
+      <span class="modal-cancel-link" onclick="closeStaffModal()">Cancel</span>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE BOOKING BAR -->
+<div id="booking-bar">
+  <div class="bb-info">
+    <div class="bb-label">🛒 Your selection <span class="bb-count-badge" id="bb-count">0</span></div>
+    <div class="bb-services-list" id="bb-services-list">—</div>
+  </div>
+  <select class="bb-select" id="bb-tech-select" onchange="this.classList.remove('bb-error')">
+    <option value="">Select professional ▾</option>
+    <option value="no_preference">No Preference — We'll assign best available</option>
+    <option value="kristy">Kristy — Enhancements & Pedicures</option>
+    <option value="kevin">Kevin — Nail Art & Design</option>
+    <option value="peter">Peter — Nail Enhancements & Pedicures</option>
+    <option value="tina">Tina — Pedicures, Enhancements & Waxing</option>
+    <option value="alex">Alex — Pedicure Specialist</option>
+    <option value="sweety">Sweety — Pedicures, Waxing & Henna</option>
+    <option value="sony">Sony — Pedicures & Henna</option>
+    <option value="ammu">Ammu — Pedicures & Nail Enhancements</option>
+    <option value="kim">Kim — Pedicures & Nail Enhancements</option>
+    <option value="lori">Lori — Pedicures & Manicures</option>
+  </select>
+  <button class="bb-book-btn" onclick="bookingBarBook()">📅 Book Appointment →</button>
+  <button class="bb-clear-btn" onclick="bookingBarClear()">✕ Clear all</button>
+</div>
+
+
+<!-- GOOGLE ANALYTICS (add your GA4 Measurement ID to activate) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script> -->
+</body>
+</html>
