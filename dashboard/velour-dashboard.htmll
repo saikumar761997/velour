@@ -425,6 +425,53 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
   .ck-line{grid-template-columns:1fr;gap:6px;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
   .ck-line-remove{width:100%;height:32px}
 }
+/* ---------- Payroll ---------- */
+.pay-section{margin-bottom:26px}
+.pay-comp-strip{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px}
+.pay-comp-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;user-select:none}
+.pay-comp-head h3{font-size:15px;font-weight:600;color:var(--ink);font-family:"Hanken Grotesk",sans-serif}
+.pay-comp-head .car{transition:transform .15s;color:var(--muted)}
+.pay-comp-strip.open .pay-comp-head .car{transform:rotate(180deg)}
+.pay-comp-body{display:none;border-top:1px solid var(--line)}
+.pay-comp-strip.open .pay-comp-body{display:block}
+.pay-comp-row{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--line);font-size:14px}
+.pay-comp-row:last-child{border-bottom:none}
+.pay-comp-row .name{font-weight:600;color:var(--ink)}
+.pay-comp-row .rate{color:var(--plum-soft);font-size:13px;margin-top:2px}
+.pay-comp-row .rate.unset{color:var(--amber);font-weight:600}
+.pay-comp-row button{border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:9px;padding:6px 13px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.pay-comp-row button:hover{border-color:var(--persimmon);color:var(--persimmon-deep)}
+.pay-period-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:36px 24px;text-align:center;color:var(--plum-soft)}
+.pay-period-empty .btn{margin-top:14px}
+.pay-period-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:22px}
+.pay-period-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.pay-period-top h3{font-family:"Fraunces",serif;font-size:20px;color:var(--ink)}
+.pay-period-dates{color:var(--muted);font-size:13.5px;margin-top:3px}
+.pay-period-notes{color:var(--plum-soft);font-size:13px;margin-top:6px;font-style:italic}
+.pay-hours-block{margin:18px 0;padding:14px 16px;background:var(--surface-2);border-radius:12px}
+.pay-hours-title{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.pay-hours-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
+.pay-hours-row input{width:90px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;text-align:right}
+.pay-warn-banner{background:#F6ECD9;border:1px solid #E7CFA0;border-radius:10px;padding:12px 16px;margin:14px 0;font-size:13.5px;color:var(--amber);font-weight:600}
+.pay-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+.pay-table th{text-align:right;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+.pay-table th:first-child,.pay-table td:first-child{text-align:left}
+.pay-table td{text-align:right;padding:10px;border-bottom:1px solid var(--line);color:var(--plum)}
+.pay-table tr:last-child td{border-bottom:none}
+.pay-table td.name{font-weight:600;color:var(--ink)}
+.pay-table td.gross{font-weight:700;color:var(--persimmon-deep);font-family:"Fraunces",serif;font-size:15px}
+.pay-table .warn-icon{color:var(--amber);cursor:help;margin-left:5px}
+.pay-comp-badge{font-size:10.5px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--plum-soft);white-space:nowrap}
+.pay-close-row{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.pay-close-reason{color:var(--amber);font-size:13px;font-weight:600}
+.pay-history-row{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13.5px;cursor:pointer;transition:border-color .12s}
+.pay-history-row:hover{border-color:var(--persimmon)}
+.pay-history-row .l{font-weight:600;color:var(--ink)}
+.pay-history-row .d{color:var(--muted);font-size:12.5px;margin-top:2px}
+.pay-history-row .t{font-family:"Fraunces",serif;font-size:16px;color:var(--persimmon-deep)}
+.comp-type-seg{display:flex;gap:8px;margin-top:6px}
+.comp-type-seg button{flex:1;border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:10px;padding:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.comp-type-seg button.on{background:var(--plum);color:#fff;border-color:var(--plum)}
 </style>
 </head>
 <body>
@@ -458,6 +505,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
       <button class="navlink" data-view="insights"><span class="dot"></span>Insights</button>
       <button class="navlink" data-view="customers"><span class="dot"></span>Customers</button>
       <button class="navlink" data-view="technicians"><span class="dot"></span>Technicians</button>
+      <button class="navlink" data-view="payroll"><span class="dot"></span>Payroll</button>
     </nav>
     <div class="foot">
       <button class="lock" id="lockBtn">Lock dashboard</button><br>
@@ -549,6 +597,18 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
         <span class="sub" id="techSub"></span>
       </div>
       <div id="techWrap"></div>
+    </section>
+
+    <!-- PAYROLL -->
+    <section class="view" id="view-payroll">
+      <div class="view-head">
+        <h2>Payroll</h2>
+        <span class="sub" id="paySub"></span>
+      </div>
+
+      <div class="pay-section" id="payCompWrap"></div>
+      <div class="pay-section" id="payPeriodWrap"></div>
+      <div class="pay-section" id="payHistoryWrap"></div>
     </section>
   </main>
 </div>
@@ -666,7 +726,7 @@ async function loadAll(){
   const lookbackDate = new Date(Date.now() - CONFIG.LOOKBACK_DAYS*864e5).toISOString().slice(0,10);
 
   // Pull the datasets in parallel.
-  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments] = await Promise.all([
+  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments, technicianComp, payrollPeriods] = await Promise.all([
     api.get("customers",   `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("technicians", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("services",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
@@ -676,7 +736,11 @@ async function loadAll(){
     api.get("technician_links", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("payments",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("technician_compensation", `${salon}=${eq(CONFIG.SALON_ID)}&order=effective_start_date.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("payroll_periods", `${salon}=${eq(CONFIG.SALON_ID)}&order=period_start.desc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
   ]);
+  store.technicianComp = Array.isArray(technicianComp) ? technicianComp : [];
+  store.payrollPeriods = Array.isArray(payrollPeriods) ? payrollPeriods : [];
   store.techServices = {};
   (Array.isArray(techServices)?techServices:[]).forEach(ts=>{
     (store.techServices[ts.technician_id] ||= new Set()).add(ts.service_id);
@@ -1917,6 +1981,357 @@ async function askAivy(){
   }
 }
 
+/* =====================================================================
+   PAYROLL
+   The dashboard performs zero payroll math. Every number rendered below
+   comes straight from calculate_payroll_preview / payroll_period_totals
+   via the RPC layer — this file only displays data and submits actions.
+   ===================================================================== */
+
+async function payrollWrite(action, args){
+  const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+    body: JSON.stringify({ action, args, passcode: window.__VELOUR_PASS || "" })
+  });
+  const data = await res.json().catch(()=>null);
+  if(!res.ok || !data || data.ok===false){
+    throw new Error((data && data.error) || ("HTTP "+res.status));
+  }
+  return data.result;
+}
+
+function currentComp(techId){
+  const rows = (store.technicianComp||[]).filter(c=>c.technician_id===techId && c.effective_end_date==null);
+  if(!rows.length) return null;
+  return rows.sort((a,b)=> b.effective_start_date.localeCompare(a.effective_start_date))[0];
+}
+function compLabel(c){
+  if(!c) return "Not set up";
+  if(c.comp_type==="commission") return `${(Number(c.commission_rate)*100).toFixed(0)}% commission`;
+  if(c.comp_type==="hourly") return `$${Number(c.hourly_rate).toFixed(2)}/hr`;
+  if(c.comp_type==="hourly_plus_commission") return `$${Number(c.hourly_rate).toFixed(2)}/hr + ${(Number(c.commission_rate)*100).toFixed(0)}% commission`;
+  if(c.comp_type==="salary") return `$${Number(c.salary_amount).toFixed(2)} salary`;
+  return "—";
+}
+function money(n){ return "$"+Number(n||0).toFixed(2); }
+function fmtPayDate(d){
+  if(!d) return "";
+  const dt = new Date(String(d).length<=10 ? d+"T12:00:00" : d);
+  return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric"}).format(dt);
+}
+
+function renderPayroll(){
+  renderCompStrip();
+  renderPeriodWorkspace();
+  renderPayrollHistory();
+}
+
+/* ---------- Compensation strip ---------- */
+function renderCompStrip(){
+  const wrap = document.getElementById("payCompWrap");
+  const techs = (store.technicians||[]).filter(t=>t.active!==false);
+  const configuredCount = techs.filter(t=>currentComp(t.id)).length;
+  const anyUnset = configuredCount < techs.length;
+  const rows = techs.map(t=>{
+    const c = currentComp(t.id);
+    const label = compLabel(c);
+    return `<div class="pay-comp-row">
+      <div><div class="name">${esc(t.name||"Staff")}</div><div class="rate ${c?'':'unset'}">${esc(label)}</div></div>
+      <button onclick="openCompModal('${t.id}')">${c ? "Edit" : "Set up"}</button>
+    </div>`;
+  }).join("") || `<div class="pay-comp-row"><span class="none">No active technicians.</span></div>`;
+
+  // Collapsed by default — owners rarely change pay rates, so this
+  // shouldn't sit open at the top of the page. A click expands it.
+  wrap.innerHTML = `<div class="pay-comp-strip" id="compStripOuter">
+    <div class="pay-comp-head" onclick="toggleCompStrip()">
+      <h3>${configuredCount} of ${techs.length} technician${techs.length===1?'':'s'} configured${anyUnset ? ' · action needed' : ''}</h3>
+      <span style="display:flex;align-items:center;gap:10px">
+        <button class="wk-btn" onclick="event.stopPropagation(); toggleCompStrip()">Edit Compensation</button>
+        <span class="car">▾</span>
+      </span>
+    </div>
+    <div class="pay-comp-body">${rows}</div>
+  </div>`;
+}
+function toggleCompStrip(){
+  document.getElementById("compStripOuter").classList.toggle("open");
+}
+
+let compTechId = null, compType = "commission";
+function openCompModal(techId){
+  compTechId = techId;
+  const t = store.technicians.find(x=>x.id===techId);
+  const c = currentComp(techId);
+  document.getElementById("compWho").textContent = t ? (t.name||"Staff") : "";
+  document.getElementById("compCommission").value = c && c.commission_rate!=null ? (Number(c.commission_rate)*100) : "";
+  document.getElementById("compHourly").value = c && c.hourly_rate!=null ? c.hourly_rate : "";
+  document.getElementById("compStart").value = new Date().toISOString().slice(0,10);
+  document.getElementById("compErr").textContent = "";
+  compSetType(c ? c.comp_type : "commission");
+  const save = document.getElementById("compSave"); save.disabled=false; save.textContent="Save";
+  document.getElementById("compmodal").style.display = "flex";
+}
+function closeCompModal(){
+  document.getElementById("compmodal").style.display="none";
+  compTechId=null;
+  const save = document.getElementById("compSave"); save.disabled=false; save.textContent="Save";
+}
+function compSetType(type){
+  compType = type;
+  document.querySelectorAll("#compTypeSeg button").forEach(b=>b.classList.toggle("on", b.dataset.t===type));
+  document.getElementById("compCommissionRow").style.display = (type==="commission"||type==="hourly_plus_commission") ? "block" : "none";
+  document.getElementById("compHourlyRow").style.display = (type==="hourly"||type==="hourly_plus_commission") ? "block" : "none";
+}
+async function submitCompensation(){
+  const err = document.getElementById("compErr"); err.textContent = "";
+  const startDate = document.getElementById("compStart").value;
+  if(!startDate){ err.textContent = "Pick an effective start date."; return; }
+  const commissionPct = document.getElementById("compCommission").value;
+  const hourly = document.getElementById("compHourly").value;
+  const needsCommission = compType==="commission"||compType==="hourly_plus_commission";
+  const needsHourly = compType==="hourly"||compType==="hourly_plus_commission";
+  if(needsCommission && (commissionPct==="" || isNaN(Number(commissionPct)))){ err.textContent = "Enter a commission percentage."; return; }
+  if(needsHourly && (hourly==="" || isNaN(Number(hourly)))){ err.textContent = "Enter an hourly rate."; return; }
+
+  const save = document.getElementById("compSave"); save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("set_compensation", {
+      p_salon_id: CONFIG.SALON_ID,
+      p_technician_id: compTechId,
+      p_comp_type: compType,
+      p_effective_start_date: startDate,
+      p_commission_rate: needsCommission ? Number(commissionPct)/100 : null,
+      p_hourly_rate: needsHourly ? Number(hourly) : null,
+      p_salary_amount: null,
+      p_created_by: "Kristy"
+    });
+    closeCompModal();
+    await reloadPayrollLookups();
+    renderPayroll();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("EFFECTIVE_DATE_NOT_AFTER_CURRENT")) err.textContent = "That date is before this person's current pay setup started — pick a later date.";
+    else if(msg.includes("MISSING_")) err.textContent = "Please fill in the rate for the selected pay type.";
+    else err.textContent = "Couldn't save. Please try again.";
+    save.disabled = false; save.textContent = "Save";
+  }
+}
+
+/* ---------- Period workspace ---------- */
+function openPeriod(){ return (store.payrollPeriods||[]).find(p=>p.status==="open"); }
+
+function renderPeriodWorkspace(){
+  const wrap = document.getElementById("payPeriodWrap");
+  const p = openPeriod();
+  if(!p){
+    wrap.innerHTML = `<div class="pay-period-empty">
+      <h3>No payroll period running</h3>
+      <p>Start one whenever you're ready to run payroll — you pick the dates.</p>
+      <button class="btn accent" onclick="openNewPeriod()">+ Start payroll period</button>
+    </div>`;
+    return;
+  }
+  const hourlyTechs = (store.technicians||[]).filter(t=>{
+    const c = currentComp(t.id);
+    return c && (c.comp_type==="hourly" || c.comp_type==="hourly_plus_commission");
+  });
+
+  wrap.innerHTML = `<div class="pay-period-card">
+    <div class="pay-period-top">
+      <div>
+        <h3>${esc(p.label)}</h3>
+        <div class="pay-period-dates">${fmtPayDate(p.period_start)} – ${fmtPayDate(p.period_end)}</div>
+        ${p.notes ? `<div class="pay-period-notes">${esc(p.notes)}</div>` : ""}
+      </div>
+    </div>
+    ${hourlyTechs.length ? `<div class="pay-hours-block">
+      <div class="pay-hours-title">Hours worked this period</div>
+      ${hourlyTechs.map(t=>`<div class="pay-hours-row">
+        <span>${esc(t.name||"Staff")}</span>
+        <input type="number" min="0" step="0.25" id="hrs-${t.id}" placeholder="0" onchange="saveHours('${t.id}','${p.id}',this.value)">
+      </div>`).join("")}
+    </div>` : ""}
+    <div id="payPreviewWrap"><div class="state"><div class="spinner"></div><p>Loading payroll…</p></div></div>
+  </div>`;
+
+  loadPreview(p.id);
+}
+
+async function loadPreview(periodId){
+  const target = document.getElementById("payPreviewWrap");
+  if(!target) return;
+  try{
+    const rows = await payrollWrite("preview_payroll", { p_payroll_period_id: periodId });
+    renderPreviewTable(rows||[], periodId);
+  }catch(e){
+    console.error(e);
+    target.innerHTML = `<div class="state err"><p>Couldn't load payroll numbers. Try refreshing.</p></div>`;
+  }
+}
+
+function renderPreviewTable(rows, periodId){
+  const target = document.getElementById("payPreviewWrap");
+  if(!target) return;
+
+  rows.forEach(r=>{
+    const input = document.getElementById(`hrs-${r.technician_id}`);
+    if(input && document.activeElement !== input) input.value = r.hours_worked>0 ? r.hours_worked : "";
+  });
+
+  const anyWarnings = rows.some(r=>r.warnings && r.warnings.length);
+
+  const warnBanner = anyWarnings ? `<div class="pay-warn-banner">⚠ Payroll can't be closed yet — see the warnings below.</div>` : "";
+
+  const tableRows = rows.map(r=>{
+    const warn = (r.warnings||[]).length ? `<span class="warn-icon" title="${esc(r.warnings.join(' '))}">⚠</span>` : "";
+    return `<tr>
+      <td class="name">${esc(r.technician_name)}${warn}</td>
+      <td>${r.services_performed}</td>
+      <td>${money(r.service_revenue)}</td>
+      <td>${money(r.commission_earned)}</td>
+      <td>${r.hours_worked>0 ? r.hours_worked : "—"}</td>
+      <td>${r.hourly_earned>0 ? money(r.hourly_earned) : "—"}</td>
+      <td>${money(r.tips_total)}</td>
+      <td class="gross">${money(r.gross_pay)}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="8"><span class="none">No work recorded in this period yet.</span></td></tr>`;
+
+  const totalGross = rows.reduce((s,r)=>s+Number(r.gross_pay||0),0);
+
+  target.innerHTML = `${warnBanner}
+    <table class="pay-table">
+      <thead><tr><th>Technician</th><th>Services</th><th>Revenue</th><th>Commission</th><th>Hours</th><th>Hourly pay</th><th>Tips (theirs)</th><th>Gross pay</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+    <div class="pay-close-row">
+      ${anyWarnings ? `<span class="pay-close-reason">Fix the warnings above before closing.</span>` : `<span class="rate">Total to pay out: <b>${money(totalGross)}</b></span>`}
+      <button class="btn accent" ${anyWarnings ? "disabled" : ""} onclick="doClosePeriod('${periodId}')">Close this payroll period</button>
+    </div>`;
+}
+
+async function saveHours(techId, periodId, val){
+  const hours = Number(val)||0;
+  try{
+    await payrollWrite("update_payroll_hours", { p_payroll_period_id: periodId, p_technician_id: techId, p_hours_worked: hours, p_entered_by: "Kristy" });
+    await loadPreview(periodId);
+  }catch(e){
+    console.error(e);
+    alert("Couldn't save hours. Please try again.");
+  }
+}
+
+async function doClosePeriod(periodId){
+  if(!confirm("Close this payroll period? Once closed, these numbers are locked in and won't change even if you make corrections later.")) return;
+  try{
+    await payrollWrite("close_payroll_period", { p_payroll_period_id: periodId, p_closed_by: "Kristy", p_payroll_version: "1" });
+    await reloadPayrollLookups();
+    renderPayroll();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("UNRESOLVED_WARNINGS_BLOCK_CLOSE")) alert("Some technicians still have warnings — fix those first.");
+    else alert("Couldn't close this period. Please try again.");
+  }
+}
+
+/* ---------- New period modal ---------- */
+function openNewPeriod(){
+  document.getElementById("pLabel").value = "";
+  document.getElementById("pStart").value = "";
+  document.getElementById("pEnd").value = "";
+  document.getElementById("pNotes").value = "";
+  document.getElementById("pErr").textContent = "";
+  const save = document.getElementById("pSave"); save.disabled=false; save.textContent="Create period";
+  document.getElementById("pmodal").style.display = "flex";
+}
+function closeNewPeriod(){
+  document.getElementById("pmodal").style.display="none";
+  const save = document.getElementById("pSave"); save.disabled=false; save.textContent="Create period";
+}
+function pSuggestLabel(){
+  const s = document.getElementById("pStart").value, e = document.getElementById("pEnd").value;
+  const labelField = document.getElementById("pLabel");
+  if(labelField.value.trim()) return;
+  if(!s || !e) return;
+  const fmt = d => new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(new Date(d+"T12:00:00"));
+  const year = new Date(e+"T12:00:00").getFullYear();
+  labelField.placeholder = `${fmt(s)} – ${fmt(e)}, ${year}`;
+}
+async function submitNewPeriod(){
+  const err = document.getElementById("pErr"); err.textContent = "";
+  const start = document.getElementById("pStart").value;
+  const end = document.getElementById("pEnd").value;
+  const labelField = document.getElementById("pLabel");
+  const label = labelField.value.trim() || labelField.placeholder;
+  if(!start || !end){ err.textContent = "Pick a start and end date."; return; }
+  if(end < start){ err.textContent = "End date must be on or after the start date."; return; }
+  if(!label){ err.textContent = "Give this period a name."; return; }
+  const save = document.getElementById("pSave"); save.disabled = true; save.textContent = "Creating…";
+  try{
+    await payrollWrite("create_payroll_period", {
+      p_salon_id: CONFIG.SALON_ID, p_label: label, p_period_start: start, p_period_end: end,
+      p_notes: document.getElementById("pNotes").value.trim() || null, p_created_by: "Kristy"
+    });
+    closeNewPeriod();
+    await reloadPayrollLookups();
+    renderPayroll();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("PERIOD_OVERLAPS_EXISTING")) err.textContent = "Those dates overlap an existing payroll period.";
+    else if(msg.includes("INVALID_PERIOD_RANGE")) err.textContent = "End date must be on or after the start date.";
+    else err.textContent = "Couldn't create this period. Please try again.";
+    save.disabled = false; save.textContent = "Create period";
+  }
+}
+
+/* ---------- History ---------- */
+function renderPayrollHistory(){
+  const wrap = document.getElementById("payHistoryWrap");
+  const closed = (store.payrollPeriods||[]).filter(p=>p.status==="closed");
+  if(!closed.length){ wrap.innerHTML = ""; return; }
+  wrap.innerHTML = `<h3 style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:10px">Payroll history</h3>` +
+    closed.map(p=>`<div class="pay-history-row" onclick="viewClosedPeriod('${p.id}')">
+      <div><div class="l">${esc(p.label)}</div><div class="d">${fmtPayDate(p.period_start)} – ${fmtPayDate(p.period_end)} · closed ${fmtPayDate(p.closed_at)}</div></div>
+      <div class="t" id="hist-total-${p.id}">…</div>
+    </div>`).join("");
+  closed.forEach(async p=>{
+    try{
+      const rows = await api.get("payroll_period_totals", `payroll_period_id=eq.${p.id}`);
+      const total = (Array.isArray(rows)?rows:[]).reduce((s,r)=>s+Number(r.gross_pay||0),0);
+      const el = document.getElementById(`hist-total-${p.id}`);
+      if(el) el.textContent = money(total);
+    }catch(e){ /* silent — history total is informational only */ }
+  });
+}
+async function viewClosedPeriod(periodId){
+  try{
+    const rows = await api.get("payroll_period_totals", `payroll_period_id=eq.${periodId}`);
+    const p = (store.payrollPeriods||[]).find(x=>x.id===periodId);
+    const list = (Array.isArray(rows)?rows:[]).map(r=>
+      `${r.technician_name}: ${money(r.gross_pay)} (${r.services_performed} services, ${r.customers_served} customers, ${money(r.tips_total)} tips)`
+    ).join("\n");
+    alert(`${p?p.label:"Payroll period"} — frozen at close:\n\n${list || "No data."}`);
+  }catch(e){
+    console.error(e);
+    alert("Couldn't load that period's history.");
+  }
+}
+
+/* ---------- Refresh payroll lookups without a full page reload ---------- */
+async function reloadPayrollLookups(){
+  const salon = CONFIG.SALON_FK, eq = v=>`eq.${v}`;
+  const [technicianComp, payrollPeriods] = await Promise.all([
+    api.get("technician_compensation", `${salon}=${eq(CONFIG.SALON_ID)}&order=effective_start_date.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("payroll_periods", `${salon}=${eq(CONFIG.SALON_ID)}&order=period_start.desc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+  ]);
+  store.technicianComp = Array.isArray(technicianComp) ? technicianComp : [];
+  store.payrollPeriods = Array.isArray(payrollPeriods) ? payrollPeriods : [];
+}
+
 function switchView(name){
   document.querySelectorAll(".navlink").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
   document.getElementById("view-today").classList.toggle("on", name==="today");
@@ -1925,10 +2340,12 @@ function switchView(name){
   document.getElementById("view-insights").classList.toggle("on", name==="insights");
   document.getElementById("view-customers").classList.toggle("on", name==="customers");
   document.getElementById("view-technicians").classList.toggle("on", name==="technicians");
+  document.getElementById("view-payroll").classList.toggle("on", name==="payroll");
   if(name==="technicians") renderTechnicians();
   if(name==="week") renderWeek();
   if(name==="insights") renderInsights();
   if(name==="aivy") runAivy(false);
+  if(name==="payroll") renderPayroll();
 }
 
 /* ---------- Passcode gate ---------- */
@@ -2501,6 +2918,53 @@ async function submitNewBooking(){
 
     <div class="rmodal-actions">
       <button class="btn ghost" type="button" onclick="closeProfile()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="compmodal" class="rmodal" style="display:none">
+  <div class="rmodal-card">
+    <h3>Pay setup</h3>
+    <div class="rmodal-sub" id="compWho"></div>
+    <label>Pay type</label>
+    <div class="comp-type-seg" id="compTypeSeg">
+      <button type="button" data-t="commission" onclick="compSetType('commission')">Commission</button>
+      <button type="button" data-t="hourly" onclick="compSetType('hourly')">Hourly</button>
+      <button type="button" data-t="hourly_plus_commission" onclick="compSetType('hourly_plus_commission')">Both</button>
+    </div>
+    <div id="compCommissionRow">
+      <label for="compCommission">Commission percentage</label>
+      <input type="number" id="compCommission" min="0" max="100" step="1" placeholder="e.g. 40">
+    </div>
+    <div id="compHourlyRow">
+      <label for="compHourly">Hourly rate ($)</label>
+      <input type="number" id="compHourly" min="0" step="0.01" placeholder="e.g. 15.00">
+    </div>
+    <label for="compStart">Effective from</label>
+    <input type="date" id="compStart">
+    <div class="rmodal-err" id="compErr"></div>
+    <div class="rmodal-actions">
+      <button class="btn ghost" type="button" onclick="closeCompModal()">Cancel</button>
+      <button class="btn accent" type="button" id="compSave" onclick="submitCompensation()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="pmodal" class="rmodal" style="display:none">
+  <div class="rmodal-card">
+    <h3>Start payroll period</h3>
+    <label for="pStart">Start date</label>
+    <input type="date" id="pStart" onchange="pSuggestLabel()">
+    <label for="pEnd">End date</label>
+    <input type="date" id="pEnd" onchange="pSuggestLabel()">
+    <label for="pLabel">Label</label>
+    <input type="text" id="pLabel" placeholder="e.g. July 7 – 13, 2026">
+    <label for="pNotes">Notes (optional)</label>
+    <input type="text" id="pNotes" placeholder="Anything to remember about this period">
+    <div class="rmodal-err" id="pErr"></div>
+    <div class="rmodal-actions">
+      <button class="btn ghost" type="button" onclick="closeNewPeriod()">Cancel</button>
+      <button class="btn accent" type="button" id="pSave" onclick="submitNewPeriod()">Create period</button>
     </div>
   </div>
 </div>
