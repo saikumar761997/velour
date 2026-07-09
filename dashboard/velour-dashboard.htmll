@@ -349,6 +349,82 @@
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
   }
+/* ---------- Admin Booking modal (redesigned) ---------- */
+.nb-card{
+  background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);
+  width:100%;max-width:600px;max-height:90vh;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.nb-head{padding:22px 28px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
+.nb-head h3{font-size:22px;color:var(--ink)}
+.nb-head .nb-sub{color:var(--plum-soft);font-size:13.5px;margin-top:4px;line-height:1.5}
+.nb-body{padding:20px 28px;overflow-y:auto;flex:1}
+.nb-section{margin-bottom:24px}
+.nb-section:last-child{margin-bottom:0}
+.nb-label{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
+.nb-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input.nb-input, select.nb-input{
+  width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface);font-family:inherit;font-size:14.5px;color:var(--ink);
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-shadow:0 0 0 3px rgba(231,90,52,.12)}
+
+.nb-seg{display:flex;gap:6px;background:var(--surface-2);padding:4px;border-radius:11px}
+.nb-seg button{flex:1;border:none;background:none;padding:9px 10px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;color:var(--plum-soft);cursor:pointer;transition:background .15s,color .15s}
+.nb-seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(59,34,51,.12)}
+
+.nb-tabs{display:flex;gap:20px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.nb-tab{padding:8px 2px 10px;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.nb-tab.on{color:var(--persimmon-deep);border-bottom-color:var(--persimmon)}
+
+.nb-cust-results{max-height:180px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px}
+.nb-cust-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13.5px}
+.nb-cust-row:last-child{border-bottom:none}
+.nb-cust-row:hover{background:var(--surface-2)}
+.nb-cust-row .tag{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted)}
+.nb-cust-picked{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface-2);border-radius:10px;padding:11px 14px;margin-top:8px}
+.nb-cust-picked .x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px}
+
+.nb-svc-cat{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.nb-svc-cat:first-child{margin-top:0}
+.nb-svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.nb-price-note{font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:10px;line-height:1.5}
+.nb-svc-chip{display:flex;flex-direction:column;gap:2px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .12s;min-height:44px}
+.nb-svc-chip:hover{border-color:#E3CFC6}
+.nb-svc-chip.on{background:var(--persimmon);border-color:var(--persimmon);color:#fff}
+.nb-svc-chip .n{font-size:13.5px;font-weight:600}
+.nb-svc-chip .p{font-size:12px;color:var(--muted)}
+.nb-svc-chip.on .p{color:rgba(255,255,255,.85)}
+.nb-totals{margin-top:10px;background:var(--surface-2);border-radius:9px;padding:10px 14px;font-size:13px;color:var(--plum);font-weight:600}
+
+.nb-hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}
+.nb-err{color:var(--persimmon-deep);font-size:13px;min-height:18px}
+
+.nb-foot{padding:14px 28px;border-top:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.nb-enteredby{font-size:12.5px;color:var(--muted)}
+.nb-enteredby button{background:none;border:none;color:var(--persimmon-deep);cursor:pointer;font-size:12.5px;font-weight:600;text-decoration:underline;padding:0}
+.nb-actions{display:flex;gap:8px}
+
+@media (max-width:640px){ .nb-row2, .nb-svc-grid{grid-template-columns:1fr} }
+.nb-field-err{color:var(--persimmon-deep);font-size:11.5px;margin:-4px 0 8px;min-height:14px}
+.ck-lines-head{display:grid;grid-template-columns:2fr 1.3fr 90px 80px 26px;gap:8px;padding:0 2px 6px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.ck-line{display:grid;grid-template-columns:2fr 1.3fr 90px 80px 26px;gap:8px;align-items:center;margin-bottom:8px}
+.ck-line.ck-line-error input, .ck-line.ck-line-error select{border-color:var(--persimmon-deep);box-shadow:0 0 0 2px rgba(196,58,58,.10)}
+.ck-line input, .ck-line select{padding:9px 10px;font-size:13.5px}
+.ck-line-remove{background:none;border:1px solid var(--line);border-radius:8px;color:var(--muted);cursor:pointer;font-size:13px;width:26px;height:34px;display:flex;align-items:center;justify-content:center}
+.ck-line-remove:hover{border-color:var(--persimmon-deep);color:var(--persimmon-deep)}
+.ck-line-remove:disabled{opacity:.3;cursor:not-allowed}
+.ck-add-line{background:none;border:1px dashed var(--line);border-radius:10px;color:var(--persimmon-deep);cursor:pointer;font-size:13px;font-weight:600;padding:9px;width:100%;margin-top:2px}
+.ck-add-line:hover{border-color:var(--persimmon-deep);background:var(--surface-2)}
+.ck-totals{background:var(--surface-2);border-radius:10px;padding:14px 16px;margin:18px 0;font-size:13.5px}
+.ck-totals-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--plum-soft)}
+.ck-totals-row.final{font-weight:700;color:var(--ink);font-size:16px;font-family:"Fraunces",serif;border-top:1px solid var(--line);margin-top:6px;padding-top:10px}
+@media (max-width:640px){
+  .ck-lines-head{display:none}
+  .ck-line{grid-template-columns:1fr;gap:6px;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+  .ck-line-remove{width:100%;height:32px}
+}
 </style>
 </head>
 <body>
@@ -413,6 +489,7 @@
         <div class="vh-right">
           <span class="sub" id="todaySub"></span>
           <select class="tech-filter" id="techFilterToday" onchange="setTechFilter(this.value)"></select>
+          <button class="wk-btn" onclick="openNewBooking()">+ Add booking</button>
         </div>
       </div>
       <div class="ledger" id="ledger"></div>
@@ -589,7 +666,7 @@ async function loadAll(){
   const lookbackDate = new Date(Date.now() - CONFIG.LOOKBACK_DAYS*864e5).toISOString().slice(0,10);
 
   // Pull the datasets in parallel.
-  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks] = await Promise.all([
+  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments] = await Promise.all([
     api.get("customers",   `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("technicians", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("services",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
@@ -597,7 +674,24 @@ async function loadAll(){
     api.get("technician_time_off", `${salon}=${eq(CONFIG.SALON_ID)}&order=off_date.asc&limit=${CONFIG.ROW_LIMIT}`),
     api.get("salon_hours", `${salon}=${eq(CONFIG.SALON_ID)}&limit=200`).catch(()=>[]),
     api.get("technician_links", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("payments",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
   ]);
+  store.techServices = {};
+  (Array.isArray(techServices)?techServices:[]).forEach(ts=>{
+    (store.techServices[ts.technician_id] ||= new Set()).add(ts.service_id);
+  });
+
+  // Actual Revenue lookup — sums per booking (a future split-tender POS
+  // payment could post more than one row per booking; summing handles
+  // that correctly without any further change here).
+  const paidByBooking = {};
+  (Array.isArray(payments)?payments:[]).forEach(p=>{
+    const bid = p.booking_id; if(bid==null) return;
+    const row = (paidByBooking[bid] ||= {amount:0, tip:0});
+    row.amount += Number(p.amount||0);
+    row.tip += Number(p.tip_amount||0);
+  });
 
   // Lookups.
   store.customers = customers;
@@ -623,12 +717,22 @@ async function loadAll(){
     const bid = bsBookingId(bs); if(bid==null) continue;
     (svcByBooking[bid] ||= []).push(bs);
   }
+  store.bookingServices = svcByBooking;
 
   // Assemble a clean view-model per booking.
   store.assembled = bookings.map(b => {
     const svcRows = (svcByBooking[b.id] || []).filter(Boolean);
     const bsTotal = svcRows.reduce((sum,s)=>sum+bsPrice(s),0);
-    const total = (b.total_price!=null && b.total_price!=="") ? Number(b.total_price) : bsTotal;
+    const estimate = (b.total_price!=null && b.total_price!=="") ? Number(b.total_price) : bsTotal;
+    const paid = paidByBooking[b.id];
+    // Expected Revenue (confirmed bookings) always uses the estimate —
+    // there's no payment yet by definition. Actual Revenue (completed
+    // bookings) uses the real checked-out amount when one exists, and
+    // falls back to the estimate only for bookings completed before
+    // checkout existed. Every render function in this file reads `total`
+    // below — fixing it once here is what keeps Today/Week/Insights/
+    // Customers/Owner-Aivy all agreeing with each other automatically.
+    const total = paid ? paid.amount : estimate;
     const cust = custById[bookingCustId(b)];
     const tech = techById[bookingTechId(b)];
     const status = bookingStatus(b);
@@ -643,6 +747,10 @@ async function loadAll(){
       tech: tech ? techName(tech) : null,
       services: svcRows.map(bsName),
       total,
+      estimate,
+      actual: paid ? paid.amount : null,
+      tip: paid ? paid.tip : 0,
+      isPaid: !!paid,
       status,
       source,
       counts: !CONFIG.NON_REVENUE_STATUSES.includes(status),
@@ -697,7 +805,7 @@ function renderToday(){
     const chips = a.services.length ? a.services.map(s=>`<span class="chip">${esc(s)}</span>`).join("") : `<span class="chip">Service TBD</span>`;
     const actions = a.status==="confirmed" ? `
         <div class="appt-actions">
-          <button class="act done" onclick="markStatus('${a.id}','completed')">✓ Done</button>
+          <button class="act done" onclick="openCheckout('${a.id}')">✓ Done</button>
           <button class="act resched" onclick="openReschedule('${a.id}')">Reschedule</button>
           <button class="act noshow" onclick="markStatus('${a.id}','no_show')">No-show</button>
           <button class="act cancel" onclick="cancelBooking('${a.id}')">Cancel</button>
@@ -758,6 +866,212 @@ function cancelBooking(id){
   const reason = prompt("Cancel this appointment?\n\nOptional — type a reason (or leave blank), then press OK:");
   if(reason===null) return;            // pressed Cancel on the prompt = do nothing
   doWrite(id, "cancelled", reason.trim());
+}
+
+/* ---------- Checkout (replaces direct "Done" — this is the only path that creates payments + payment_line_items) ---------- */
+let ck = { bookingId:null, method:null, lines:[] };
+
+function ckServiceIdByName(name){
+  const n = (name||"").trim().toLowerCase();
+  if(!n) return null;
+  const match = Object.values(store.services).find(s=>(s.name||"").trim().toLowerCase()===n);
+  return match ? match.id : null;
+}
+
+function openCheckout(id){
+  const a = store.assembled.find(x=>x.id===id);
+  if(!a) return;
+  const origLines = store.bookingServices[id] || [];
+  ck = {
+    bookingId: id,
+    method: null,
+    // Pre-fill from what was actually booked — technician defaults to who
+    // was scheduled, but every field stays fully editable, and lines can
+    // be added for work that wasn't originally booked (per-line, not
+    // locked to the booking's single technician).
+    lines: origLines.length
+      ? origLines.map(bs => ({
+          serviceId: ckServiceIdByName(bsName(bs)),
+          serviceName: bsName(bs),
+          technicianId: a.techId || "",
+          chargedPrice: bsPrice(bs),
+          tip: 0
+        }))
+      : [{ serviceId:null, serviceName:"", technicianId: a.techId||"", chargedPrice:0, tip:0 }]
+  };
+  document.getElementById("ckWho").textContent =
+    `${a.customer}${a.tech?` · originally scheduled with ${a.tech}`:""}`;
+  document.getElementById("ckServiceCatalog").innerHTML =
+    Object.values(store.services).filter(s=>s.active!==false)
+      .sort((x,y)=>(x.name||"").localeCompare(y.name||""))
+      .map(s=>`<option value="${esc(s.name)}">`).join("");
+  document.querySelectorAll("#ckMethodSeg button").forEach(b=>b.classList.remove("on"));  // no default — a real choice is required
+  document.getElementById("ckDiscount").value = "";
+  document.getElementById("ckNotes").value = "";
+  document.getElementById("ckCreatedBy").value = "Kristy";
+  document.getElementById("ckCreatedByLabel").textContent = "Kristy";
+  document.getElementById("ckCreatedBy").style.display = "none";
+  document.getElementById("ckErr").textContent = "";
+  ckRenderLines();
+  const save = document.getElementById("ckSave"); save.disabled=false; save.textContent="Complete & charge";
+  document.getElementById("ckmodal").style.display = "flex";
+}
+function closeCheckout(){ document.getElementById("ckmodal").style.display="none"; }
+
+function ckRenderLines(){
+  document.getElementById("ckLines").innerHTML = ck.lines.map((l,i)=>`
+    <div class="ck-line" data-idx="${i}">
+      <input class="nb-input" list="ckServiceCatalog" placeholder="Service" value="${esc(l.serviceName)}"
+             oninput="ckLineService(${i}, this.value)">
+      <select class="nb-input" onchange="ckLineField(${i},'technicianId',this.value)">
+        <option value="">Select technician…</option>
+        ${store.technicians.filter(t=>t.active!==false).map(t=>
+          `<option value="${t.id}" ${l.technicianId===t.id?"selected":""}>${esc(t.name||"Staff")}</option>`).join("")}
+      </select>
+      <input class="nb-input" type="number" step="0.01" min="0" value="${l.chargedPrice}" oninput="ckLineField(${i},'chargedPrice',this.value)">
+      <input class="nb-input" type="number" step="0.01" min="0" value="${l.tip}" oninput="ckLineField(${i},'tip',this.value)">
+      <button type="button" class="ck-line-remove" onclick="ckRemoveLine(${i})" ${ck.lines.length<=1?"disabled":""} title="Remove line">✕</button>
+    </div>`).join("");
+  ckRecalc();
+}
+
+function ckLineService(idx, val){
+  const line = ck.lines[idx]; if(!line) return;
+  line.serviceName = val;
+  const match = Object.values(store.services).find(s=>(s.name||"").trim().toLowerCase()===val.trim().toLowerCase());
+  line.serviceId = match ? match.id : null;
+  // Only auto-suggest a price for a line that doesn't have one yet (a new
+  // blank row) — never overwrite a price someone already typed/edited.
+  if(match && (line.chargedPrice==="" || Number(line.chargedPrice)===0)){
+    line.chargedPrice = match.price;
+    const row = document.querySelector(`.ck-line[data-idx="${idx}"]`);
+    if(row) row.querySelectorAll('input[type="number"]')[0].value = match.price;
+  }
+  ckRecalc();
+}
+function ckLineField(idx, field, val){
+  const line = ck.lines[idx]; if(!line) return;
+  line[field] = val;
+  ckRecalc();
+}
+function ckAddLine(){
+  ck.lines.push({ serviceId:null, serviceName:"", technicianId:"", chargedPrice:0, tip:0 });
+  ckRenderLines();
+  setTimeout(()=>{
+    const rows = document.querySelectorAll("#ckLines .ck-line");
+    const last = rows[rows.length-1];
+    if(last) last.querySelector("input").focus();
+  }, 20);
+}
+function ckRemoveLine(idx){
+  if(ck.lines.length<=1) return;   // backend requires at least one line — mirror that here, don't let staff paint themselves into an error
+  ck.lines.splice(idx,1);
+  ckRenderLines();
+}
+
+function ckRecalc(){
+  const totalCharged = ck.lines.reduce((s,l)=>s+(Number(l.chargedPrice)||0),0);
+  const totalTips = ck.lines.reduce((s,l)=>s+(Number(l.tip)||0),0);
+  const discount = Number(document.getElementById("ckDiscount").value)||0;
+  const finalPayment = (totalCharged - discount) + totalTips;
+  document.getElementById("ckTotals").innerHTML = `
+    <div class="ck-totals-row"><span>Total charged</span><span>${usd(totalCharged)}</span></div>
+    <div class="ck-totals-row"><span>Discount</span><span>−${usd(discount)}</span></div>
+    <div class="ck-totals-row"><span>Total tips</span><span>${usd(totalTips)}</span></div>
+    <div class="ck-totals-row final"><span>Final payment</span><span>${usd(finalPayment)}</span></div>`;
+}
+
+function ckSetMethod(m){
+  ck.method = m;
+  document.querySelectorAll("#ckMethodSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m===m));
+}
+function ckEditCreatedBy(){
+  document.getElementById("ckCreatedByLabel").parentElement.querySelector("button").style.display="none";
+  document.getElementById("ckCreatedBy").style.display = "block";
+  document.getElementById("ckCreatedBy").focus();
+  document.getElementById("ckCreatedBy").onblur = () => {
+    const v = document.getElementById("ckCreatedBy").value.trim() || "Kristy";
+    document.getElementById("ckCreatedByLabel").textContent = v;
+    document.getElementById("ckCreatedBy").style.display = "none";
+    document.getElementById("ckCreatedByLabel").parentElement.querySelector("button").style.display="inline";
+  };
+}
+
+// Validates every line, visually flags each bad row, and returns the
+// FIRST problem as a specific message ("Line 2: pick a technician")
+// rather than a generic banner — so a new receptionist knows exactly
+// what to fix without hunting through the form.
+function ckValidateLines(){
+  let firstErr = null;
+  document.querySelectorAll("#ckLines .ck-line").forEach((row,i)=>{
+    const l = ck.lines[i];
+    const badService = !l.serviceName.trim();
+    const badTech = !l.technicianId;
+    const badPrice = l.chargedPrice===""||l.chargedPrice==null||isNaN(Number(l.chargedPrice))||Number(l.chargedPrice)<0;
+    const bad = badService || badTech || badPrice;
+    row.classList.toggle("ck-line-error", bad);
+    if(bad && !firstErr){
+      firstErr = badService ? `Line ${i+1}: enter a service.`
+        : badTech ? `Line ${i+1}: pick a technician.`
+        : `Line ${i+1}: enter a valid price.`;
+    }
+  });
+  return firstErr;
+}
+
+async function submitCheckout(){
+  const err = document.getElementById("ckErr"); err.textContent = "";
+  const lineErr = ckValidateLines();
+  if(lineErr){ err.textContent = lineErr; return; }
+  if(!ck.method){ err.textContent = "Pick a payment method."; return; }
+  const totalCharged = ck.lines.reduce((s,l)=>s+(Number(l.chargedPrice)||0),0);
+  const discount = Number(document.getElementById("ckDiscount").value)||0;
+  if(discount > totalCharged){ err.textContent = "Discount can't exceed the total charged."; return; }
+  const createdBy = (document.getElementById("ckCreatedBy").value.trim() || document.getElementById("ckCreatedByLabel").textContent.trim() || "Kristy");
+  const save = document.getElementById("ckSave"); save.disabled = true; save.textContent = "Charging…";
+  try{
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ action:"checkout", args:{
+        p_booking: ck.bookingId,
+        p_lines: ck.lines.map(l=>({
+          service_id: l.serviceId || null,
+          service_name: l.serviceName.trim(),
+          technician_id: l.technicianId,
+          charged_price: Number(l.chargedPrice)||0,
+          tip_amount: Number(l.tip)||0
+        })),
+        p_payment_method: ck.method,
+        p_discount: discount,
+        p_notes: document.getElementById("ckNotes").value.trim() || null,
+        p_created_by: createdBy
+      }, passcode: window.__VELOUR_PASS || "" })
+    });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.ok===false){
+      const msg = (data && data.error) || ("HTTP "+res.status);
+      if(msg.includes("PAYMENT_METHOD_REQUIRED"))          err.textContent = "Pick a payment method.";
+      else if(msg.includes("INVALID_PAYMENT_METHOD"))      err.textContent = "That payment method isn't recognized.";
+      else if(msg.includes("NO_SERVICE_LINES"))            err.textContent = "Add at least one service line.";
+      else if(msg.includes("LINE_MISSING_TECHNICIAN"))     err.textContent = "Every line needs a technician.";
+      else if(msg.includes("INVALID_TECHNICIAN"))          err.textContent = "One of the technicians on this checkout isn't recognized.";
+      else if(msg.includes("INVALID_SERVICE"))             err.textContent = "One of the services on this checkout isn't recognized.";
+      else if(msg.includes("INVALID_LINE_AMOUNT"))         err.textContent = "Check the price on each line.";
+      else if(msg.includes("INVALID_LINE_TIP"))            err.textContent = "Check the tip on each line.";
+      else if(msg.includes("DISCOUNT_EXCEEDS_CHARGE"))     err.textContent = "Discount can't exceed the total charged.";
+      else if(msg.includes("INVALID_STATUS_FOR_CHECKOUT")) err.textContent = "This appointment's status just changed — refresh and try again.";
+      else                                                  err.textContent = "Couldn't complete checkout. Please try again.";
+      save.disabled = false; save.textContent = "Complete & charge";
+      return;
+    }
+    closeCheckout();
+    await reloadData();
+  }catch(e){
+    console.error(e);
+    err.textContent = "Network error. Please try again.";
+    save.disabled = false; save.textContent = "Complete & charge";
+  }
 }
 
 let rmBookingId = null;
@@ -1016,7 +1330,7 @@ function openBookingDetail(id){
   const acts = a.status==="confirmed" ? `
     <button class="mg-btn mg-primary" onclick="closeDetail(); openReschedule('${a.id}')">Reschedule</button>
     <div style="display:flex;gap:8px;margin-top:8px">
-      <button class="act done" style="flex:1" onclick="markStatus('${a.id}','completed'); closeDetail()">✓ Done</button>
+      <button class="act done" style="flex:1" onclick="closeDetail(); openCheckout('${a.id}')">✓ Done</button>
       <button class="act noshow" style="flex:1" onclick="markStatus('${a.id}','no_show'); closeDetail()">No-show</button>
       <button class="act cancel" style="flex:1" onclick="closeDetail(); cancelBooking('${a.id}')">Cancel</button>
     </div>` : "";
@@ -1636,8 +1950,385 @@ document.getElementById("lockBtn").addEventListener("click", ()=>{
 document.querySelectorAll(".navlink").forEach(b=> b.addEventListener("click", ()=>switchView(b.dataset.view)));
 document.getElementById("custSearch").addEventListener("input", e=>renderCustomers(e.target.value));
 window.addEventListener("load", ()=>document.getElementById("passInput").focus());
+window.addEventListener("load", ()=>document.getElementById("passInput").focus());
+
+/* ---------- Admin Booking (walk-in / phone / manual — one generic flow) ---------- */
+let nb = { source:"walk_in", custMode:"existing", customerId:null, services:[] };
+
+function openNewBooking(defaultSource){
+  nb = { source: defaultSource || "walk_in", custMode:"existing", customerId:null, services:[] };
+  document.getElementById("nbTitle").textContent = "New booking";
+  nbSetSource(nb.source);
+  nbSetCustMode("existing");
+  document.getElementById("nbCreatedBy").value = "Kristy";
+  document.getElementById("nbCreatedByLabel").textContent = "Kristy";
+  document.getElementById("nbCreatedBy").style.display = "none";
+  document.getElementById("nbCustSearch").value = "";
+  document.getElementById("nbCustResults").style.display = "none";
+  document.getElementById("nbCustSelected").style.display = "none";
+  document.getElementById("nbName").value = "";
+  document.getElementById("nbPhone").value = "";
+  document.getElementById("nbEmail").value = "";
+  document.getElementById("nbPhoneErr").textContent = "";
+  document.getElementById("nbEmailErr").textContent = "";
+  const svcByCat = {};
+  Object.values(store.services).filter(s=>s.active!==false).forEach(s=>{
+    (svcByCat[s.category||"Other"] ||= []).push(s);
+  });
+  const cats = Object.keys(svcByCat).sort();
+  document.getElementById("nbServices").innerHTML = cats.map(cat => `
+    <div class="nb-svc-cat">${esc(cat)}</div>
+    <div class="nb-svc-grid">
+      ${svcByCat[cat].sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map(s=>`
+        <button type="button" class="nb-svc-chip" id="nbsvc-${s.id}" onclick="nbToggleService('${s.id}')">
+          <span class="n">${esc(s.name)}</span>
+          <span class="p">${usd(s.price)} · ${s.duration_minutes}min</span>
+        </button>`).join("")}
+    </div>`).join("");
+  const now = new Date(), pad = n=>String(n).padStart(2,"0");
+  document.getElementById("nbDate").value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const rounded = new Date(Math.ceil(now.getTime()/300000)*300000);
+  document.getElementById("nbTime").value = `${pad(rounded.getHours())}:${pad(rounded.getMinutes())}`;
+  document.getElementById("nbNotes").value = "";
+  document.getElementById("nbErr").textContent = "";
+  document.getElementById("nbSvcFilter").value = "";
+  nbUpdateTotals();
+  nbRefreshTechOptions();
+  const save = document.getElementById("nbSave"); save.disabled=false; save.textContent="Save booking";
+  document.getElementById("nbmodal").style.display = "flex";
+  // Existing customer is the default tab (most walk-ins are repeat faces) —
+  // put the cursor straight in the search box so staff can start typing
+  // the instant the modal opens, no click required.
+  setTimeout(()=>{ if(nb.custMode==="existing") document.getElementById("nbCustSearch").focus(); }, 30);
+}
+
+function nbFilterServices(q){
+  q = q.trim().toLowerCase();
+  document.querySelectorAll("#nbServices .nb-svc-chip").forEach(chip=>{
+    const match = !q || chip.querySelector(".n").textContent.toLowerCase().includes(q);
+    chip.style.display = match ? "" : "none";
+  });
+  document.querySelectorAll("#nbServices .nb-svc-cat").forEach(cat=>{
+    const grid = cat.nextElementSibling;
+    const anyVisible = grid && [...grid.children].some(c=>c.style.display!=="none");
+    cat.style.display = anyVisible ? "" : "none";
+    if(grid) grid.style.display = anyVisible ? "" : "none";
+  });
+}
+function closeNewBooking(){ document.getElementById("nbmodal").style.display="none"; }
+
+function nbSetSource(src){
+  nb.source = src;
+  document.querySelectorAll("#nbSourceSeg button").forEach(b=>b.classList.toggle("on", b.dataset.src===src));
+}
+
+function nbSetCustMode(mode){
+  nb.custMode = mode;
+  document.getElementById("nbTabExisting").classList.toggle("on", mode==="existing");
+  document.getElementById("nbTabNew").classList.toggle("on", mode==="new");
+  document.getElementById("nbExistingPane").style.display = mode==="existing" ? "block" : "none";
+  document.getElementById("nbNewPane").style.display = mode==="new" ? "block" : "none";
+  // Switching modes clears the other one's data so there's never ambiguity
+  // about which path governs the submission.
+  if(mode==="new"){ nbClearCustomer(); }
+  else { document.getElementById("nbName").value=""; document.getElementById("nbPhone").value=""; document.getElementById("nbEmail").value=""; }
+}
+
+function nbEditCreatedBy(){
+  document.getElementById("nbCreatedByLabel").parentElement.querySelector("button").style.display="none";
+  document.getElementById("nbCreatedBy").style.display = "block";
+  document.getElementById("nbCreatedBy").focus();
+  document.getElementById("nbCreatedBy").onblur = () => {
+    const v = document.getElementById("nbCreatedBy").value.trim() || "Kristy";
+    document.getElementById("nbCreatedByLabel").textContent = v;
+    document.getElementById("nbCreatedBy").style.display = "none";
+    document.getElementById("nbCreatedByLabel").parentElement.querySelector("button").style.display="inline";
+  };
+}
+
+function nbSearchCustomer(q){
+  const box = document.getElementById("nbCustResults");
+  q = q.trim().toLowerCase();
+  if(!q){ box.style.display="none"; box.innerHTML=""; return; }
+  const digits = q.replace(/\D/g,"");
+  const matches = store.customers.filter(c=>
+    (customerName(c)||"").toLowerCase().includes(q) ||
+    (digits && (customerPhone(c)||"").replace(/\D/g,"").includes(digits)) ||
+    (customerEmail(c)||"").toLowerCase().includes(q)
+  ).slice(0,8);
+  box.style.display = matches.length ? "block" : "none";
+  box.innerHTML = matches.map(c=>{
+    const completed = store.assembled.filter(a=>a.customerId===c.id && a.status==="completed");
+    const tag = completed.length ? `${completed.length} visit${completed.length===1?"":"s"}` : "New";
+    return `<div class="nb-cust-row" onclick="nbSelectCustomer('${c.id}')">
+      <span>${esc(customerName(c))}<br><span class="am-nop">${esc(customerPhone(c)||customerEmail(c)||"")}</span></span>
+      <span class="tag">${tag}</span>
+    </div>`;
+  }).join("");
+}
+function nbSelectCustomer(id){
+  const c = store.customers.find(x=>x.id===id); if(!c) return;
+  nb.customerId = id;
+  document.getElementById("nbCustSearch").value = "";
+  document.getElementById("nbCustResults").style.display="none";
+  document.getElementById("nbCustSelected").style.display="flex";
+  document.getElementById("nbCustSelectedName").textContent =
+    customerName(c) + (customerPhone(c)?` · ${customerPhone(c)}`:"");
+}
+function nbClearCustomer(){
+  nb.customerId = null;
+  document.getElementById("nbCustSelected").style.display="none";
+}
+
+function nbToggleService(id){
+  const btn = document.getElementById("nbsvc-"+id);
+  if(nb.services.includes(id)){ nb.services = nb.services.filter(x=>x!==id); btn.classList.remove("on"); }
+  else { nb.services.push(id); btn.classList.add("on"); }
+  nbUpdateTotals();
+  nbRefreshTechOptions();
+}
+function nbUpdateTotals(){
+  // Deliberately no dollar figure here. This strip sits right above Save
+  // and previously showed a summed price that read like a locked total —
+  // but base service prices don't account for technician-specific pricing,
+  // add-ons, tax, or promotions, none of which this system computes yet.
+  // Duration stays because it's load-bearing for scheduling, not a price.
+  const svcs = nb.services.map(id=>store.services[id]).filter(Boolean);
+  const dur = svcs.reduce((s,x)=>s+(x.duration_minutes||0),0);
+  document.getElementById("nbTotals").textContent =
+    svcs.length ? `${svcs.length} service${svcs.length===1?"":"s"} · ${dur} min` : "No services selected yet";
+
+  const timeStr = document.getElementById("nbTime").value;
+  const endEl = document.getElementById("nbEndPreview");
+  if(timeStr && dur){
+    const [h,m] = timeStr.split(":").map(Number);
+    const endMin = h*60+m+dur;
+    const d = new Date(); d.setHours(Math.floor(endMin/60)%24, endMin%60, 0, 0);
+    endEl.textContent = `Ends around ${timeFmt(d)}`;
+  } else {
+    endEl.textContent = "";
+  }
+}
+
+function nbT2m(t){ if(!t) return null; const [h,m] = t.split(":").map(Number); return h*60+m; }
+const NB_DOW = ["sun","mon","tue","wed","thu","fri","sat"];
+
+function nbRefreshTechOptions(){
+  const dateStr = document.getElementById("nbDate").value;
+  const timeStr = document.getElementById("nbTime").value;
+  const sel = document.getElementById("nbTech");
+  const current = sel.value;
+  const svcs = nb.services.map(id=>store.services[id]).filter(Boolean);
+  const dur = svcs.reduce((s,x)=>s+(x.duration_minutes||0),0) || 30;
+
+  let dow=null, dateObj=null, startMin=null, endMin=null;
+  if(dateStr){ dateObj = new Date(dateStr+"T00:00:00"); dow = NB_DOW[dateObj.getDay()]; }
+  if(timeStr){ const [h,m]=timeStr.split(":").map(Number); startMin=h*60+m; endMin=startMin+dur; }
+
+  // Informational only from here down — nothing disables an option.
+  // This is an internal staff tool: the receptionist knows the real
+  // floor situation better than this list does. The backend (SLOT_TAKEN)
+  // remains the actual authority on genuine conflicts. Grouping (not
+  // disabling) is what makes availability "clear but not restrictive" —
+  // the clean choices surface at the top, flagged ones stay one click away.
+  const available = [];
+  const flagged = [];
+  store.technicians.filter(t=>t.active!==false).forEach(t=>{
+    let note = null;
+    if(dow && Array.isArray(t.available_days) && t.available_days.length && !t.available_days.includes(dow)){
+      note = "not usually in that day";
+    }
+    if(!note && svcs.length){
+      const quals = store.techServices[t.id] || new Set();
+      if(svcs.some(s=>!quals.has(s.id))) note = "not marked qualified for a selected service";
+    }
+    if(!note && dateObj && startMin!=null){
+      const off = (store.timeoff||[]).find(o=> o.technician_id===t.id && o.off_date===dateStr &&
+        (o.all_day || (nbT2m(o.start_time)<endMin && nbT2m(o.end_time)>startMin)));
+      if(off) note = "marked off that day";
+    }
+    if(!note && dateObj && startMin!=null){
+      const clash = store.assembled.find(a=> a.techId===t.id && a.when &&
+        a.when.toDateString()===dateObj.toDateString() &&
+        a.status!=="cancelled" && a.status!=="no_show" &&
+        apptStartMin(a) < endMin && apptEndMin(a) > startMin);
+      if(clash) note = `already booked at ${timeFmt(clash.when)}`;
+    }
+    const optHtml = `<option value="${t.id}">${esc(t.name||"Staff")}${note?` — ${note}`:""}</option>`;
+    (note ? flagged : available).push(optHtml);
+  });
+  let html = `<option value="">No preference — assign best available</option>`;
+  if(available.length) html += `<optgroup label="Available">${available.join("")}</optgroup>`;
+  if(flagged.length)   html += `<optgroup label="Has a note">${flagged.join("")}</optgroup>`;
+  sel.innerHTML = html;
+  if(current && [...sel.options].some(o=>o.value===current)) sel.value = current;
+}
+
+function nbValidateEmail(){
+  const v = document.getElementById("nbEmail").value.trim();
+  const el = document.getElementById("nbEmailErr");
+  if(!v){ el.textContent=""; return true; }                 // optional — blank is fine
+  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  el.textContent = ok ? "" : "Enter a valid email, or leave it blank.";
+  return ok;
+}
+function nbValidatePhone(){
+  const v = document.getElementById("nbPhone").value.trim();
+  const el = document.getElementById("nbPhoneErr");
+  if(!v){ el.textContent=""; return true; }                 // optional — blank is fine
+  const digits = v.replace(/\D/g,"");
+  const ok = digits.length===10 || (digits.length===11 && digits[0]==="1");
+  el.textContent = ok ? "" : "Enter a 10-digit phone number, or leave it blank.";
+  return ok;
+}
+
+async function submitNewBooking(){
+  const err = document.getElementById("nbErr"); err.textContent = "";
+  const createdBy = (document.getElementById("nbCreatedBy").value.trim() || document.getElementById("nbCreatedByLabel").textContent.trim() || "Kristy");
+  const svcs = nb.services.map(id=>store.services[id]).filter(Boolean);
+  if(!svcs.length){ err.textContent = "Pick at least one service."; return; }
+  const isNew = nb.custMode==="new";
+  const name  = isNew ? document.getElementById("nbName").value.trim() : "";
+  if(isNew && !name){ err.textContent = "Enter the customer's name."; return; }
+  if(!isNew && !nb.customerId){ err.textContent = "Search and select a customer, or switch to \"New customer.\""; return; }
+  if(isNew && !(nbValidateEmail() && nbValidatePhone())){ err.textContent = "Fix the highlighted field above."; return; }
+  const phone = isNew ? document.getElementById("nbPhone").value.trim() : null;
+  const email = isNew ? document.getElementById("nbEmail").value.trim() : null;
+  const date = document.getElementById("nbDate").value;
+  const time = document.getElementById("nbTime").value;
+  if(!date || !time){ err.textContent = "Pick a date and time."; return; }
+  const dur = svcs.reduce((s,x)=>s+(x.duration_minutes||0),0);
+  const price = svcs.reduce((s,x)=>s+(Number(x.price)||0),0);
+  const [h,m] = time.split(":").map(Number);
+  const endMin = h*60+m+dur;
+  const endTime = `${String(Math.floor(endMin/60)%24).padStart(2,"0")}:${String(endMin%60).padStart(2,"0")}`;
+  const save = document.getElementById("nbSave"); save.disabled = true; save.textContent = "Saving…";
+  try{
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ action:"create_booking", args:{
+        p_salon: CONFIG.SALON_ID,
+        p_name: isNew ? name : null,
+        p_email: isNew ? (email||null) : null,
+        p_phone: isNew ? (phone||null) : null,
+        p_tech: document.getElementById("nbTech").value || null,
+        p_date: date, p_start: time+":00", p_end: endTime+":00",
+        p_duration: dur, p_price: price,
+        p_notes: document.getElementById("nbNotes").value.trim() || null,
+        p_services: svcs.map(s=>({name:s.name, price:s.price, duration_minutes:s.duration_minutes})),
+        p_source: nb.source, p_customer_id: nb.customerId,
+        p_created_by: createdBy
+      }, passcode: window.__VELOUR_PASS || "" })
+    });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.ok===false){
+      const msg = (data && data.error) || ("HTTP "+res.status);
+      if(msg.includes("SLOT_TAKEN"))              err.textContent = "That technician just got booked for this time — pick another.";
+      else if(msg.includes("NO_TECH_AVAILABLE"))  err.textContent = "No technician is free and qualified for that combination. Try a different time or pick someone specific.";
+      else if(msg.includes("INVALID_TIME_RANGE")) err.textContent = "End time must be after start time.";
+      else                                        err.textContent = "Couldn't save. Please try again.";
+      save.disabled = false; save.textContent = "Save booking";
+      nbRefreshTechOptions();
+      return;
+    }
+    closeNewBooking();
+    await reloadData();
+  }catch(e){
+    console.error(e);
+    err.textContent = "Network error. Please try again.";
+    save.disabled = false; save.textContent = "Save booking";
+  }
+}
 </script>
-<div id="rmodal" class="rmodal" style="display:none">
+<div id="nbmodal" class="rmodal" style="display:none">
+  <div class="nb-card">
+    <div class="nb-head">
+      <h3 id="nbTitle">New booking</h3>
+      <div class="nb-sub">Creates a real booking — counts in Insights, CRM, and revenue like any other appointment.</div>
+      <div class="nb-seg" style="margin-top:14px" id="nbSourceSeg">
+        <button type="button" data-src="walk_in" onclick="nbSetSource('walk_in')">Customer walked in</button>
+        <button type="button" data-src="phone" onclick="nbSetSource('phone')">Phone booking</button>
+        <button type="button" data-src="manual" onclick="nbSetSource('manual')">Manual entry</button>
+      </div>
+    </div>
+
+    <div class="nb-body">
+      <div class="nb-section">
+        <span class="nb-label">Customer</span>
+        <div class="nb-tabs">
+          <button type="button" class="nb-tab" id="nbTabExisting" onclick="nbSetCustMode('existing')">Existing customer</button>
+          <button type="button" class="nb-tab" id="nbTabNew" onclick="nbSetCustMode('new')">New customer</button>
+        </div>
+        <div id="nbExistingPane">
+          <input class="nb-input" id="nbCustSearch" type="text" placeholder="Search name or phone…" autocomplete="off" oninput="nbSearchCustomer(this.value)">
+          <div id="nbCustResults" class="nb-cust-results" style="display:none"></div>
+          <div id="nbCustSelected" class="nb-cust-picked" style="display:none">
+            <span id="nbCustSelectedName"></span>
+            <button class="x" onclick="nbClearCustomer()">✕</button>
+          </div>
+        </div>
+        <div id="nbNewPane" style="display:none">
+          <input class="nb-input" id="nbName" type="text" placeholder="Full name" style="margin-bottom:8px">
+          <div class="nb-row2">
+            <input class="nb-input" id="nbPhone" type="text" placeholder="Phone (optional)" oninput="nbValidatePhone()" onblur="nbValidatePhone()">
+            <input class="nb-input" id="nbEmail" type="text" placeholder="Email (optional)" oninput="nbValidateEmail()" onblur="nbValidateEmail()">
+          </div>
+          <div class="nb-row2">
+            <div class="nb-field-err" id="nbPhoneErr"></div>
+            <div class="nb-field-err" id="nbEmailErr"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nb-section">
+        <span class="nb-label">Services</span>
+        <div class="nb-price-note">Prices shown are base rates. Add-ons, tax, and any promotions are calculated at checkout, not here.</div>
+        <input class="nb-input" id="nbSvcFilter" type="text" placeholder="Filter services…" autocomplete="off" oninput="nbFilterServices(this.value)" style="margin-bottom:10px">
+        <div id="nbServices"></div>
+        <div class="nb-totals" id="nbTotals"></div>
+      </div>
+
+      <div class="nb-section">
+        <div class="nb-row2">
+          <div>
+            <span class="nb-label">Date</span>
+            <input class="nb-input" type="date" id="nbDate" onchange="nbUpdateTotals(); nbRefreshTechOptions()">
+          </div>
+          <div>
+            <span class="nb-label">Time</span>
+            <input class="nb-input" type="time" id="nbTime" onchange="nbUpdateTotals(); nbRefreshTechOptions()">
+          </div>
+        </div>
+        <div class="nb-hint" id="nbEndPreview"></div>
+      </div>
+
+      <div class="nb-section">
+        <span class="nb-label">Technician</span>
+        <select class="nb-input" id="nbTech"></select>
+        <div class="nb-hint">All active technicians are selectable — grouping is FYI, not a restriction.</div>
+      </div>
+
+      <div class="nb-section">
+        <span class="nb-label">Notes (optional)</span>
+        <input class="nb-input" id="nbNotes" type="text" placeholder="Anything staff should know">
+      </div>
+
+      <div class="nb-err" id="nbErr"></div>
+    </div>
+
+    <div class="nb-foot">
+      <div class="nb-enteredby">
+        Entering as <b id="nbCreatedByLabel">Kristy</b> · <button type="button" onclick="nbEditCreatedBy()">change</button>
+        <input class="nb-input" id="nbCreatedBy" type="text" value="Kristy" style="display:none;margin-top:6px;max-width:200px">
+      </div>
+      <div class="nb-actions">
+        <button class="btn" onclick="closeNewBooking()">Cancel</button>
+        <button class="btn accent" id="nbSave" onclick="submitNewBooking()">Save booking</button>
+      </div>
+    </div>
+  </div>
+</div><div id="rmodal" class="rmodal" style="display:none">
   <div class="rmodal-card">
     <h3>Reschedule</h3>
     <div class="rmodal-sub" id="rmWho"></div>
@@ -1651,6 +2342,64 @@ window.addEventListener("load", ()=>document.getElementById("passInput").focus()
     <div class="rmodal-actions">
       <button class="btn ghost" type="button" onclick="closeReschedule()">Cancel</button>
       <button class="btn accent" type="button" id="rmSave" onclick="submitReschedule()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="ckmodal" class="rmodal" style="display:none">
+  <div class="nb-card">
+    <div class="nb-head">
+      <h3>Checkout</h3>
+      <div class="nb-sub" id="ckWho"></div>
+    </div>
+
+    <div class="nb-body">
+      <div class="nb-section">
+        <span class="nb-label">Services performed</span>
+        <div class="ck-lines-head">
+          <span>Service</span><span>Technician</span><span>Price</span><span>Tip</span><span></span>
+        </div>
+        <div id="ckLines"></div>
+        <button type="button" class="ck-add-line" onclick="ckAddLine()">+ Add service line</button>
+        <datalist id="ckServiceCatalog"></datalist>
+      </div>
+
+      <div class="nb-section">
+        <div class="nb-row2">
+          <div>
+            <span class="nb-label">Discount (optional)</span>
+            <input class="nb-input" id="ckDiscount" type="number" step="0.01" min="0" placeholder="0.00" oninput="ckRecalc()">
+          </div>
+          <div>
+            <span class="nb-label">Payment method</span>
+            <div class="nb-seg" id="ckMethodSeg">
+              <button type="button" data-m="cash" onclick="ckSetMethod('cash')">Cash</button>
+              <button type="button" data-m="card" onclick="ckSetMethod('card')">Card</button>
+              <button type="button" data-m="other" onclick="ckSetMethod('other')">Other</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ck-totals" id="ckTotals"></div>
+
+      <div class="nb-section">
+        <span class="nb-label">Notes (optional)</span>
+        <input class="nb-input" id="ckNotes" type="text" placeholder="Anything about this checkout">
+      </div>
+
+      <div class="nb-err" id="ckErr"></div>
+    </div>
+
+    <div class="nb-foot">
+      <div class="nb-enteredby">
+        Checked out by <b id="ckCreatedByLabel">Kristy</b> · <button type="button" onclick="ckEditCreatedBy()">change</button>
+        <input class="nb-input" id="ckCreatedBy" type="text" value="Kristy" style="display:none;margin-top:6px;max-width:200px">
+      </div>
+      <div class="nb-actions">
+        <button class="btn" onclick="closeCheckout()">Cancel</button>
+        <button class="btn accent" id="ckSave" onclick="submitCheckout()">Complete &amp; charge</button>
+      </div>
     </div>
   </div>
 </div>
