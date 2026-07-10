@@ -294,6 +294,31 @@
   .rtag.vip{background:#FDEBE4;color:var(--persimmon-deep)}
   .rtag.lapsed{background:#F6ECD9;color:var(--amber)}
   .navlink-aivy{color:var(--persimmon-deep);font-weight:700}
+  .settings-tabs{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:20px;padding-bottom:2px}
+  .settings-tab{border:1px solid var(--line);background:#fff;color:var(--plum-soft);border-radius:9px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .12s,color .12s,background .12s}
+  .settings-tab:hover{border-color:var(--persimmon);color:var(--persimmon-deep)}
+  .settings-tab.active{background:var(--plum);color:#fff;border-color:var(--plum)}
+  .settings-placeholder{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:40px 24px;text-align:center;color:var(--muted);font-size:14px}
+  .settings-section-title{font-family:"Fraunces",serif;font-weight:500;font-size:19px;color:var(--ink);margin-bottom:4px}
+  .settings-section-sub{font-size:13px;color:var(--plum-soft);margin-bottom:18px}
+  .settings-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);max-width:420px}
+  .settings-card label{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:14px 0 5px}
+  .settings-card label:first-of-type{margin-top:4px}
+  .settings-card input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
+  .settings-card input:focus{border-color:var(--persimmon);box-shadow:0 0 0 3px rgba(231,90,52,.14)}
+  .settings-card .btn{margin-top:16px}
+  .settings-card-note{font-size:12.5px;color:var(--plum-soft);margin-top:4px}
+  .settings-success{color:var(--sage);font-size:13px;font-weight:600;margin-top:10px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{padding-right:44px}
+  .pw-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:6px 8px;line-height:1;border-radius:6px}
+  .pw-toggle:hover{color:var(--plum);background:var(--surface-2)}
+  .pin-status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+  .pin-status.on{background:#E7F1EB;color:var(--sage)}
+  .pin-status.off{background:#F6EDE8;color:var(--plum-soft)}
+  .bh-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+  .bh-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .bh-row input[type=time]{width:auto;padding:8px 10px}
   .aivy-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;line-height:1.6;color:var(--ink);font-size:14.5px}
   .aivy-card h4{font-family:"Fraunces",serif;font-weight:600;font-size:16px;color:var(--persimmon-deep);margin:16px 0 6px}
   .aivy-card h4:first-child{margin-top:0}
@@ -495,7 +520,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
   <aside>
     <div class="brand">
       <div class="wordmark">Velour</div>
-      <div class="salon">Red Persimmon<br>Nails &amp; Spa</div>
+      <div class="salon" id="brandSalonName">Red Persimmon<br>Nails &amp; Spa</div>
     </div>
     <div class="datestack" id="dateStack"></div>
     <nav>
@@ -506,6 +531,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
       <button class="navlink" data-view="customers"><span class="dot"></span>Customers</button>
       <button class="navlink" data-view="technicians"><span class="dot"></span>Technicians</button>
       <button class="navlink" data-view="payroll"><span class="dot"></span>Payroll</button>
+      <button class="navlink" data-view="settings"><span class="dot"></span>Settings</button>
     </nav>
     <div class="foot">
       <button class="lock" id="lockBtn">Lock dashboard</button><br>
@@ -610,6 +636,16 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
       <div class="pay-section" id="payPeriodWrap"></div>
       <div class="pay-section" id="payHistoryWrap"></div>
     </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="view-head">
+        <h2>Settings</h2>
+        <span class="sub">Your salon's control center</span>
+      </div>
+      <div class="settings-tabs" id="settingsTabs"></div>
+      <div id="settingsWrap"></div>
+    </section>
   </main>
 </div>
 
@@ -665,7 +701,7 @@ const api = {
         apikey: CONFIG.SUPABASE_ANON_KEY,
         Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
       },
-      body: JSON.stringify({ table, query, passcode: window.__VELOUR_PASS || "" }),
+      body: JSON.stringify({ table, query, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID, payroll_pin: window.__VELOUR_PAYROLL_PIN || "" }),
     });
     if (res.status === 401) throw new Error("UNAUTHORIZED");
     if (!res.ok) {
@@ -711,22 +747,48 @@ const usd = n => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",
 const timeFmt = d => d ? new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit"}).format(d) : "—";
 const dateShort = d => d ? new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric"}).format(d) : "—";
 
+/* ---------- Business Info helpers ---------- */
+function fmtPhoneDisplay(raw){
+  const digits = String(raw||"").replace(/\D/g,"");
+  if(digits.length !== 10) return raw || "";
+  return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+}
+function applyBrandSalonName(){
+  const el = document.getElementById("brandSalonName");
+  if(!el || !store.salon || !store.salon.name) return; // keep hardcoded fallback on any miss
+  el.textContent = store.salon.name; // plain text — no line-break heuristics tied to one salon's naming style
+}
+
 /* ---------- Date helpers (salon-local time) ---------- */
+// Shared "today, in local time" formatter. new Date().toISOString() converts
+// to UTC first, which silently rolls to the next calendar day in the evening
+// for any timezone behind UTC (e.g. US Eastern) — this avoids that entirely.
+function localDateStr(d = new Date()){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
 function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
 function endOfToday(){ const d=startOfToday(); d.setDate(d.getDate()+1); return d; }
 function startOfWeek(){ const d=startOfToday(); const dow=(d.getDay()+6)%7; /* Mon=0 */ d.setDate(d.getDate()-dow); return d; }
 
 /* ---------- State ---------- */
-const store = { customers:[], technicians:[], services:{}, bookings:[], assembled:[], timeoff:[], salonHours:[], techTokens:{}, loaded:false };
+const store = { customers:[], technicians:[], services:{}, bookings:[], assembled:[], timeoff:[], salonHours:[], techTokens:{}, loaded:false, salon:null };
+// Payroll PIN verification is session-scoped: re-prompted on login, refresh,
+// or Lock — not on every tab switch. See renderPayroll()'s gate below.
+let payrollPinVerified = false;
 
 /* ---------- Data load ---------- */
 async function loadAll(){
   const eq = v => `eq.${v}`;
   const salon = CONFIG.SALON_FK;
-  const lookbackDate = new Date(Date.now() - CONFIG.LOOKBACK_DAYS*864e5).toISOString().slice(0,10);
+  const lookbackDate = localDateStr(new Date(Date.now() - CONFIG.LOOKBACK_DAYS*864e5));
 
-  // Pull the datasets in parallel.
-  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments, technicianComp, payrollPeriods] = await Promise.all([
+  // Pull the datasets in parallel. Payroll tables are deliberately excluded
+  // here — they only load after the Payroll PIN is verified, via
+  // reloadPayrollLookups(), not at boot for every dashboard user.
+  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments, salonRows] = await Promise.all([
     api.get("customers",   `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("technicians", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("services",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
@@ -736,11 +798,12 @@ async function loadAll(){
     api.get("technician_links", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("payments",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
-    api.get("technician_compensation", `${salon}=${eq(CONFIG.SALON_ID)}&order=effective_start_date.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
-    api.get("payroll_periods", `${salon}=${eq(CONFIG.SALON_ID)}&order=period_start.desc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("salons", `id=${eq(CONFIG.SALON_ID)}&limit=1`).catch(()=>[]),
   ]);
-  store.technicianComp = Array.isArray(technicianComp) ? technicianComp : [];
-  store.payrollPeriods = Array.isArray(payrollPeriods) ? payrollPeriods : [];
+  store.salon = (Array.isArray(salonRows) && salonRows[0]) ? salonRows[0] : null;
+  applyBrandSalonName();
+  store.technicianComp = [];
+  store.payrollPeriods = [];
   store.techServices = {};
   (Array.isArray(techServices)?techServices:[]).forEach(ts=>{
     (store.techServices[ts.technician_id] ||= new Set()).add(ts.service_id);
@@ -910,7 +973,7 @@ async function doWrite(id, status, reason){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"mark_status", args:{ p_booking:id, p_status:status, p_reason: reason || null, p_by:"salon" }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"mark_status", args:{ p_booking:id, p_status:status, p_reason: reason || null, p_by:"salon" }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
@@ -1110,7 +1173,7 @@ async function submitCheckout(){
         p_discount: discount,
         p_notes: document.getElementById("ckNotes").value.trim() || null,
         p_created_by: createdBy
-      }, passcode: window.__VELOUR_PASS || "" })
+      }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){
@@ -1139,6 +1202,7 @@ async function submitCheckout(){
 }
 
 let rmBookingId = null;
+let rmDurationMin = 0;
 function openReschedule(id){
   const item = store.assembled.find(a=>a.id===id);
   if(!item) return;
@@ -1153,8 +1217,15 @@ function openReschedule(id){
     `<option value="">Keep current technician</option>` +
     store.technicians.map(t=>`<option value="${t.id}">${esc(t.name||"Staff")}</option>`).join("");
   document.getElementById("rmErr").textContent = "";
+  rmDurationMin = (item.endMin!=null) ? (item.endMin - (d.getHours()*60+d.getMinutes())) : 60;
+  rmUpdateWarning();
   const save = document.getElementById("rmSave"); save.disabled = false; save.textContent = "Save changes";
   document.getElementById("rmodal").style.display = "flex";
+}
+function rmUpdateWarning(){
+  const date = document.getElementById("rmDate").value;
+  const time = document.getElementById("rmTime").value;
+  renderHoursWarning("rmHoursWarning", outsideBusinessHoursWarning(date, time, rmDurationMin));
 }
 function closeReschedule(){
   document.getElementById("rmodal").style.display = "none";
@@ -1173,7 +1244,7 @@ async function submitReschedule(){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"reschedule", args:{ p_booking:rmBookingId, p_date:date, p_start:time+":00", p_tech:tech }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"reschedule", args:{ p_booking:rmBookingId, p_date:date, p_start:time+":00", p_tech:tech }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){
@@ -1413,30 +1484,7 @@ function renderTechnicians(){
   const wrap = document.getElementById("techWrap");
   const techs = [...store.technicians].sort((a,b)=>(a.name||"").localeCompare(b.name||""));
   document.getElementById("techSub").textContent = `${techs.length} technician${techs.length===1?"":"s"}`;
-  const todayStr = new Date().toISOString().slice(0,10);
-
-  // Salon-wide closures (one row per date, though stored per-tech).
-  const closureMap = {};
-  store.timeoff.filter(o=>o.salon_closure && o.off_date>=todayStr).forEach(o=>{ if(!closureMap[o.off_date]) closureMap[o.off_date]=o; });
-  const closureDates = Object.keys(closureMap).sort();
-  const closuresHtml = closureDates.length ? closureDates.map(d=>{
-    const o = closureMap[d];
-    const when = o.all_day ? "Closed all day" : `Closing ${fmtOffTime(o.start_time)}`;
-    const reason = (o.reason && o.reason!=="Salon closed") ? ` · ${esc(o.reason)}` : "";
-    return `<div class="tooff"><span>${fmtOffDate(d)} · ${when}${reason}</span>
-      <button class="x" title="Reopen" onclick="reopenSalon('${d}')">✕</button></div>`;
-  }).join("") : `<div class="none">No upcoming closures.</div>`;
-
-  const salonCard = `<div class="tech-card salon-card">
-    <div class="th">
-      <div>
-        <div class="tname">Salon closures</div>
-        <div class="tdays">Close the whole salon for a holiday or early day.</div>
-      </div>
-      <div class="addoff"><button onclick="openCloseSalon()">+ Close the salon</button></div>
-    </div>
-    <div class="tech-off">${closuresHtml}</div>
-  </div>`;
+  const todayStr = localDateStr();
 
   const techCards = techs.map(t=>{
     const off = store.timeoff
@@ -1466,7 +1514,33 @@ function renderTechnicians(){
     </div>`;
   }).join("");
 
-  wrap.innerHTML = salonCard + techCards;
+  wrap.innerHTML = techCards;
+}
+
+/* ---------- Salon closures (moved here from Technicians — used by Settings > Business Hours) ---------- */
+function renderSalonClosuresCard(){
+  const todayStr = localDateStr();
+  const closureMap = {};
+  store.timeoff.filter(o=>o.salon_closure && o.off_date>=todayStr).forEach(o=>{ if(!closureMap[o.off_date]) closureMap[o.off_date]=o; });
+  const closureDates = Object.keys(closureMap).sort();
+  const closuresHtml = closureDates.length ? closureDates.map(d=>{
+    const o = closureMap[d];
+    const when = o.all_day ? "Closed all day" : `Closing ${fmtOffTime(o.start_time)}`;
+    const reason = (o.reason && o.reason!=="Salon closed") ? ` · ${esc(o.reason)}` : "";
+    return `<div class="tooff"><span>${fmtOffDate(d)} · ${when}${reason}</span>
+      <button class="x" title="Reopen" onclick="reopenSalon('${d}')">✕</button></div>`;
+  }).join("") : `<div class="none">No upcoming closures.</div>`;
+
+  return `<div class="tech-card salon-card">
+    <div class="th">
+      <div>
+        <div class="tname">Salon closures</div>
+        <div class="tdays">Close the whole salon for a holiday or early day.</div>
+      </div>
+      <div class="addoff"><button onclick="openCloseSalon()">+ Close the salon</button></div>
+    </div>
+    <div class="tech-off">${closuresHtml}</div>
+  </div>`;
 }
 
 function techLinkUrl(techId){
@@ -1488,7 +1562,7 @@ async function resetTechLink(techId){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"reset_tech_link", args:{ p_tech:techId }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"reset_tech_link", args:{ p_tech:techId }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data&&data.error)||("HTTP "+res.status)); }
@@ -1507,7 +1581,7 @@ function openTimeOff(techId){
   const t = store.technicians.find(x=>x.id===techId);
   tmTechId = techId;
   document.getElementById("tmWho").textContent = t ? (t.name||"Staff") : "";
-  document.getElementById("tmDate").value = new Date().toISOString().slice(0,10);
+  document.getElementById("tmDate").value = localDateStr();
   document.getElementById("tmAllDay").checked = true;
   document.getElementById("tmStart").value = "";
   document.getElementById("tmEnd").value = "";
@@ -1546,7 +1620,7 @@ async function submitTimeOff(){
         p_start: allDay ? null : start+":00",
         p_end:   allDay ? null : end+":00",
         p_reason: reason || null
-      }, passcode: window.__VELOUR_PASS || "" })
+      }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
@@ -1570,7 +1644,7 @@ async function removeTimeOff(id){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"clear_timeoff", args:{ p_id:id }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"clear_timeoff", args:{ p_id:id }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
@@ -1599,7 +1673,7 @@ function closeAffected(){ document.getElementById("amodal").style.display="none"
 
 /* ---------- close / reopen the whole salon ---------- */
 function openCloseSalon(){
-  document.getElementById("csDate").value = new Date().toISOString().slice(0,10);
+  document.getElementById("csDate").value = localDateStr();
   document.getElementById("csAllDay").checked = true;
   document.getElementById("csFrom").value = "";
   document.getElementById("csReason").value = "";
@@ -1628,14 +1702,14 @@ async function submitCloseSalon(){
       body: JSON.stringify({ action:"close_salon", args:{
         p_salon:CONFIG.SALON_ID, p_date:date, p_all_day:allDay,
         p_from: allDay ? null : from+":00", p_reason: reason || null
-      }, passcode: window.__VELOUR_PASS || "" })
+      }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
     const conflicts = (data.result && data.result.conflicts) || [];
     closeCloseSalon();
     await reloadData();
-    renderTechnicians();
+    renderSettingsBusinessHours();
     if(conflicts.length){
       showAffected(conflicts, `Salon closed. ${conflicts.length} customer${conflicts.length>1?"s were":" was"} already booked — tap a number to call:`);
     }
@@ -1652,12 +1726,12 @@ async function reopenSalon(date){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"reopen_salon", args:{ p_salon:CONFIG.SALON_ID, p_date:date }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"reopen_salon", args:{ p_salon:CONFIG.SALON_ID, p_date:date }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
     await reloadData();
-    renderTechnicians();
+    renderSettingsBusinessHours();
   }catch(e){
     console.error(e);
     alert("Couldn't reopen. Please try again.");
@@ -1816,7 +1890,7 @@ async function saveNotes(){
     const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
       method:"POST",
       headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-      body: JSON.stringify({ action:"save_notes", args:{ p_customer:id, p_notes:ta.value }, passcode: window.__VELOUR_PASS || "" })
+      body: JSON.stringify({ action:"save_notes", args:{ p_customer:id, p_notes:ta.value }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data&&data.error)||("HTTP "+res.status)); }
@@ -1992,7 +2066,7 @@ async function payrollWrite(action, args){
   const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
     method:"POST",
     headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
-    body: JSON.stringify({ action, args, passcode: window.__VELOUR_PASS || "" })
+    body: JSON.stringify({ action, args, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID, payroll_pin: window.__VELOUR_PAYROLL_PIN || "" })
   });
   const data = await res.json().catch(()=>null);
   if(!res.ok || !data || data.ok===false){
@@ -2022,9 +2096,50 @@ function fmtPayDate(d){
 }
 
 function renderPayroll(){
+  if(!payrollPinVerified){
+    renderPayrollPinGate();
+    return;
+  }
   renderCompStrip();
   renderPeriodWorkspace();
   renderPayrollHistory();
+}
+
+function renderPayrollPinGate(){
+  document.getElementById("payPeriodWrap").innerHTML = "";
+  document.getElementById("payHistoryWrap").innerHTML = "";
+  document.getElementById("payCompWrap").innerHTML = `
+    <div class="settings-card">
+      <div class="settings-section-title">Payroll is protected</div>
+      <div class="settings-section-sub">Enter the Payroll PIN to view compensation and payroll data.</div>
+      <label for="payPinInput">Payroll PIN</label>
+      <input type="password" id="payPinInput" placeholder="••••" onkeydown="if(event.key==='Enter')submitPayrollPin()">
+      <div class="rmodal-err" id="payPinErr"></div>
+      <button class="btn accent" id="payPinSave" onclick="submitPayrollPin()">Unlock Payroll</button>
+    </div>`;
+  const input = document.getElementById("payPinInput");
+  if(input) input.focus();
+}
+
+async function submitPayrollPin(){
+  const input = document.getElementById("payPinInput");
+  const err = document.getElementById("payPinErr");
+  const save = document.getElementById("payPinSave");
+  const pin = input.value.trim();
+  if(!pin){ err.textContent = "Enter the Payroll PIN."; return; }
+  save.disabled = true; save.textContent = "Checking…";
+  window.__VELOUR_PAYROLL_PIN = pin;
+  try{
+    await reloadPayrollLookups();
+    payrollPinVerified = true;
+    renderPayroll();
+  }catch(e){
+    window.__VELOUR_PAYROLL_PIN = "";
+    payrollPinVerified = false;
+    err.textContent = "That PIN doesn't match. Try again.";
+    save.disabled = false; save.textContent = "Unlock Payroll";
+    input.value = ""; input.focus();
+  }
 }
 
 /* ---------- Compensation strip ---------- */
@@ -2067,7 +2182,7 @@ function openCompModal(techId){
   document.getElementById("compWho").textContent = t ? (t.name||"Staff") : "";
   document.getElementById("compCommission").value = c && c.commission_rate!=null ? (Number(c.commission_rate)*100) : "";
   document.getElementById("compHourly").value = c && c.hourly_rate!=null ? c.hourly_rate : "";
-  document.getElementById("compStart").value = new Date().toISOString().slice(0,10);
+  document.getElementById("compStart").value = localDateStr();
   document.getElementById("compErr").textContent = "";
   compSetType(c ? c.comp_type : "commission");
   const save = document.getElementById("compSave"); save.disabled=false; save.textContent="Save";
@@ -2325,11 +2440,424 @@ async function viewClosedPeriod(periodId){
 async function reloadPayrollLookups(){
   const salon = CONFIG.SALON_FK, eq = v=>`eq.${v}`;
   const [technicianComp, payrollPeriods] = await Promise.all([
-    api.get("technician_compensation", `${salon}=${eq(CONFIG.SALON_ID)}&order=effective_start_date.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
-    api.get("payroll_periods", `${salon}=${eq(CONFIG.SALON_ID)}&order=period_start.desc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("technician_compensation", `${salon}=${eq(CONFIG.SALON_ID)}&order=effective_start_date.asc&limit=${CONFIG.ROW_LIMIT}`),
+    api.get("payroll_periods", `${salon}=${eq(CONFIG.SALON_ID)}&order=period_start.desc&limit=${CONFIG.ROW_LIMIT}`),
   ]);
   store.technicianComp = Array.isArray(technicianComp) ? technicianComp : [];
   store.payrollPeriods = Array.isArray(payrollPeriods) ? payrollPeriods : [];
+}
+
+/* =====================================================================
+   SETTINGS
+   The owner's permanent control center. Each section is a self-contained
+   render function registered in SETTINGS_SECTIONS below — adding a future
+   section means one new entry here, nothing else in the shell changes.
+   ===================================================================== */
+
+const SETTINGS_SECTIONS = [
+  { id: "access",         label: "Access & Security",   render: renderSettingsAccess },
+  { id: "business_info",  label: "Business Information", render: renderSettingsBusinessInfo },
+  { id: "business_hours", label: "Business Hours",       render: renderSettingsBusinessHours },
+  { id: "services",       label: "Services",             render: renderSettingsServices },
+  { id: "staff",          label: "Staff",                render: renderSettingsStaff },
+  { id: "website",        label: "Website",              render: renderSettingsWebsite },
+];
+
+let currentSettingsTab = SETTINGS_SECTIONS[0].id;
+
+function switchSettingsTab(id){
+  currentSettingsTab = id;
+  renderSettings();
+}
+
+function renderSettings(){
+  const tabsWrap = document.getElementById("settingsTabs");
+  tabsWrap.innerHTML = SETTINGS_SECTIONS.map(s =>
+    `<button class="settings-tab ${s.id===currentSettingsTab?'active':''}" onclick="switchSettingsTab('${s.id}')">${esc(s.label)}</button>`
+  ).join("");
+
+  const wrap = document.getElementById("settingsWrap");
+  wrap.innerHTML = "";
+  const section = SETTINGS_SECTIONS.find(s => s.id === currentSettingsTab);
+  if(section) section.render();
+}
+
+function settingsPlaceholder(title, sub){
+  document.getElementById("settingsWrap").innerHTML = `
+    <div class="settings-section-title">${esc(title)}</div>
+    <div class="settings-section-sub">${esc(sub)}</div>
+    <div class="settings-placeholder">This section is under construction. We'll build each section one at a time.</div>
+  `;
+}
+
+function togglePwVisibility(id, btn){
+  const input = document.getElementById(id);
+  if(!input) return;
+  if(input.type === "password"){
+    input.type = "text";
+    btn.textContent = "🙈";
+    btn.title = "Hide";
+  }else{
+    input.type = "password";
+    btn.textContent = "👁";
+    btn.title = "Show";
+  }
+}
+
+async function renderSettingsAccess(){
+  const wrap = document.getElementById("settingsWrap");
+  wrap.innerHTML = `
+    <div class="settings-section-title">Access &amp; Security</div>
+    <div class="settings-section-sub">Change your dashboard passcode and set up the Payroll PIN.</div>
+    <div id="accPassCard"></div>
+    <div id="accPinCard"><div class="settings-placeholder">Loading…</div></div>
+  `;
+  renderAccessPasswordCard();
+
+  let status;
+  try{
+    const rows = await payrollWrite("get_settings_status", { p_salon_id: CONFIG.SALON_ID });
+    status = (Array.isArray(rows) && rows[0]) ? rows[0] : { payroll_pin_set: false };
+  }catch(e){
+    console.error(e);
+    document.getElementById("accPinCard").innerHTML = `<div class="settings-placeholder">Couldn't load Payroll PIN status. Try reopening Settings.</div>`;
+    return;
+  }
+  renderAccessPinCard(status.payroll_pin_set === true);
+}
+
+function renderAccessPasswordCard(){
+  document.getElementById("accPassCard").innerHTML = `
+    <div class="settings-card">
+      <div class="settings-section-title" style="font-size:16px">Dashboard Password</div>
+      <div class="settings-card-note">Used by anyone logging into this dashboard.</div>
+      <label for="accCurPass">Current password</label>
+      <div class="pw-wrap"><input type="password" id="accCurPass" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accCurPass', this)">👁</button></div>
+      <label for="accNewPass">New password</label>
+      <div class="pw-wrap"><input type="password" id="accNewPass" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPass', this)">👁</button></div>
+      <label for="accNewPass2">Confirm new password</label>
+      <div class="pw-wrap"><input type="password" id="accNewPass2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPass2', this)">👁</button></div>
+      <div class="rmodal-err" id="accPassErr"></div>
+      <div class="settings-success" id="accPassOk" style="display:none">✓ Dashboard password updated successfully.</div>
+      <button class="btn accent" id="accPassSave" onclick="submitChangePasscode()">Update password</button>
+    </div>`;
+}
+
+async function submitChangePasscode(){
+  const cur = document.getElementById("accCurPass").value;
+  const next = document.getElementById("accNewPass").value;
+  const next2 = document.getElementById("accNewPass2").value;
+  const err = document.getElementById("accPassErr");
+  const ok = document.getElementById("accPassOk");
+  const save = document.getElementById("accPassSave");
+  err.textContent = ""; ok.style.display = "none";
+
+  if(!cur){ err.textContent = "Enter your current password."; return; }
+  if(next.length < 4){ err.textContent = "New password must be at least 4 characters."; return; }
+  if(next !== next2){ err.textContent = "New passwords don't match."; return; }
+
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("change_passcode", { p_salon_id: CONFIG.SALON_ID, p_current_passcode: cur, p_new_passcode: next });
+    window.__VELOUR_PASS = next;   // keep this session working without forcing a re-login
+    ok.style.display = "block";
+    document.getElementById("accCurPass").value = "";
+    document.getElementById("accNewPass").value = "";
+    document.getElementById("accNewPass2").value = "";
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("CURRENT_PASSCODE_INCORRECT")) err.textContent = "Your current password doesn't match.";
+    else if(msg.includes("NEW_PASSCODE_TOO_SHORT")) err.textContent = "New password must be at least 4 characters.";
+    else err.textContent = "Couldn't update the password. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Update password";
+  }
+}
+
+function renderAccessPinCard(pinSet){
+  const card = document.getElementById("accPinCard");
+  const statusHtml = pinSet
+    ? `<div class="pin-status on">Payroll PIN: Enabled ✓</div>`
+    : `<div class="pin-status off">Payroll PIN: Not configured</div>`;
+  if(!pinSet){
+    card.innerHTML = `
+      <div class="settings-card">
+        <div class="settings-section-title" style="font-size:16px">Payroll PIN</div>
+        ${statusHtml}
+        <div class="settings-card-note">Not set up yet — Payroll data is currently unprotected beyond the main dashboard password. We recommend setting a PIN to keep compensation and payroll numbers private from anyone else who has the dashboard password.</div>
+        <label for="accNewPin">New PIN</label>
+        <div class="pw-wrap"><input type="password" id="accNewPin" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin', this)">👁</button></div>
+        <label for="accNewPin2">Confirm PIN</label>
+        <div class="pw-wrap"><input type="password" id="accNewPin2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin2', this)">👁</button></div>
+        <div class="rmodal-err" id="accPinErr"></div>
+        <div class="settings-success" id="accPinOk" style="display:none">✓ Payroll PIN set successfully.</div>
+        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(false)">Set up PIN</button>
+      </div>`;
+  }else{
+    card.innerHTML = `
+      <div class="settings-card">
+        <div class="settings-section-title" style="font-size:16px">Payroll PIN</div>
+        ${statusHtml}
+        <div class="settings-card-note">Required to view or edit compensation and payroll data.</div>
+        <label for="accCurPin">Current PIN</label>
+        <div class="pw-wrap"><input type="password" id="accCurPin" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accCurPin', this)">👁</button></div>
+        <label for="accNewPin">New PIN</label>
+        <div class="pw-wrap"><input type="password" id="accNewPin" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin', this)">👁</button></div>
+        <label for="accNewPin2">Confirm new PIN</label>
+        <div class="pw-wrap"><input type="password" id="accNewPin2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin2', this)">👁</button></div>
+        <div class="rmodal-err" id="accPinErr"></div>
+        <div class="settings-success" id="accPinOk" style="display:none">✓ Payroll PIN updated successfully.</div>
+        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(true)">Update PIN</button>
+      </div>`;
+  }
+}
+
+async function submitPayrollPinChange(hasExisting){
+  const cur = hasExisting ? document.getElementById("accCurPin").value : null;
+  const next = document.getElementById("accNewPin").value;
+  const next2 = document.getElementById("accNewPin2").value;
+  const err = document.getElementById("accPinErr");
+  const ok = document.getElementById("accPinOk");
+  const save = document.getElementById("accPinSave");
+  err.textContent = ""; ok.style.display = "none";
+
+  if(hasExisting && !cur){ err.textContent = "Enter your current PIN."; return; }
+  if(next.length < 4){ err.textContent = "PIN must be at least 4 characters."; return; }
+  if(next !== next2){ err.textContent = "New PINs don't match."; return; }
+
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("set_payroll_pin", { p_salon_id: CONFIG.SALON_ID, p_current_pin: cur, p_new_pin: next });
+    // Setting/changing the PIN proves you know it — stay verified for this session.
+    window.__VELOUR_PAYROLL_PIN = next;
+    payrollPinVerified = true;
+    ok.style.display = "block";
+    renderAccessPinCard(true);
+    document.getElementById("accPinOk").style.display = "block";
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("CURRENT_PIN_INCORRECT")) err.textContent = "Your current PIN doesn't match.";
+    else if(msg.includes("NEW_PIN_TOO_SHORT")) err.textContent = "PIN must be at least 4 characters.";
+    else err.textContent = "Couldn't save the PIN. Please try again.";
+    save.disabled = false; save.textContent = hasExisting ? "Update PIN" : "Set up PIN";
+  }
+}
+function renderSettingsBusinessInfo(){
+  const s = store.salon || {};
+  const wrap = document.getElementById("settingsWrap");
+  wrap.innerHTML = `
+    <div class="settings-section-title">Business Information</div>
+    <div class="settings-section-sub">Shown on your dashboard and public website.</div>
+    <div class="settings-card">
+      <label for="biName">Salon name</label>
+      <input type="text" id="biName" value="${esc(s.name)}">
+      <label for="biPhone">Phone number</label>
+      <input type="tel" id="biPhone" value="${esc(fmtPhoneDisplay(s.phone))}" placeholder="(603) 555-1234">
+      <label for="biEmail">Email</label>
+      <input type="email" id="biEmail" value="${esc(s.email)}" placeholder="name@example.com">
+      <label for="biAddress">Address</label>
+      <input type="text" id="biAddress" value="${esc(s.address)}">
+      <label for="biAddress2">Address line 2</label>
+      <input type="text" id="biAddress2" value="${esc(s.address2)}" placeholder="Suite, unit, etc. (optional)">
+      <label for="biCity">City</label>
+      <input type="text" id="biCity" value="${esc(s.city)}">
+      <label for="biState">State</label>
+      <input type="text" id="biState" value="${esc(s.state)}">
+      <label for="biZip">ZIP code</label>
+      <input type="text" id="biZip" value="${esc(s.zip)}">
+      <label for="biMapsUrl">Google Maps link</label>
+      <input type="url" id="biMapsUrl" value="${esc(s.maps_url)}" placeholder="https://maps.google.com/?q=...">
+      <div class="rmodal-err" id="biErr"></div>
+      <div class="settings-success" id="biOk" style="display:none">✓ Business information updated successfully.</div>
+      <button class="btn accent" id="biSave" onclick="submitBusinessInfo()">Save changes</button>
+    </div>`;
+}
+
+async function submitBusinessInfo(){
+  const val = id => document.getElementById(id).value.trim();
+  const name = val("biName");
+  const err = document.getElementById("biErr");
+  const ok = document.getElementById("biOk");
+  const save = document.getElementById("biSave");
+  err.textContent = ""; ok.style.display = "none";
+
+  if(!name){ err.textContent = "Salon name is required."; return; }
+
+  const phone = val("biPhone");
+  if(phone && phone.replace(/\D/g,"").length !== 10 && !(phone.replace(/\D/g,"").length===11 && phone.replace(/\D/g,"")[0]==="1")){
+    err.textContent = "Enter a 10-digit phone number, or leave it blank.";
+    return;
+  }
+  const email = val("biEmail");
+  if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    err.textContent = "Enter a valid email, or leave it blank.";
+    return;
+  }
+  const mapsUrl = val("biMapsUrl");
+  if(mapsUrl && !/^https?:\/\//i.test(mapsUrl)){
+    err.textContent = "Google Maps link should start with http:// or https://, or leave it blank.";
+    return;
+  }
+
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("update_business_info", {
+      p_salon_id: CONFIG.SALON_ID,
+      p_name: name,
+      p_phone: phone || null,
+      p_email: email || null,
+      p_address: val("biAddress") || null,
+      p_address2: val("biAddress2") || null,
+      p_city: val("biCity") || null,
+      p_state: val("biState") || null,
+      p_zip: val("biZip") || null,
+      p_maps_url: mapsUrl || null,
+    });
+    // Refresh the in-memory copy so the form and sidebar both reflect the save immediately.
+    const rows = await api.get("salons", `id=eq.${CONFIG.SALON_ID}&limit=1`);
+    store.salon = (Array.isArray(rows) && rows[0]) ? rows[0] : store.salon;
+    applyBrandSalonName();
+    ok.style.display = "block";
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("MISSING_NAME")) err.textContent = "Salon name is required.";
+    else if(msg.includes("INVALID_PHONE")) err.textContent = "Enter a 10-digit phone number, or leave it blank.";
+    else if(msg.includes("INVALID_EMAIL")) err.textContent = "Enter a valid email, or leave it blank.";
+    else if(msg.includes("INVALID_MAPS_URL")) err.textContent = "Google Maps link should start with http:// or https://.";
+    else err.textContent = "Couldn't save. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Save changes";
+  }
+}
+const DAY_ORDER = ["mon","tue","wed","thu","fri","sat","sun"];
+const DAY_LABELS = {mon:"Monday",tue:"Tuesday",wed:"Wednesday",thu:"Thursday",fri:"Friday",sat:"Saturday",sun:"Sunday"};
+
+function renderSettingsBusinessHours(){
+  const wrap = document.getElementById("settingsWrap");
+  const byDay = {};
+  (store.salonHours||[]).forEach(h => { byDay[h.day_of_week] = h; });
+
+  const rows = DAY_ORDER.map(d=>{
+    const h = byDay[d] || {};
+    const open = (h.open_time||"").slice(0,5);
+    const close = (h.close_time||"").slice(0,5);
+    const isOpen = h.is_open !== false;
+    return `<div class="bh-row" data-day="${d}">
+      <label class="tm-check" style="margin:0;min-width:110px"><input type="checkbox" class="bh-open" ${isOpen?"checked":""} onchange="onBusinessHoursChanged()"> ${DAY_LABELS[d]}</label>
+      <input type="time" class="bh-open-time" value="${esc(open)}" onchange="onBusinessHoursChanged()">
+      <span style="color:var(--muted)">to</span>
+      <input type="time" class="bh-close-time" value="${esc(close)}" onchange="onBusinessHoursChanged()">
+    </div>`;
+  }).join("");
+
+  wrap.innerHTML = `
+    <div class="settings-section-title">Business Hours</div>
+    <div class="settings-section-sub">Weekly hours and salon closures.</div>
+    <div class="settings-card" style="max-width:520px">
+      <div class="bh-rows">${rows}</div>
+      <div id="bhConflictWarning"></div>
+      <div class="rmodal-err" id="bhErr"></div>
+      <div class="settings-success" id="bhOk" style="display:none">✓ Business hours updated successfully.</div>
+      <button class="btn accent" id="bhSave" onclick="submitBusinessHours()">Save hours</button>
+    </div>
+    <div id="bhClosuresWrap"></div>`;
+  document.getElementById("bhClosuresWrap").innerHTML = renderSalonClosuresCard();
+  onBusinessHoursChanged();
+}
+
+function readBusinessHoursForm(){
+  return DAY_ORDER.map(d=>{
+    const row = document.querySelector(`.bh-row[data-day="${d}"]`);
+    return {
+      day_of_week: d,
+      is_open: row.querySelector(".bh-open").checked,
+      open_time: row.querySelector(".bh-open-time").value || null,
+      close_time: row.querySelector(".bh-close-time").value || null,
+    };
+  });
+}
+
+// Non-blocking client-side check against already-loaded future confirmed
+// bookings — no new RPC needed, matches the agreed approach.
+function onBusinessHoursChanged(){
+  const proposed = readBusinessHoursForm();
+  const byDay = Object.fromEntries(proposed.map(p=>[p.day_of_week, p]));
+  const todayStr = localDateStr();
+  const DOW = ["sun","mon","tue","wed","thu","fri","sat"];
+
+  const conflicts = (store.bookings||[])
+    .filter(b => b.status === "confirmed" && b.booking_date >= todayStr)
+    .map(b => {
+      const dow = DOW[new Date(b.booking_date+"T12:00:00").getDay()];
+      const p = byDay[dow];
+      if(!p) return null;
+      const outside = !p.is_open || !p.open_time || !p.close_time || b.start_time < p.open_time || b.end_time > p.close_time;
+      return outside ? b : null;
+    })
+    .filter(Boolean);
+
+  const banner = document.getElementById("bhConflictWarning");
+  if(!banner) return;
+  if(!conflicts.length){ banner.innerHTML = ""; return; }
+
+  const rows = conflicts.map(b=>{
+    const cust = (store.customers||[]).find(c=>c.id===b.customer_id);
+    const tech = (store.technicians||[]).find(t=>t.id===b.technician_id);
+    return `<div class="tooff"><span>${dateShort(new Date(b.booking_date+"T12:00:00"))} ${timeFmt(new Date(b.booking_date+"T"+b.start_time))} · ${esc(cust?cust.name:"Guest")} with ${esc(tech?tech.name:"Staff")}</span></div>`;
+  }).join("");
+
+  banner.innerHTML = `
+    <div class="pay-warn-banner" style="cursor:pointer" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display==='none' ? 'block' : 'none'">
+      ⚠ ${conflicts.length} future booking${conflicts.length===1?"":"s"} fall${conflicts.length===1?"s":""} outside the new business hours — tap to view.
+    </div>
+    <div style="display:none;margin-top:8px">${rows}</div>`;
+}
+
+async function submitBusinessHours(){
+  const err = document.getElementById("bhErr");
+  const ok = document.getElementById("bhOk");
+  const save = document.getElementById("bhSave");
+  err.textContent = ""; ok.style.display = "none";
+
+  const hours = readBusinessHoursForm();
+  for(const h of hours){
+    if(h.is_open && (!h.open_time || !h.close_time)){
+      err.textContent = `${DAY_LABELS[h.day_of_week]} is marked open but is missing an open or close time.`;
+      return;
+    }
+    if(h.is_open && h.close_time <= h.open_time){
+      err.textContent = `${DAY_LABELS[h.day_of_week]}'s close time must be after its open time.`;
+      return;
+    }
+  }
+
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("update_business_hours", { p_salon_id: CONFIG.SALON_ID, p_hours: hours });
+    const rows = await api.get("salon_hours", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=200`);
+    store.salonHours = Array.isArray(rows) ? rows : store.salonHours;
+    ok.style.display = "block";
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("CLOSE_TIME_MUST_BE_AFTER_OPEN_TIME")) err.textContent = "Close time must be after open time for every open day.";
+    else if(msg.includes("MISSING_HOURS_FOR_OPEN_DAY")) err.textContent = "Every open day needs both an open and close time.";
+    else err.textContent = "Couldn't save. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Save hours";
+  }
+}
+function renderSettingsServices(){
+  settingsPlaceholder("Services", "Add, edit, deactivate, or archive services.");
+}
+function renderSettingsStaff(){
+  settingsPlaceholder("Staff", "Add, edit, deactivate, or archive staff — plus time off, schedule links, and qualifications.");
+}
+function renderSettingsWebsite(){
+  settingsPlaceholder("Website", "Sync status between your dashboard and your public website.");
 }
 
 function switchView(name){
@@ -2341,17 +2869,21 @@ function switchView(name){
   document.getElementById("view-customers").classList.toggle("on", name==="customers");
   document.getElementById("view-technicians").classList.toggle("on", name==="technicians");
   document.getElementById("view-payroll").classList.toggle("on", name==="payroll");
+  document.getElementById("view-settings").classList.toggle("on", name==="settings");
   if(name==="technicians") renderTechnicians();
   if(name==="week") renderWeek();
   if(name==="insights") renderInsights();
   if(name==="aivy") runAivy(false);
   if(name==="payroll") renderPayroll();
+  if(name==="settings") renderSettings();
 }
 
 /* ---------- Passcode gate ---------- */
 function unlock(){
   const val = document.getElementById("passInput").value;
   window.__VELOUR_PASS = val;                 // the Edge Function verifies this
+  window.__VELOUR_PAYROLL_PIN = "";
+  payrollPinVerified = false;
   document.getElementById("gate").style.display="none";
   document.getElementById("app").classList.add("on");
   boot();
@@ -2363,6 +2895,8 @@ document.getElementById("lockBtn").addEventListener("click", ()=>{
   document.getElementById("gate").style.display="flex";
   document.getElementById("passInput").value=""; document.getElementById("passInput").focus();
   document.getElementById("gateErr").textContent="";
+  window.__VELOUR_PAYROLL_PIN = "";
+  payrollPinVerified = false;
 });
 document.querySelectorAll(".navlink").forEach(b=> b.addEventListener("click", ()=>switchView(b.dataset.view)));
 document.getElementById("custSearch").addEventListener("input", e=>renderCustomers(e.target.value));
@@ -2516,6 +3050,7 @@ function nbUpdateTotals(){
     svcs.length ? `${svcs.length} service${svcs.length===1?"":"s"} · ${dur} min` : "No services selected yet";
 
   const timeStr = document.getElementById("nbTime").value;
+  const dateStr = document.getElementById("nbDate").value;
   const endEl = document.getElementById("nbEndPreview");
   if(timeStr && dur){
     const [h,m] = timeStr.split(":").map(Number);
@@ -2525,10 +3060,45 @@ function nbUpdateTotals(){
   } else {
     endEl.textContent = "";
   }
+  renderHoursWarning("nbHoursWarning", outsideBusinessHoursWarning(dateStr, timeStr, dur));
 }
 
 function nbT2m(t){ if(!t) return null; const [h,m] = t.split(":").map(Number); return h*60+m; }
 const NB_DOW = ["sun","mon","tue","wed","thu","fri","sat"];
+
+// Shared warn-only check, used identically by both the Admin Booking modal
+// and the Reschedule modal — same rule the server enforces for website
+// bookings, but here it only ever warns, never blocks, since staff are
+// making a conscious decision. Mirrors salon_hours + salon-wide closures,
+// matching create_booking's server-side logic exactly.
+function outsideBusinessHoursWarning(dateStr, startTimeStr, durationMin){
+  if(!dateStr || !startTimeStr) return null;
+  const dow = NB_DOW[new Date(dateStr+"T12:00:00").getDay()];
+  const hoursRow = (store.salonHours||[]).find(h=>h.day_of_week===dow);
+  const startMin = nbT2m(startTimeStr);
+  const endMin = startMin + (durationMin||0);
+  const endTimeStr = `${String(Math.floor(endMin/60)).padStart(2,"0")}:${String(endMin%60).padStart(2,"0")}`;
+
+  if(!hoursRow || hoursRow.is_open===false){
+    return "Heads up — the salon is marked closed that day.";
+  }
+  const open = (hoursRow.open_time||"").slice(0,5);
+  const close = (hoursRow.close_time||"").slice(0,5);
+  if(startTimeStr < open || endTimeStr > close){
+    return "Heads up — this is outside your posted business hours.";
+  }
+  const closure = (store.timeoff||[]).find(o=>o.salon_closure && o.off_date===dateStr &&
+    (o.all_day || ((o.start_time||"00:00").slice(0,5) < endTimeStr && (o.end_time||"23:59:59").slice(0,5) > startTimeStr)));
+  if(closure){
+    return "Heads up — the salon is marked closed on this date.";
+  }
+  return null;
+}
+function renderHoursWarning(elId, warning){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = warning ? `<div class="pay-warn-banner" style="margin-top:10px">⚠ ${esc(warning)} You can still save — this is a heads-up, not a block.</div>` : "";
+}
 
 function nbRefreshTechOptions(){
   const dateStr = document.getElementById("nbDate").value;
@@ -2636,7 +3206,7 @@ async function submitNewBooking(){
         p_services: svcs.map(s=>({name:s.name, price:s.price, duration_minutes:s.duration_minutes})),
         p_source: nb.source, p_customer_id: nb.customerId,
         p_created_by: createdBy
-      }, passcode: window.__VELOUR_PASS || "" })
+      }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
     });
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){
@@ -2718,6 +3288,7 @@ async function submitNewBooking(){
           </div>
         </div>
         <div class="nb-hint" id="nbEndPreview"></div>
+        <div id="nbHoursWarning"></div>
       </div>
 
       <div class="nb-section">
@@ -2750,11 +3321,12 @@ async function submitNewBooking(){
     <h3>Reschedule</h3>
     <div class="rmodal-sub" id="rmWho"></div>
     <label for="rmDate">New date</label>
-    <input type="date" id="rmDate">
+    <input type="date" id="rmDate" onchange="rmUpdateWarning()">
     <label for="rmTime">New start time</label>
-    <input type="time" id="rmTime">
+    <input type="time" id="rmTime" onchange="rmUpdateWarning()">
     <label for="rmTech">Technician</label>
     <select id="rmTech"></select>
+    <div id="rmHoursWarning"></div>
     <div class="rmodal-err" id="rmErr"></div>
     <div class="rmodal-actions">
       <button class="btn ghost" type="button" onclick="closeReschedule()">Cancel</button>
