@@ -823,7 +823,7 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 
 <!-- ANNOUNCEMENT BAR -->
 <div id="announcebar" style="background:linear-gradient(90deg,var(--gold),#E8C27A,var(--gold));padding:9px 5%;text-align:center;position:relative;">
-  <p style="font-size:13px;font-weight:600;color:var(--crimson-dk);letter-spacing:0.03em;">🎉 New clients get <strong>10% off</strong> their first visit! &nbsp;·&nbsp; 👆 Tap on a service to book in store &nbsp;·&nbsp; Walk-ins always welcome · Call <a href="tel:6036217469" style="color:var(--crimson-dk);text-decoration:underline;">(603) 621-7469</a></p>
+  <p style="font-size:13px;font-weight:600;color:var(--crimson-dk);letter-spacing:0.03em;">🎉 New clients get <strong>10% off</strong> their first visit! &nbsp;·&nbsp; 👆 Tap on a service to book in store &nbsp;·&nbsp; Walk-ins always welcome · Call <a href="tel:6036217469" style="color:var(--crimson-dk);text-decoration:underline;" id="wsAnnounceBarPhone">(603) 621-7469</a></p>
   <button onclick="document.getElementById('announcebar').style.display='none'" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--crimson-dk);font-weight:700;">×</button>
 </div>
 <nav>
@@ -848,7 +848,7 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 <div style="max-width:1200px;margin:0 auto;">
 <div class="hero">
   <div>
-    <div class="hero-eyebrow">1500 S. Willow St · Across American Eagle · Manchester, NH</div>
+    <div class="hero-eyebrow" id="wsHeroLocation">1500 S. Willow St · Across American Eagle · Manchester, NH</div>
     <h1>Where every nail<br>tells <em>your story.</em></h1>
     <p class="hero-sub">Premium nail care, lash extensions, waxing, and spa treatments. Expert technicians, warm atmosphere, results that speak for themselves.</p>
     <div class="hero-actions">
@@ -1392,11 +1392,11 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     </div>
     <div class="info-block">
       <h3>Location</h3>
-      <p>1500 S. Willow Street<br>Across from American Eagle<br>Close to Food Court<br>Manchester, NH 03103<br><br><a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH">Get directions →</a></p>
+      <p><span id="wsFindUsAddress1">1500 S. Willow Street<br>Across from American Eagle<br>Close to Food Court<br>Manchester, NH 03103</span><br><br><a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" id="wsFindUsMapsLink1">Get directions →</a></p>
     </div>
     <div class="info-block">
       <h3>Contact</h3>
-      <p><a href="tel:6036217469">(603) 621-7469</a><br><a href="mailto:red_persimmon@gmail.com">red_persimmon@gmail.com</a><br><br>Walk-ins always welcome!</p>
+      <p><a href="tel:6036217469" id="wsFindUsPhone1">(603) 621-7469</a><br><a href="mailto:red_persimmon@gmail.com" id="wsFindUsEmail1">red_persimmon@gmail.com</a><br><br>Walk-ins always welcome!</p>
     </div>
     <div class="info-block">
       <h3>Gift Certificates</h3>
@@ -1437,11 +1437,11 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">
-      Red Persimmon Nails & Spa
-      <span>1500 S. Willow Street · Across American Eagle · Manchester, NH 03103</span>
+      <span id="wsFooterName" style="display:inline;font-size:inherit;text-transform:none;letter-spacing:normal;color:inherit;margin-top:0;">Red Persimmon Nails &amp; Spa</span>
+      <span id="wsFooterAddress">1500 S. Willow Street · Across American Eagle · Manchester, NH 03103</span>
     </div>
-    <p>(603) 621-7469 · red_persimmon@gmail.com</p>
-    <p>© 2025 Red Persimmon Nails & Spa. All rights reserved.</p>
+    <p><a href="tel:6036217469" id="wsFooterPhone">(603) 621-7469</a> · <a href="mailto:red_persimmon@gmail.com" id="wsFooterEmail">red_persimmon@gmail.com</a></p>
+    <p>© 2025 <span id="wsFooterCopyrightName">Red Persimmon Nails &amp; Spa</span>. All rights reserved.</p>
   </div>
 </footer>
 
@@ -1733,6 +1733,74 @@ async function dbGet(table, qs='') {
     return r.json();
   } catch(e) { console.warn('dbGet failed:', e.message); return []; }
 }
+
+// ============================================================
+// BUSINESS INFORMATION — live sync from Settings
+// Reuses the existing dbGet() + SALON_ID + public RLS pattern already
+// used for services/technicians/hours. Renders instantly from the
+// hardcoded HTML above; this only swaps in live values where present,
+// leaving any field that's empty or unreachable exactly as it was.
+// Scope: contact info only (hero, both Find Us blocks, footer) — see
+// ARCHITECTURE.md for the tracked follow-up items intentionally left
+// hardcoded (meta tags, Aivy's system prompt, scattered error-message
+// phone mentions).
+// ============================================================
+function wsSetText(id, val){ const el = document.getElementById(id); if(el && val) el.textContent = val; }
+function wsSetHref(id, val){ const el = document.getElementById(id); if(el && val) el.href = val; }
+
+async function loadBusinessInfo(){
+  let s;
+  try{
+    const rows = await dbGet('salons', `id=eq.${SALON_ID}&limit=1`);
+    s = Array.isArray(rows) && rows[0];
+  }catch(e){ console.warn('loadBusinessInfo failed:', e.message); return; }
+  if(!s || !s.name) return; // fetch failed or empty — keep the hardcoded content exactly as-is
+
+  const digits = String(s.phone||'').replace(/\D/g,'');
+  const phoneDisplay = digits.length===10 ? `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}` : '';
+  const telHref = digits.length===10 ? `tel:${digits}` : '';
+  const cityStateZip = [ [s.city, s.state].filter(Boolean).join(', '), s.zip ].filter(Boolean).join(' ');
+  const addrLines = [s.address, s.address2, cityStateZip].filter(Boolean).join('<br>');
+  const addrShort = [s.address, [s.city, s.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+
+  wsSetText('wsHeroLocation', addrShort);
+
+  const addr1El = document.getElementById('wsFindUsAddress1');
+  if(addr1El && addrLines) addr1El.innerHTML = addrLines;
+  wsSetHref('wsFindUsMapsLink1', s.maps_url);
+  wsSetText('wsFindUsPhone1', phoneDisplay);
+  wsSetHref('wsFindUsPhone1', telHref);
+  wsSetText('wsFindUsEmail1', s.email);
+  wsSetHref('wsFindUsEmail1', s.email ? `mailto:${s.email}` : '');
+
+  const addr2El = document.getElementById('wsFindUsAddress2');
+  if(addr2El && addrLines) addr2El.innerHTML = addrLines;
+  wsSetText('wsFindUsPhone2', phoneDisplay);
+  wsSetHref('wsFindUsPhone2', telHref);
+  wsSetHref('wsFindUsMapsLink2', s.maps_url);
+
+  wsSetText('wsFooterName', s.name);
+  wsSetText('wsFooterAddress', addrShort + (s.zip ? ' ' + s.zip : ''));
+  wsSetText('wsFooterPhone', phoneDisplay);
+  wsSetHref('wsFooterPhone', telHref);
+  wsSetText('wsFooterEmail', s.email);
+  wsSetHref('wsFooterEmail', s.email ? `mailto:${s.email}` : '');
+  wsSetText('wsFooterCopyrightName', s.name);
+
+  wsSetText('wsAnnounceBarPhone', phoneDisplay);
+  wsSetHref('wsAnnounceBarPhone', telHref);
+
+  // Map embed: Google's no-API-key "output=embed" trick, built from the same
+  // structured address fields used everywhere else above — not from the
+  // freeform maps_url text, which can't be reliably transformed into an
+  // embeddable src for every URL style an owner might paste in.
+  const fullAddress = [s.address, s.city, s.state, s.zip].filter(Boolean).join(', ');
+  const mapEl = document.getElementById('wsMapEmbed');
+  if(mapEl && fullAddress){
+    mapEl.src = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
+  }
+}
+document.addEventListener('DOMContentLoaded', loadBusinessInfo);
 async function dbPost(table, data) {
   try {
     const ctrl = new AbortController();
@@ -2071,6 +2139,10 @@ async function bmConfirm(){
       err.innerHTML='⚠️ That time was just booked by someone else. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Pick another time →</a>';
     } else if(msg.includes('NO_TECH_AVAILABLE')){
       err.innerHTML='⚠️ No technician is free for that exact time. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Choose another time →</a> or call (603) 621-7469.';
+    } else if(msg.includes('SALON_CLOSED')){
+      err.innerHTML='⚠️ We\'re closed on that date. <a href="#" onclick="bmShowPane(1);return false;">Pick another day →</a> or call (603) 621-7469.';
+    } else if(msg.includes('OUTSIDE_BUSINESS_HOURS')){
+      err.innerHTML='⚠️ That time is outside our business hours. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Choose another time →</a> or call (603) 621-7469.';
     } else {
       err.textContent='⚠️ Something went wrong. Please try again, or call (603) 621-7469 to book.';
     }
@@ -2791,7 +2863,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
           <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📍</span>
           <div>
             <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Address</div>
-            <div style="font-size:14px;color:rgba(255,255,255,0.6);">1500 S. Willow Street<br>Across from American Eagle · Near Food Court<br>Manchester, NH 03103</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.6);" id="wsFindUsAddress2">1500 S. Willow Street<br>Across from American Eagle · Near Food Court<br>Manchester, NH 03103</div>
           </div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
@@ -2805,16 +2877,17 @@ document.addEventListener('DOMContentLoaded', initDrag);
           <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📞</span>
           <div>
             <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Phone</div>
-            <a href="tel:6036217469" style="font-size:14px;color:var(--gold-lt);text-decoration:none;">(603) 621-7469</a>
+            <a href="tel:6036217469" style="font-size:14px;color:var(--gold-lt);text-decoration:none;" id="wsFindUsPhone2">(603) 621-7469</a>
           </div>
         </div>
       </div>
       <div style="margin-top:28px;">
-        <a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" target="_blank" class="btn-gold">Get Directions →</a>
+        <a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" target="_blank" class="btn-gold" id="wsFindUsMapsLink2">Get Directions →</a>
       </div>
     </div>
     <div style="min-height:400px;">
       <iframe
+        id="wsMapEmbed"
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.1234!2d-71.4628!3d42.9634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s1500+S+Willow+St%2C+Manchester%2C+NH+03103!5e0!3m2!1sen!2sus!4v1234567890"
         width="100%" height="100%" style="border:0;display:block;min-height:400px;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
