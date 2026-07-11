@@ -463,6 +463,48 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
 .pay-comp-row:last-child{border-bottom:none}
 .pay-comp-row .name{font-weight:600;color:var(--ink)}
 .pay-comp-row .rate{color:var(--plum-soft);font-size:13px;margin-top:2px}
+/* ---------- Services (Settings) ---------- */
+.svc-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.svc-toolbar input[type="text"]{width:320px;max-width:100%;flex:none;margin:0}
+.svc-toolbar label.tm-check{margin:0;white-space:nowrap}
+.svc-toolbar .svc-add-btn{margin-left:auto}
+.svc-summary{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+.svc-cat-strip{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.svc-cat-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;user-select:none}
+.svc-cat-head h3{font-size:16px;font-weight:700;color:var(--ink);font-family:"Hanken Grotesk",sans-serif;margin:0}
+.svc-cat-head .svc-count{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:8px}
+.svc-cat-head .car{transition:transform .15s;color:var(--muted);font-size:18px}
+.svc-cat-strip.open .svc-cat-head .car{transform:rotate(180deg)}
+.svc-cat-body{display:none;border-top:1px solid var(--line)}
+.svc-cat-strip.open .svc-cat-body{display:block}
+.svc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.svc-row:last-child{border-bottom:none}
+.svc-row .svc-main{min-width:0}
+.svc-row .svc-name{font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px}
+.svc-row .svc-meta{color:var(--plum-soft);font-size:13px;margin-top:2px}
+.svc-row.inactive .svc-name,.svc-row.inactive .svc-meta{color:var(--muted)}
+.svc-row.archived{opacity:.55}
+.svc-row .svc-actions{display:flex;gap:8px;flex-shrink:0}
+.svc-row .svc-actions button{background:none;border:1px solid var(--line);border-radius:8px;color:var(--plum-soft);cursor:pointer;font-size:12.5px;padding:6px 10px;white-space:nowrap}
+.svc-row .svc-actions button:hover{border-color:var(--persimmon-deep);color:var(--persimmon-deep)}
+.svc-pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.svc-pill.inactive{background:#f1ece7;color:var(--muted)}
+.svc-empty{padding:32px 18px;color:var(--muted);font-size:14px;text-align:center}
+.svc-note{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--plum-soft);margin:2px 0 14px}
+.stf-qual-cat{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:12px 0 6px}
+.stf-qual-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.stf-qual-grid .tm-check{margin:0}
+.stf-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
+.stf-days-grid label{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--plum-soft);margin:0}
+/* ---------- Scrollable modal variant (tall forms) ---------- */
+.rmodal-card.rmodal-card-scroll{display:flex;flex-direction:column;max-height:88vh;max-width:480px;padding:0}
+.rmodal-card-scroll .rmodal-card-head{flex:0 0 auto;padding:22px 26px 12px}
+.rmodal-card-scroll .rmodal-card-head h3{margin:0}
+.rmodal-card-scroll .rmodal-card-body{flex:1 1 auto;overflow-y:auto;padding:0 26px}
+.rmodal-card-scroll .rmodal-card-foot{flex:0 0 auto;border-top:1px solid var(--line);padding:14px 26px 22px;margin-top:6px}
+.stf-hours-row{display:flex;align-items:center;gap:10px;padding:6px 0;flex-wrap:wrap}
+.stf-hours-row label.tm-check{min-width:100px;margin:0}
+.stf-hours-row input[type="time"]{width:auto;margin:0}
 .pay-comp-row .rate.unset{color:var(--amber);font-weight:600}
 .pay-comp-row button{border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:9px;padding:6px 13px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
 .pay-comp-row button:hover{border-color:var(--persimmon);color:var(--persimmon-deep)}
@@ -529,7 +571,6 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
       <button class="navlink" data-view="week"><span class="dot"></span>Week</button>
       <button class="navlink" data-view="insights"><span class="dot"></span>Insights</button>
       <button class="navlink" data-view="customers"><span class="dot"></span>Customers</button>
-      <button class="navlink" data-view="technicians"><span class="dot"></span>Technicians</button>
       <button class="navlink" data-view="payroll"><span class="dot"></span>Payroll</button>
       <button class="navlink" data-view="settings"><span class="dot"></span>Settings</button>
     </nav>
@@ -614,15 +655,6 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
       </div>
       <div class="cust-chips" id="custChips"></div>
       <div id="custWrap"></div>
-    </section>
-
-    <!-- TECHNICIANS -->
-    <section class="view" id="view-technicians">
-      <div class="view-head">
-        <h2>Technicians</h2>
-        <span class="sub" id="techSub"></span>
-      </div>
-      <div id="techWrap"></div>
     </section>
 
     <!-- PAYROLL -->
@@ -788,7 +820,7 @@ async function loadAll(){
   // Pull the datasets in parallel. Payroll tables are deliberately excluded
   // here — they only load after the Payroll PIN is verified, via
   // reloadPayrollLookups(), not at boot for every dashboard user.
-  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, payments, salonRows] = await Promise.all([
+  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, techHours, payments, salonRows] = await Promise.all([
     api.get("customers",   `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("technicians", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("services",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
@@ -797,6 +829,10 @@ async function loadAll(){
     api.get("salon_hours", `${salon}=${eq(CONFIG.SALON_ID)}&limit=200`).catch(()=>[]),
     api.get("technician_links", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    // technician_hours carries no salon_id of its own (same as
+    // technician_services) — fetched unfiltered and matched against this
+    // salon's already-loaded technicians below, same established pattern.
+    api.get("technician_hours", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("payments",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("salons", `id=${eq(CONFIG.SALON_ID)}&limit=1`).catch(()=>[]),
   ]);
@@ -807,6 +843,12 @@ async function loadAll(){
   store.techServices = {};
   (Array.isArray(techServices)?techServices:[]).forEach(ts=>{
     (store.techServices[ts.technician_id] ||= new Set()).add(ts.service_id);
+  });
+  const techIdSet = new Set(technicians.map(t => t.id));
+  store.technicianHours = {};
+  (Array.isArray(techHours) ? techHours : []).forEach(h => {
+    if(!techIdSet.has(h.technician_id)) return; // belongs to another salon
+    (store.technicianHours[h.technician_id] ||= {})[h.day_of_week] = h;
   });
 
   // Actual Revenue lookup — sums per booking (a future split-tender POS
@@ -1215,7 +1257,7 @@ function openReschedule(id){
   document.getElementById("rmTime").value = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   document.getElementById("rmTech").innerHTML =
     `<option value="">Keep current technician</option>` +
-    store.technicians.map(t=>`<option value="${t.id}">${esc(t.name||"Staff")}</option>`).join("");
+    store.technicians.filter(t=>t.active!==false).map(t=>`<option value="${t.id}">${esc(t.name||"Staff")}</option>`).join("");
   document.getElementById("rmErr").textContent = "";
   rmDurationMin = (item.endMin!=null) ? (item.endMin - (d.getHours()*60+d.getMinutes())) : 60;
   rmUpdateWarning();
@@ -1268,9 +1310,9 @@ async function reloadData(){
   populateTechFilters();
   renderToday();
   renderCustomers(document.getElementById("custSearch")?.value || "");
-  if(document.getElementById("view-technicians").classList.contains("on")) renderTechnicians();
   if(document.getElementById("view-week").classList.contains("on")) renderWeek();
   if(document.getElementById("view-insights").classList.contains("on")) renderInsights();
+  if(document.getElementById("view-settings").classList.contains("on") && currentSettingsTab === "staff") renderSettingsStaff();
 }
 
 /* ---------- Insights ---------- */
@@ -1387,9 +1429,20 @@ function setTechFilter(v){
   if(document.getElementById("view-week").classList.contains("on")) renderWeek();
 }
 
-/* Red Persimmon opening hours (JS getDay: 0=Sun..6=Sat), minutes from midnight. */
-const SALON_HOURS_MIN = {0:{o:660,c:1080},1:{o:600,c:1200},2:{o:600,c:1200},3:{o:600,c:1200},4:{o:600,c:1200},5:{o:600,c:1260},6:{o:600,c:1260}};
-function dayHours(date){ const h=SALON_HOURS_MIN[date.getDay()]; return h?{openMin:h.o,closeMin:h.c}:null; }
+// Reads live from store.salonHours (already fetched via loadAll) instead of
+// a hardcoded table — this used to be its own separate hardcoded copy of
+// salon hours, independent of both Business Hours' real data and the
+// website's (also hardcoded, also being fixed) SALON_HRS. One source now.
+const DOW_INDEX = ["sun","mon","tue","wed","thu","fri","sat"];
+function dayHours(date){
+  const dow = DOW_INDEX[date.getDay()];
+  const h = (store.salonHours || []).find(x => x.day_of_week === dow);
+  if(!h || h.is_open === false) return null;
+  const toMin = t => { if(!t) return null; const [hh, mm] = t.slice(0,5).split(":").map(Number); return hh*60+mm; };
+  const openMin = toMin(h.open_time), closeMin = toMin(h.close_time);
+  if(openMin == null || closeMin == null) return null;
+  return { openMin, closeMin };
+}
 const GAP_MIN = 30; // only show gaps of 30 min or more
 function apptStartMin(a){ return a.when ? a.when.getHours()*60 + a.when.getMinutes() : 0; }
 function apptEndMin(a){ return a.endMin!=null ? a.endMin : apptStartMin(a)+30; }
@@ -1477,45 +1530,17 @@ function closeDetail(){ document.getElementById("dmodal").style.display="none"; 
 /* ---------- Technicians tab ---------- */
 const DOW_LABEL = {mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
 function fmtDays(arr){ return (Array.isArray(arr)&&arr.length) ? arr.map(d=>DOW_LABEL[d]||d).join(", ") : "—"; }
+
+// Time off / schedule-link actions are shared between the old standalone
+// Technicians tab and the new Settings > Staff tab (which absorbs the same
+// functionality). Whichever is actually visible re-renders; the other is
+// left untouched until the owner visits it, rather than assuming one or
+// the other is "the" technician view.
+function refreshTechnicianRelatedViews(){
+  if(document.getElementById("view-settings")?.classList.contains("on") && currentSettingsTab === "staff") renderSettingsStaff();
+}
 function fmtOffDate(s){ if(!s) return ""; const d=new Date(s+"T00:00:00"); return new Intl.DateTimeFormat("en-US",{weekday:"short",month:"short",day:"numeric"}).format(d); }
 function fmtOffTime(t){ if(!t) return ""; const [h,m]=t.split(":"); const d=new Date(); d.setHours(+h,+m,0,0); return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit"}).format(d); }
-
-function renderTechnicians(){
-  const wrap = document.getElementById("techWrap");
-  const techs = [...store.technicians].sort((a,b)=>(a.name||"").localeCompare(b.name||""));
-  document.getElementById("techSub").textContent = `${techs.length} technician${techs.length===1?"":"s"}`;
-  const todayStr = localDateStr();
-
-  const techCards = techs.map(t=>{
-    const off = store.timeoff
-      .filter(o => o.technician_id===t.id && !o.salon_closure && o.off_date >= todayStr)
-      .sort((a,b)=> a.off_date.localeCompare(b.off_date));
-    const offHtml = off.length ? off.map(o=>{
-      const when = o.all_day ? "All day" : `${fmtOffTime(o.start_time)} – ${fmtOffTime(o.end_time)}`;
-      const reason = o.reason ? ` · ${esc(o.reason)}` : "";
-      return `<div class="tooff"><span>${fmtOffDate(o.off_date)} · ${when}${reason}</span>
-        <button class="x" title="Remove" onclick="removeTimeOff('${o.id}')">✕</button></div>`;
-    }).join("") : `<div class="none">No upcoming time off.</div>`;
-    return `<div class="tech-card">
-      <div class="th">
-        <div>
-          <div class="tname">${esc(t.name||"Staff")}</div>
-          <div class="tdays">Works: ${fmtDays(t.available_days)}</div>
-        </div>
-        <div class="addoff"><button onclick="openTimeOff('${t.id}')">+ Add time off</button></div>
-      </div>
-      <div class="tech-off">${offHtml}</div>
-      <div class="tech-links">
-        ${store.techTokens[t.id]
-          ? `<button class="tl-btn" onclick="copyTechLink('${t.id}')">📋 Copy schedule link</button>
-             <button class="tl-btn tl-reset" onclick="resetTechLink('${t.id}')">🔄 Reset link</button>`
-          : `<span class="none">No schedule link yet.</span>`}
-      </div>
-    </div>`;
-  }).join("");
-
-  wrap.innerHTML = techCards;
-}
 
 /* ---------- Salon closures (moved here from Technicians — used by Settings > Business Hours) ---------- */
 function renderSalonClosuresCard(){
@@ -1567,7 +1592,7 @@ async function resetTechLink(techId){
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data&&data.error)||("HTTP "+res.status)); }
     if(data.result) store.techTokens[techId] = data.result;   // new token returned
-    renderTechnicians();
+    refreshTechnicianRelatedViews();
     const url = techLinkUrl(techId);
     prompt("New link created. Share this one (the old link no longer works):", url);
   }catch(e){
@@ -1627,7 +1652,7 @@ async function submitTimeOff(){
     const conflicts = (data.result && data.result.conflicts) || [];
     closeTimeOff();
     await reloadData();
-    renderTechnicians();
+    refreshTechnicianRelatedViews();
     if(conflicts.length){
       showAffected(conflicts, `${conflicts.length} booking${conflicts.length>1?"s":""} fall in this time off — reschedule or cancel them from the Today tab.`);
     }
@@ -1649,7 +1674,7 @@ async function removeTimeOff(id){
     const data = await res.json().catch(()=>null);
     if(!res.ok || !data || data.ok===false){ throw new Error((data && data.error) || ("HTTP "+res.status)); }
     await reloadData();
-    renderTechnicians();
+    refreshTechnicianRelatedViews();
   }catch(e){
     console.error(e);
     alert("Couldn't remove that time off. Please try again.");
@@ -2850,14 +2875,713 @@ async function submitBusinessHours(){
     save.disabled = false; save.textContent = "Save hours";
   }
 }
+/* ---------- Services (Settings) ---------- */
+const SERVICE_CATEGORY_LABELS = {
+  enhancements: "Enhancements", lashes: "Lashes", nail_care: "Nail Care",
+  polish: "Polish", waxing: "Waxing",
+};
+function svcCategoryLabel(cat){
+  if(SERVICE_CATEGORY_LABELS[cat]) return SERVICE_CATEGORY_LABELS[cat];
+  return (cat || "Uncategorized").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+function svcCatSlug(cat){ return (cat || "uncategorized").replace(/[^a-z0-9]+/gi, "-"); }
+
+// Session-only UI state — which categories are expanded, archived visibility,
+// and the current search term. Deliberately not persisted; each Settings
+// visit starts collapsed, same as the Payroll compensation strip.
+let svcCategoryOpen = {};
+let svcShowArchived = false;
+let svcSearch = "";
+let svcModalId = null;
+let svcDefaultOpenApplied = false; // opens one category on first visit only, so the page never looks empty on arrival — respects manual toggles after that
+
 function renderSettingsServices(){
-  settingsPlaceholder("Services", "Add, edit, deactivate, or archive services.");
+  const wrap = document.getElementById("settingsWrap");
+  const all = Object.values(store.services || {});
+  const liveCount = all.filter(s => !s.archived_at).length;
+  const catCount = new Set(all.filter(s => !s.archived_at).map(s => s.category || "uncategorized")).size;
+
+  wrap.innerHTML = `
+    <div class="settings-section-title">Services</div>
+    <div class="settings-section-sub">Add, edit, deactivate, or archive services shown on your booking flow.</div>
+    <div class="svc-summary">${liveCount} service${liveCount === 1 ? "" : "s"} across ${catCount} categor${catCount === 1 ? "y" : "ies"}</div>
+    <div class="svc-toolbar">
+      <input type="text" id="svcSearchInput" placeholder="Search services…" value="${esc(svcSearch)}" oninput="svcOnSearch(this.value)">
+      <label class="tm-check"><input type="checkbox" id="svcShowArchivedToggle" ${svcShowArchived ? "checked" : ""} onchange="svcToggleArchived(this.checked)"> Show archived</label>
+      <button class="btn accent svc-add-btn" type="button" onclick="openServiceModal()">+ Add service</button>
+    </div>
+    <div id="svcCategoriesWrap"></div>
+  `;
+  renderServiceCategories();
 }
+
+// Rendered separately from the toolbar/search input so typing in the search
+// box never rebuilds (and steals focus from) the input itself — only the
+// list below it re-renders.
+function renderServiceCategories(){
+  const holder = document.getElementById("svcCategoriesWrap");
+  if(!holder) return;
+
+  const all = Object.values(store.services || {});
+  const term = svcSearch.trim().toLowerCase();
+
+  const byCategory = {};
+  all.forEach(s => {
+    if(s.archived_at && !svcShowArchived) return;
+    if(term && !(s.name || "").toLowerCase().includes(term)) return;
+    (byCategory[s.category || "uncategorized"] ||= []).push(s);
+  });
+
+  const categories = Object.keys(byCategory).sort((a, b) => svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+
+  // First-ever render this session: open the first category so the page
+  // doesn't look empty on arrival. Never re-applied after that, so it
+  // doesn't fight any collapsing the owner does later.
+  if(!svcDefaultOpenApplied && categories.length){
+    svcCategoryOpen[categories[0]] = true;
+    svcDefaultOpenApplied = true;
+  }
+
+  // A live search auto-expands whatever matches; collapse state is otherwise
+  // left exactly as the owner set it.
+  if(term) categories.forEach(c => { svcCategoryOpen[c] = true; });
+
+  if(!categories.length){
+    holder.innerHTML = `<div class="svc-empty">${term ? `No services match "${esc(svcSearch.trim())}".` : "No services yet — add your first one above."}</div>`;
+    return;
+  }
+
+  holder.innerHTML = categories.map(cat => {
+    const rows = byCategory[cat].slice().sort((a, b) => (a.display_order || 0) - (b.display_order || 0));
+    const activeCount = rows.filter(s => s.active !== false && !s.archived_at).length;
+    const isOpen = !!svcCategoryOpen[cat];
+    return `<div class="svc-cat-strip ${isOpen ? "open" : ""}" id="svcCat-${svcCatSlug(cat)}">
+      <div class="svc-cat-head" onclick="svcToggleCategory('${cat.replace(/'/g, "&apos;")}')">
+        <h3>${esc(svcCategoryLabel(cat))}<span class="svc-count">${activeCount} active · ${rows.length} shown</span></h3>
+        <span class="car">▾</span>
+      </div>
+      <div class="svc-cat-body">${rows.map(svcRowHtml).join("")}</div>
+    </div>`;
+  }).join("");
+}
+
+function svcRowHtml(s){
+  const archived = !!s.archived_at;
+  const inactive = s.active === false;
+  const priceStr = s.price_from ? `From ${money(s.price)}` : money(s.price);
+  const rowClass = archived ? "archived" : (inactive ? "inactive" : "");
+  const statusPill = archived ? `<span class="svc-pill">Archived</span>` : (inactive ? `<span class="svc-pill inactive">Inactive</span>` : "");
+
+  let actions;
+  if(archived){
+    actions = "";
+  } else if(inactive){
+    actions = `
+      <button onclick="openServiceModal('${s.id}')">Edit</button>
+      <button onclick="svcSetActive('${s.id}', true)">Activate</button>
+      <button onclick="svcArchive('${s.id}')">Archive</button>`;
+  } else {
+    actions = `
+      <button onclick="openServiceModal('${s.id}')">Edit</button>
+      <button onclick="svcSetActive('${s.id}', false)">Deactivate</button>`;
+  }
+
+  return `<div class="svc-row ${rowClass}">
+    <div class="svc-main">
+      <div class="svc-name">${esc(s.name)}${statusPill}</div>
+      <div class="svc-meta">${esc(priceStr)} · ${s.duration_minutes} min</div>
+    </div>
+    <div class="svc-actions">${actions}</div>
+  </div>`;
+}
+
+function svcToggleCategory(cat){
+  svcCategoryOpen[cat] = !svcCategoryOpen[cat];
+  const el = document.getElementById("svcCat-" + svcCatSlug(cat));
+  if(el) el.classList.toggle("open", svcCategoryOpen[cat]);
+}
+function svcToggleArchived(checked){
+  svcShowArchived = checked;
+  renderServiceCategories();
+}
+function svcOnSearch(val){
+  svcSearch = val;
+  renderServiceCategories();
+}
+
+// Re-fetches just the services table and rebuilds the in-memory map —
+// same targeted-refresh pattern as Business Information/Hours, not a full
+// loadAll(). Keeps this responsive as the catalog grows toward 100+ rows.
+async function reloadServices(){
+  const rows = await api.get("services", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=${CONFIG.ROW_LIMIT}`);
+  store.services = Object.fromEntries((Array.isArray(rows) ? rows : []).map(s => [s.id, s]));
+}
+
+// Client-side preview only, using data already loaded at boot (store.assembled
+// covers every confirmed booking from the lookback date forward — no new
+// fetch). The server independently re-checks this before actually archiving;
+// this just avoids sending the owner into a guaranteed-to-fail attempt.
+function svcFutureBookingCount(serviceName){
+  const todayStr = localDateStr();
+  return (store.assembled || []).filter(a =>
+    a.status === "confirmed" &&
+    a.when && localDateStr(a.when) >= todayStr &&
+    Array.isArray(a.services) && a.services.includes(serviceName)
+  ).length;
+}
+
+function openServiceModal(id){
+  svcModalId = id || null;
+  const s = id ? store.services[id] : null;
+
+  document.getElementById("svcModalTitle").textContent = s ? "Edit service" : "Add service";
+  document.getElementById("svcName").value = s ? (s.name || "") : "";
+  document.getElementById("svcCategory").value = s ? (s.category || "") : "";
+  document.getElementById("svcPrice").value = s && s.price != null ? Number(s.price) : "";
+  document.getElementById("svcPriceFrom").checked = s ? !!s.price_from : false;
+  document.getElementById("svcDuration").value = s && s.duration_minutes != null ? s.duration_minutes : "";
+  document.getElementById("svcErr").textContent = "";
+  document.getElementById("svcNewNote").style.display = s ? "none" : "block";
+
+  const cats = [...new Set(Object.values(store.services || {}).map(x => x.category).filter(Boolean))].sort();
+  document.getElementById("svcCategoryOptions").innerHTML = cats.map(c => `<option value="${esc(c)}">`).join("");
+
+  // Reset button state on open, not just in the catch block — same
+  // convention as openCheckout()/openTimeOff().
+  const save = document.getElementById("svcSave");
+  save.disabled = false; save.textContent = "Save";
+
+  document.getElementById("svcmodal").style.display = "flex";
+}
+function closeServiceModal(){
+  document.getElementById("svcmodal").style.display = "none";
+  svcModalId = null;
+}
+
+async function submitService(){
+  const err = document.getElementById("svcErr"); err.textContent = "";
+  const name = document.getElementById("svcName").value.trim();
+  const category = document.getElementById("svcCategory").value.trim();
+  const priceRaw = document.getElementById("svcPrice").value;
+  const priceFrom = document.getElementById("svcPriceFrom").checked;
+  const durationRaw = document.getElementById("svcDuration").value;
+
+  if(!name){ err.textContent = "Service name is required."; return; }
+  if(!category){ err.textContent = "Category is required."; return; }
+  const price = Number(priceRaw);
+  if(priceRaw === "" || isNaN(price) || price < 0){ err.textContent = "Enter a valid price (0 or more)."; return; }
+  const duration = parseInt(durationRaw, 10);
+  if(!durationRaw || isNaN(duration) || duration <= 0){ err.textContent = "Enter a valid duration in minutes."; return; }
+
+  const save = document.getElementById("svcSave");
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("upsert_service", {
+      p_salon_id: CONFIG.SALON_ID,
+      p_service_id: svcModalId,
+      p_name: name,
+      p_category: category,
+      p_price: price,
+      p_duration_minutes: duration,
+      p_price_from: priceFrom,
+      p_display_order: null,
+    });
+    await reloadServices();
+    closeServiceModal();
+    renderServiceCategories();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message || "");
+    if(msg.includes("NAME_REQUIRED")) err.textContent = "Service name is required.";
+    else if(msg.includes("CATEGORY_REQUIRED")) err.textContent = "Category is required.";
+    else if(msg.includes("INVALID_PRICE")) err.textContent = "Enter a valid price (0 or more).";
+    else if(msg.includes("INVALID_DURATION")) err.textContent = "Enter a valid duration in minutes.";
+    else if(msg.includes("SERVICE_ARCHIVED")) err.textContent = "This service has been archived and can't be edited.";
+    else err.textContent = "Couldn't save. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Save";
+  }
+}
+
+async function svcSetActive(id, active){
+  const s = store.services[id];
+  if(!active){
+    if(!confirm(`Deactivate "${s ? s.name : "this service"}"? It will be hidden from booking but can be reactivated anytime.`)) return;
+  }
+  try{
+    await payrollWrite("set_service_active", { p_salon_id: CONFIG.SALON_ID, p_service_id: id, p_active: active });
+    await reloadServices();
+    renderServiceCategories();
+  }catch(e){
+    console.error(e);
+    alert("Couldn't update that service. Please try again.");
+  }
+}
+
+async function svcArchive(id){
+  const s = store.services[id];
+  if(!s) return;
+
+  const futureCount = svcFutureBookingCount(s.name);
+  if(futureCount > 0){
+    alert(`Can't archive "${s.name}" yet — it's still on ${futureCount} upcoming confirmed booking${futureCount === 1 ? "" : "s"}. Reschedule or cancel ${futureCount === 1 ? "it" : "them"} first.`);
+    return;
+  }
+  if(!confirm(`Archive "${s.name}"? This is permanent — you won't be able to restore it from here.`)) return;
+
+  try{
+    await payrollWrite("archive_service", { p_salon_id: CONFIG.SALON_ID, p_service_id: id });
+    await reloadServices();
+    renderServiceCategories();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message || "");
+    if(msg.includes("SERVICE_HAS_FUTURE_BOOKINGS")) alert("This service still has upcoming bookings — reschedule or cancel them first.");
+    else if(msg.includes("ARCHIVE_REQUIRES_INACTIVE")) alert("Deactivate this service before archiving it.");
+    else alert("Couldn't archive that service. Please try again.");
+  }
+}
+/* ---------- Staff (Settings) ---------- */
+let stfShowArchived = false;
+let stfModalId = null;
+
 function renderSettingsStaff(){
-  settingsPlaceholder("Staff", "Add, edit, deactivate, or archive staff — plus time off, schedule links, and qualifications.");
+  const wrap = document.getElementById("settingsWrap");
+  const all = store.technicians || [];
+  const liveCount = all.filter(t => !t.archived_at).length;
+
+  wrap.innerHTML = `
+    <div class="settings-section-title">Staff</div>
+    <div class="settings-section-sub">Add, edit, deactivate, or archive technicians — plus time off, schedule links, and qualifications.</div>
+    <div class="svc-summary">${liveCount} technician${liveCount === 1 ? "" : "s"}</div>
+    <div class="svc-toolbar">
+      <label class="tm-check"><input type="checkbox" id="stfShowArchivedToggle" ${stfShowArchived ? "checked" : ""} onchange="stfToggleArchived(this.checked)"> Show archived</label>
+      <button class="btn accent svc-add-btn" type="button" onclick="openStaffModal()">+ Add technician</button>
+    </div>
+    <div id="stfListWrap"></div>
+  `;
+  renderStaffList();
 }
+
+function renderStaffList(){
+  const holder = document.getElementById("stfListWrap");
+  if(!holder) return;
+
+  const all = (store.technicians || []).filter(t => stfShowArchived || !t.archived_at);
+  const sorted = all.slice().sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+  if(!sorted.length){
+    holder.innerHTML = `<div class="svc-empty">No technicians yet — add your first one above.</div>`;
+    return;
+  }
+
+  holder.innerHTML = sorted.map(staffCardHtml).join("");
+}
+
+// Compresses a technician's weekly hours into a compact summary — merges
+// consecutive days that share identical start/end into one range instead
+// of listing every day, e.g. "Mon–Wed 10–6 · Fri 10–8".
+function fmtHourCompact(t){
+  if(!t) return "";
+  const [h, m] = t.slice(0,5).split(":").map(Number);
+  let h12 = h % 12; if(h12 === 0) h12 = 12;
+  return m ? `${h12}:${String(m).padStart(2,"0")}` : `${h12}`;
+}
+function stfCompressHours(techId){
+  const hrs = store.technicianHours[techId] || {};
+  const rows = DAY_ORDER.map(d => hrs[d] || { is_available: false });
+  const segments = [];
+  let i = 0;
+  while(i < 7){
+    if(!rows[i].is_available){ i++; continue; }
+    const key = `${rows[i].start_time}-${rows[i].end_time}`;
+    let j = i;
+    while(j+1 < 7 && rows[j+1].is_available && `${rows[j+1].start_time}-${rows[j+1].end_time}` === key) j++;
+    const label = i === j ? DOW_LABEL[DAY_ORDER[i]] : `${DOW_LABEL[DAY_ORDER[i]]}–${DOW_LABEL[DAY_ORDER[j]]}`;
+    segments.push(`${label} ${fmtHourCompact(rows[i].start_time)}–${fmtHourCompact(rows[i].end_time)}`);
+    i = j + 1;
+  }
+  return segments.length ? segments.join(" · ") : "Not scheduled any day";
+}
+
+function staffCardHtml(t){
+  const archived = !!t.archived_at;
+  const inactive = t.active === false;
+  const statusPill = archived ? `<span class="svc-pill">Archived</span>` : (inactive ? `<span class="svc-pill inactive">Inactive</span>` : "");
+
+  let actions;
+  if(archived){
+    actions = "";
+  } else if(inactive){
+    actions = `
+      <button onclick="openStaffModal('${t.id}')">Edit</button>
+      <button onclick="stfSetActive('${t.id}', true)">Activate</button>
+      <button onclick="stfArchive('${t.id}')">Archive</button>`;
+  } else {
+    actions = `
+      <button onclick="openStaffModal('${t.id}')">Edit</button>
+      <button onclick="stfSetActive('${t.id}', false)">Deactivate</button>`;
+  }
+
+  // Archived technicians show nothing beyond name/status — their schedule
+  // link is already gone and time off is moot for someone no longer staffed.
+  if(archived){
+    return `<div class="tech-card">
+      <div class="th">
+        <div><div class="tname">${esc(t.name || "Staff")}${statusPill}</div></div>
+      </div>
+    </div>`;
+  }
+
+  const qualIds = store.techServices[t.id] || new Set();
+  const qualNames = Object.values(store.services || {}).filter(s => qualIds.has(s.id)).map(s => s.name);
+  const qualText = qualNames.length ? qualNames.join(", ") : "No services assigned yet";
+
+  const todayStr = localDateStr();
+  const off = (store.timeoff || [])
+    .filter(o => o.technician_id === t.id && !o.salon_closure && o.off_date >= todayStr)
+    .sort((a, b) => a.off_date.localeCompare(b.off_date));
+  const offHtml = off.length ? off.map(o => {
+    const when = o.all_day ? "All day" : `${fmtOffTime(o.start_time)} – ${fmtOffTime(o.end_time)}`;
+    const reason = o.reason ? ` · ${esc(o.reason)}` : "";
+    return `<div class="tooff"><span>${fmtOffDate(o.off_date)} · ${when}${reason}</span>
+      <button class="x" title="Remove" onclick="removeTimeOff('${o.id}')">✕</button></div>`;
+  }).join("") : `<div class="none">No upcoming time off.</div>`;
+
+  return `<div class="tech-card">
+    <div class="th">
+      <div>
+        <div class="tname">${esc(t.name || "Staff")}${statusPill}</div>
+        <div class="tdays">Works: ${esc(stfCompressHours(t.id))} · Qualified for: ${esc(qualText)}</div>
+      </div>
+      <div class="svc-actions">${actions}</div>
+    </div>
+    <div class="tech-off">
+      <div class="th" style="margin-bottom:6px"><span class="tdays" style="margin:0">Upcoming time off</span>
+        <div class="addoff"><button onclick="openTimeOff('${t.id}')">+ Add time off</button></div>
+      </div>
+      ${offHtml}
+    </div>
+    <div class="tech-links">
+      ${store.techTokens[t.id]
+        ? `<button class="tl-btn" onclick="copyTechLink('${t.id}')">📋 Copy schedule link</button>
+           <button class="tl-btn tl-reset" onclick="resetTechLink('${t.id}')">🔄 Reset link</button>`
+        : `<span class="none">No schedule link yet.</span>`}
+    </div>
+  </div>`;
+}
+
+function stfToggleArchived(checked){
+  stfShowArchived = checked;
+  renderStaffList();
+}
+
+async function reloadTechnicians(){
+  const rows = await api.get("technicians", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=${CONFIG.ROW_LIMIT}`);
+  store.technicians = Array.isArray(rows) ? rows : store.technicians;
+}
+async function reloadTechnicianServices(){
+  const rows = await api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(() => []);
+  store.techServices = {};
+  (Array.isArray(rows) ? rows : []).forEach(ts => {
+    (store.techServices[ts.technician_id] ||= new Set()).add(ts.service_id);
+  });
+}
+async function reloadTechnicianHours(){
+  const rows = await api.get("technician_hours", `limit=${CONFIG.ROW_LIMIT}`).catch(() => []);
+  const techIdSet = new Set((store.technicians||[]).map(t => t.id));
+  store.technicianHours = {};
+  (Array.isArray(rows) ? rows : []).forEach(h => {
+    if(!techIdSet.has(h.technician_id)) return;
+    (store.technicianHours[h.technician_id] ||= {})[h.day_of_week] = h;
+  });
+}
+
+// Client-side preview only, same technique as Services' archive-block check —
+// uses store.assembled (already loaded), no new fetch. Scoped by technician_id
+// directly, which is more precise than the name-matching Services needed.
+function stfFutureBookingCount(technicianId){
+  const todayStr = localDateStr();
+  return (store.assembled || []).filter(a =>
+    a.status === "confirmed" &&
+    a.techId === technicianId &&
+    a.when && localDateStr(a.when) >= todayStr
+  ).length;
+}
+
+function stfToggleHoursRow(cb){
+  const row = cb.closest(".stf-hours-row");
+  const on = cb.checked;
+  row.querySelector(".stf-hrs-start").disabled = !on;
+  row.querySelector(".stf-hrs-end").disabled = !on;
+}
+
+function openStaffModal(id){
+  stfModalId = id || null;
+  const t = id ? store.technicians.find(x => x.id === id) : null;
+
+  document.getElementById("stfModalTitle").textContent = t ? "Edit technician" : "Add technician";
+  document.getElementById("stfName").value = t ? (t.name || "") : "";
+  document.getElementById("stfEmail").value = t ? (t.email || "") : "";
+  document.getElementById("stfPhone").value = t ? fmtPhoneDisplay(t.phone) : "";
+  document.getElementById("stfErr").textContent = "";
+
+  // Working hours: for an existing technician, use their real saved hours.
+  // For a brand-new one, pre-fill from the salon's current hours as a
+  // sensible starting point ("works whenever we're open") rather than
+  // blank — the owner adjusts from there instead of building from scratch.
+  const salonByDay = Object.fromEntries((store.salonHours || []).map(h => [h.day_of_week, h]));
+  const existingHours = t ? (store.technicianHours[t.id] || {}) : {};
+  document.getElementById("stfHoursWrap").innerHTML = DAY_ORDER.map(d => {
+    const ex = existingHours[d];
+    const salonDay = salonByDay[d];
+    const isAvail = t ? !!(ex && ex.is_available) : !!(salonDay && salonDay.is_open);
+    const start = ex && ex.start_time ? ex.start_time.slice(0,5) : (!t && salonDay && salonDay.open_time ? salonDay.open_time.slice(0,5) : "");
+    const end = ex && ex.end_time ? ex.end_time.slice(0,5) : (!t && salonDay && salonDay.close_time ? salonDay.close_time.slice(0,5) : "");
+    return `<div class="stf-hours-row" data-day="${d}">
+      <label class="tm-check"><input type="checkbox" class="stf-hrs-avail" onchange="stfToggleHoursRow(this)" ${isAvail ? "checked" : ""}> ${DOW_LABEL[d]}</label>
+      <input type="time" class="stf-hrs-start" value="${esc(start)}" ${isAvail ? "" : "disabled"}>
+      <span style="color:var(--muted)">to</span>
+      <input type="time" class="stf-hrs-end" value="${esc(end)}" ${isAvail ? "" : "disabled"}>
+    </div>`;
+  }).join("");
+
+  const qualIds = t ? (store.techServices[t.id] || new Set()) : new Set();
+  const byCat = {};
+  Object.values(store.services || {}).filter(s => !s.archived_at).forEach(s => {
+    (byCat[s.category || "Other"] ||= []).push(s);
+  });
+  const cats = Object.keys(byCat).sort((a, b) => svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+  document.getElementById("stfQualWrap").innerHTML = cats.map(cat => `
+    <div class="stf-qual-cat">${esc(svcCategoryLabel(cat))}</div>
+    <div class="stf-qual-grid">
+      ${byCat[cat].sort((a, b) => (a.name || "").localeCompare(b.name || "")).map(s => `
+        <label class="tm-check"><input type="checkbox" class="stf-qual-cb" value="${s.id}" ${qualIds.has(s.id) ? "checked" : ""}> ${esc(s.name)}</label>
+      `).join("")}
+    </div>`).join("") || `<div class="none">No services to assign yet — add services first in the Services tab.</div>`;
+
+  const save = document.getElementById("stfSave");
+  save.disabled = false; save.textContent = "Save";
+
+  document.getElementById("stfmodal").style.display = "flex";
+}
+function closeStaffModal(){
+  document.getElementById("stfmodal").style.display = "none";
+  stfModalId = null;
+}
+
+function stfReadHoursForm(){
+  return DAY_ORDER.map(d => {
+    const row = document.querySelector(`.stf-hours-row[data-day="${d}"]`);
+    return {
+      day_of_week: d,
+      is_available: row.querySelector(".stf-hrs-avail").checked,
+      start_time: row.querySelector(".stf-hrs-start").value || null,
+      end_time: row.querySelector(".stf-hrs-end").value || null,
+    };
+  });
+}
+
+async function submitStaffModal(){
+  const err = document.getElementById("stfErr"); err.textContent = "";
+  const name = document.getElementById("stfName").value.trim();
+  const email = document.getElementById("stfEmail").value.trim();
+  const phone = document.getElementById("stfPhone").value.trim();
+
+  if(!name){ err.textContent = "Name is required."; return; }
+  if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ err.textContent = "Enter a valid email, or leave it blank."; return; }
+  if(phone && phone.replace(/\D/g,"").length !== 10 && !(phone.replace(/\D/g,"").length===11 && phone.replace(/\D/g,"")[0]==="1")){
+    err.textContent = "Enter a 10-digit phone number, or leave it blank."; return;
+  }
+
+  const hours = stfReadHoursForm();
+  for(const h of hours){
+    if(h.is_available && (!h.start_time || !h.end_time)){
+      err.textContent = `${DAY_LABELS[h.day_of_week]} is marked available but is missing a start or end time.`;
+      return;
+    }
+    if(h.is_available && h.end_time <= h.start_time){
+      err.textContent = `${DAY_LABELS[h.day_of_week]}'s end time must be after its start time.`;
+      return;
+    }
+  }
+
+  const qualServiceIds = [...document.querySelectorAll(".stf-qual-cb:checked")].map(cb => cb.value);
+
+  const save = document.getElementById("stfSave");
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    const newId = await payrollWrite("upsert_technician", {
+      p_salon_id: CONFIG.SALON_ID,
+      p_technician_id: stfModalId,
+      p_name: name,
+      p_email: email || null,
+      p_phone: phone || null,
+      p_available_days: null, // legacy column — technician_hours is now the source of truth
+    });
+    const techId = stfModalId || newId;
+
+    try{
+      await payrollWrite("set_technician_services", {
+        p_salon_id: CONFIG.SALON_ID,
+        p_technician_id: techId,
+        p_service_ids: qualServiceIds,
+      });
+    }catch(qe){
+      console.error(qe);
+      await reloadTechnicians();
+      closeStaffModal();
+      renderStaffList();
+      alert("Technician profile saved, but qualifications couldn't be saved — please reopen and try again.");
+      return;
+    }
+
+    try{
+      await payrollWrite("update_technician_hours", {
+        p_salon_id: CONFIG.SALON_ID,
+        p_technician_id: techId,
+        p_hours: hours,
+      });
+    }catch(he){
+      console.error(he);
+      await reloadTechnicians();
+      await reloadTechnicianServices();
+      closeStaffModal();
+      renderStaffList();
+      alert("Technician and qualifications saved, but working hours couldn't be saved — please reopen and try again.");
+      return;
+    }
+
+    await reloadTechnicians();
+    await reloadTechnicianServices();
+    await reloadTechnicianHours();
+    closeStaffModal();
+    renderStaffList();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message || "");
+    if(msg.includes("NAME_REQUIRED")) err.textContent = "Name is required.";
+    else if(msg.includes("INVALID_EMAIL")) err.textContent = "Enter a valid email, or leave it blank.";
+    else if(msg.includes("INVALID_PHONE")) err.textContent = "Enter a 10-digit phone number, or leave it blank.";
+    else if(msg.includes("TECHNICIAN_ARCHIVED")) err.textContent = "This technician has been archived and can't be edited.";
+    else err.textContent = "Couldn't save. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Save";
+  }
+}
+
+async function stfSetActive(id, active){
+  const t = store.technicians.find(x => x.id === id);
+  if(!active){
+    if(!confirm(`Deactivate "${t ? t.name : "this technician"}"? Their schedule link keeps working; they just won't be assignable for new bookings.`)) return;
+  }
+  try{
+    await payrollWrite("set_technician_active", { p_salon_id: CONFIG.SALON_ID, p_technician_id: id, p_active: active });
+    await reloadTechnicians();
+    renderStaffList();
+  }catch(e){
+    console.error(e);
+    alert("Couldn't update that technician. Please try again.");
+  }
+}
+
+async function stfArchive(id){
+  const t = store.technicians.find(x => x.id === id);
+  if(!t) return;
+
+  const futureCount = stfFutureBookingCount(id);
+  if(futureCount > 0){
+    alert(`Can't archive "${t.name}" yet — they're on ${futureCount} upcoming confirmed booking${futureCount === 1 ? "" : "s"}. Reschedule or cancel ${futureCount === 1 ? "it" : "them"} first.`);
+    return;
+  }
+  if(!confirm(`Archive "${t.name}"? This is permanent, and their schedule link will stop working immediately.`)) return;
+
+  try{
+    await payrollWrite("archive_technician", { p_salon_id: CONFIG.SALON_ID, p_technician_id: id });
+    delete store.techTokens[id];
+    await reloadTechnicians();
+    renderStaffList();
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message || "");
+    if(msg.includes("TECHNICIAN_HAS_FUTURE_BOOKINGS")) alert("This technician still has upcoming bookings — reschedule or cancel them first.");
+    else if(msg.includes("ARCHIVE_REQUIRES_INACTIVE")) alert("Deactivate this technician before archiving them.");
+    else alert("Couldn't archive that technician. Please try again.");
+  }
+}
+/* ---------- Website (Settings) ---------- */
+async function runWebsiteSyncCheck(){
+  const resultsEl = document.getElementById("wsCheckResults");
+  resultsEl.innerHTML = `<div class="svc-empty">Checking…</div>`;
+
+  const [servicesRows, techRows, techHoursRows, techQualRows, salonHoursRows] = await Promise.all([
+    api.get("services", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=${CONFIG.ROW_LIMIT}`),
+    api.get("technicians", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=${CONFIG.ROW_LIMIT}`),
+    api.get("technician_hours", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("technician_services", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("salon_hours", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=200`).catch(()=>[]),
+  ]);
+
+  const services = (Array.isArray(servicesRows)?servicesRows:[]).filter(s=>s.active!==false && !s.archived_at);
+  const technicians = (Array.isArray(techRows)?techRows:[]).filter(t=>t.active!==false && !t.archived_at);
+  const techIds = new Set(technicians.map(t=>t.id));
+
+  const hoursByTech = {};
+  (Array.isArray(techHoursRows)?techHoursRows:[]).forEach(h=>{
+    if(!techIds.has(h.technician_id)) return;
+    (hoursByTech[h.technician_id] ||= []).push(h);
+  });
+  const qualsByTech = {};
+  const techsByService = {};
+  (Array.isArray(techQualRows)?techQualRows:[]).forEach(q=>{
+    if(!techIds.has(q.technician_id)) return;
+    (qualsByTech[q.technician_id] ||= new Set()).add(q.service_id);
+    (techsByService[q.service_id] ||= new Set()).add(q.technician_id);
+  });
+  const salonHoursDays = new Set((Array.isArray(salonHoursRows)?salonHoursRows:[]).map(h=>h.day_of_week));
+
+  const techsWithNoHours = technicians.filter(t => !(hoursByTech[t.id]||[]).some(h=>h.is_available));
+  const techsWithNoQuals = technicians.filter(t => !(qualsByTech[t.id]||new Set()).size);
+  const servicesWithNoTechs = services.filter(s => !(techsByService[s.id]||new Set()).size);
+  const missingDays = ["mon","tue","wed","thu","fri","sat","sun"].filter(d=>!salonHoursDays.has(d));
+
+  const checks = [
+    { pass: services.length > 0, label: `${services.length} active service${services.length===1?"":"s"}`, detail: services.length ? null : "No active services — the website has nothing to show." },
+    { pass: technicians.length > 0, label: `${technicians.length} active technician${technicians.length===1?"":"s"}`, detail: technicians.length ? null : "No active technicians — the website can't book anyone." },
+    { pass: missingDays.length === 0, label: "Business hours configured for all 7 days", detail: missingDays.length ? `Missing: ${missingDays.join(", ")}` : null },
+    { pass: techsWithNoHours.length === 0, label: "Every technician has working hours set", detail: techsWithNoHours.length ? `${techsWithNoHours.map(t=>esc(t.name)).join(", ")} — will show as unavailable every day on the website until hours are set in Staff.` : null },
+    { pass: techsWithNoQuals.length === 0, label: "Every technician has at least one qualified service", detail: techsWithNoQuals.length ? `${techsWithNoQuals.map(t=>esc(t.name)).join(", ")} — "Book with Technician" will show an empty service list for them.` : null },
+    { pass: servicesWithNoTechs.length === 0, label: "Every active service has at least one qualified technician", detail: servicesWithNoTechs.length ? `${servicesWithNoTechs.map(s=>esc(s.name)).join(", ")} — "No Preference" bookings for these will fail with no technician available.` : null },
+  ];
+
+  const allPass = checks.every(c=>c.pass);
+  const rows = checks.map(c => `
+    <div class="svc-row">
+      <div class="svc-main">
+        <div class="svc-name">${c.pass ? "✓" : "⚠"} ${esc(c.label)}</div>
+        ${c.detail ? `<div class="svc-meta">${esc(c.detail)}</div>` : ""}
+      </div>
+    </div>`).join("");
+
+  resultsEl.innerHTML = `
+    ${allPass
+      ? `<div class="svc-note">✓ Everything checked out — the website should be reading complete, correct data right now.</div>`
+      : `<div class="pay-warn-banner">⚠ ${checks.filter(c=>!c.pass).length} issue${checks.filter(c=>!c.pass).length===1?"":"s"} found — see details below.</div>`}
+    <div class="svc-cat-strip open"><div class="svc-cat-body">${rows}</div></div>
+    <div class="svc-meta" style="margin-top:10px">Checked just now — this runs live against the same data the website reads, not a cached or stored status.</div>
+  `;
+}
+
 function renderSettingsWebsite(){
-  settingsPlaceholder("Website", "Sync status between your dashboard and your public website.");
+  const wrap = document.getElementById("settingsWrap");
+  wrap.innerHTML = `
+    <div class="settings-section-title">Website</div>
+    <div class="settings-section-sub">The website reads live from this same database — there's nothing to "push." This checks whether the data it depends on is complete right now.</div>
+    <div class="svc-toolbar">
+      <button class="btn accent svc-add-btn" type="button" onclick="runWebsiteSyncCheck()">Test website sync</button>
+    </div>
+    <div id="wsCheckResults"><div class="svc-empty">Click "Test website sync" to check.</div></div>
+  `;
 }
 
 function switchView(name){
@@ -2867,10 +3591,8 @@ function switchView(name){
   document.getElementById("view-week").classList.toggle("on", name==="week");
   document.getElementById("view-insights").classList.toggle("on", name==="insights");
   document.getElementById("view-customers").classList.toggle("on", name==="customers");
-  document.getElementById("view-technicians").classList.toggle("on", name==="technicians");
   document.getElementById("view-payroll").classList.toggle("on", name==="payroll");
   document.getElementById("view-settings").classList.toggle("on", name==="settings");
-  if(name==="technicians") renderTechnicians();
   if(name==="week") renderWeek();
   if(name==="insights") renderInsights();
   if(name==="aivy") runAivy(false);
@@ -3389,6 +4111,51 @@ async function submitNewBooking(){
         <button class="btn" onclick="closeCheckout()">Cancel</button>
         <button class="btn accent" id="ckSave" onclick="submitCheckout()">Complete &amp; charge</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="svcmodal" class="rmodal" style="display:none">
+  <div class="rmodal-card">
+    <h3 id="svcModalTitle">Add service</h3>
+    <label for="svcName">Service name</label>
+    <input type="text" id="svcName" placeholder="e.g. Gel Manicure">
+    <label for="svcCategory">Category</label>
+    <input type="text" id="svcCategory" list="svcCategoryOptions" placeholder="e.g. nail_care">
+    <datalist id="svcCategoryOptions"></datalist>
+    <label for="svcPrice">Price ($)</label>
+    <input type="number" id="svcPrice" min="0" step="0.01" placeholder="35.00">
+    <label class="tm-check"><input type="checkbox" id="svcPriceFrom"> Show as "From $X" (starting price, not fixed)</label>
+    <label for="svcDuration">Duration (minutes)</label>
+    <input type="number" id="svcDuration" min="1" step="1" placeholder="45">
+    <div class="svc-note" id="svcNewNote" style="display:none">New services aren't assigned to any technician yet — you'll set who performs this service once the Staff section is live.</div>
+    <div class="rmodal-err" id="svcErr"></div>
+    <div class="rmodal-actions">
+      <button class="btn ghost" type="button" onclick="closeServiceModal()">Cancel</button>
+      <button class="btn accent" type="button" id="svcSave" onclick="submitService()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="stfmodal" class="rmodal" style="display:none">
+  <div class="rmodal-card rmodal-card-scroll">
+    <div class="rmodal-card-head"><h3 id="stfModalTitle">Add technician</h3></div>
+    <div class="rmodal-card-body">
+      <label for="stfName">Name</label>
+      <input type="text" id="stfName" placeholder="e.g. Kevin">
+      <label for="stfEmail">Email (optional)</label>
+      <input type="email" id="stfEmail" placeholder="name@example.com">
+      <label for="stfPhone">Phone (optional)</label>
+      <input type="tel" id="stfPhone" placeholder="(603) 555-1234">
+      <label style="margin-top:14px">Working hours</label>
+      <div id="stfHoursWrap"></div>
+      <label style="margin-top:14px">Qualified services</label>
+      <div id="stfQualWrap"></div>
+      <div class="rmodal-err" id="stfErr"></div>
+    </div>
+    <div class="rmodal-card-foot rmodal-actions">
+      <button class="btn ghost" type="button" onclick="closeStaffModal()">Cancel</button>
+      <button class="btn accent" type="button" id="stfSave" onclick="submitStaffModal()">Save</button>
     </div>
   </div>
 </div>
