@@ -1,22 +1,39 @@
 // ============================================================
-// Supabase Edge Function: dashboard-write
-// Passcode-gated write actions for the staff dashboard.
+// Supabase Edge Function: dashboard-read
+// Read-only proxy for the staff dashboard. Per-salon passcode-gated,
+// with a second, independent Payroll-PIN gate on payroll tables.
 // ============================================================
 
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const DASHBOARD_PASSCODE = Deno.env.get("DASHBOARD_PASSCODE")!;
 
-const ACTIONS: Record<string, string> = {
-  mark_status:     "mark_booking_status",
-  reschedule:      "reschedule_booking",
-  set_timeoff:     "set_technician_time_off",
-  clear_timeoff:   "clear_technician_time_off",
-  close_salon:     "close_salon_day",
-  reopen_salon:    "reopen_salon_day",
-  save_notes:      "update_customer_notes",
-  reset_tech_link: "reset_tech_token",
-};
+const LEGACY_DASHBOARD_PASSCODE = Deno.env.get("DASHBOARD_PASSCODE")!;
+
+const ALLOWED = new Set([
+  "customers",
+  "bookings",
+  "booking_services",
+  "technicians",
+  "services",
+  "technician_time_off",
+  "salon_hours",
+  "technician_links",
+  "technician_services",
+  "technician_hours",
+  "payments",
+  "technician_compensation",
+  "payroll_periods",
+  "payroll_period_hours",
+  "payroll_period_totals",
+  "salons",
+]);
+
+const PAYROLL_TABLES = new Set([
+  "technician_compensation",
+  "payroll_periods",
+  "payroll_period_hours",
+  "payroll_period_totals",
+]);
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -30,34 +47,70 @@ const json = (body: unknown, status = 200) =>
     headers: { ...CORS, "content-type": "application/json" },
   });
 
+async function verifyPasscode(salonId: string | undefined, passcode: string): Promise<boolean> {
+  if (!salonId) {
+    return passcode === LEGACY_DASHBOARD_PASSCODE;
+  }
+
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/verify_dashboard_passcode`, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ p_salon_id: salonId, p_passcode: passcode }),
+  });
+  if (!r.ok) return false;
+  const ok = await r.json().catch(() => false);
+  return ok === true;
+}
+
+async function verifyPayrollPin(salonId: string | undefined, pin: string | undefined): Promise<boolean> {
+  if (!salonId) return false;
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/verify_payroll_pin`, {
+    method: "POST",
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ p_salon_id: salonId, p_pin: pin || "" }),
+  });
+  if (!r.ok) return false;
+  const ok = await r.json().catch(() => false);
+  return ok === true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
   try {
-    const { action, args, passcode } = await req.json();
-    if (passcode !== DASHBOARD_PASSCODE) return json({ error: "unauthorized" }, 401);
+    const { table, query, passcode, salon_id, payroll_pin } = await req.json();
 
-    const fn = ACTIONS[action];
-    if (!fn) return json({ error: "unknown_action" }, 403);
+    if (!(await verifyPasscode(salon_id, passcode))) return json({ error: "unauthorized" }, 401);
+    if (typeof table !== "string" || !ALLOWED.has(table)) return json({ error: "forbidden_table" }, 403);
 
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
-      method: "POST",
-      headers: {
-        apikey: SERVICE_KEY,
-        Authorization: `Bearer ${SERVICE_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(args || {}),
+    if (PAYROLL_TABLES.has(table)) {
+      if (!(await verifyPayrollPin(salon_id, payroll_pin))) {
+        return json({ error: "payroll_pin_required" }, 401);
+      }
+    }
+
+    const qs = typeof query === "string" ? query : "";
+    if (/[^\w\s=&.,:()\-*%+@]/.test(qs.replace(/%[0-9A-Fa-f]{2}/g, ""))) {
+      return json({ error: "bad_query" }, 400);
+    }
+
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${qs}`, {
+      headers: { apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
     });
 
-    const data = await r.json().catch(() => null);
-    if (!r.ok) {
-      return json({ ok: false, error: (data && (data.message || data.error)) || `HTTP ${r.status}` }, r.status);
-    }
-    return json({ ok: true, result: data });
+    const data = await r.json().catch(() => ([]));
+    return json(data, r.ok ? 200 : r.status);
   } catch (e) {
-    console.error("dashboard_write_error", String(e));
+    console.error("dashboard_read_error", String(e));
     return json({ error: "server_error" }, 500);
   }
 });
