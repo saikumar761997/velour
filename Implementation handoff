@@ -1,0 +1,59 @@
+# Velour — Implementation Handoff
+## Dashboard Authorization Redesign & Deployment
+
+## What was completed
+
+- Discovered, confirmed live, and fixed a critical broken-access-control vulnerability in `dashboard-read`/`dashboard-write`: passcode authentication was never bound to the data subsequently read or written, allowing cross-salon access.
+- Designed and implemented a centralized authorization layer (`ENTITY_REGISTRY`, `ACTION_REGISTRY`, `AUTH_SCOPE`, two-step ID resolution, default-deny, structured internal logging) — architecture reviewed and approved before any code was written.
+- Self-code-review before deployment caught and fixed 4 real issues: a query-building bug (would have broken payroll-history/booking-services reads), a missing recursion depth guard, a JS prototype-chain registry-check bypass, an unbounded read-scoping query.
+- Removed the legacy global-passcode fallback entirely, after confirming no dependents.
+- Deployed both Edge Functions to the live Supabase project, recovering cleanly from a mid-deploy mistake (placeholder content sent for the shared module on the first `dashboard-read` deploy — caught and corrected before any real traffic hit it).
+- Deployed the frontend (`dashboard.html`, `website.html`) to Cloudflare via a GitHub-integrated Workers project — recovered from a build-command filename mismatch (caught via build log, fixed).
+- Executed a full functional regression matrix against the **live deployed system** with a real, connected browser, using Demo credentials: dashboard data integrity, Services/Technicians CRUD, full booking lifecycle, Settings, and the public website's booking + Manage Appointment flow.
+
+## Files modified
+
+- `edge-functions/_shared/authz.ts` — new, but see note below.
+- `edge-functions/dashboard-read.ts` — rewritten.
+- `edge-functions/dashboard-write.ts` — rewritten.
+- `edge-functions/_pre-authz-snapshots/dashboard-read.v13.ts`, `dashboard-write.v22.ts` — new, exact pre-change source, for rollback.
+- **`dashboard.html` and `website.html` — NOT modified.** Confirmed by design and by exhaustive source audit that zero frontend changes were needed; both files deployed exactly as they existed in the repo.
+- No database migrations. No RPC changes.
+
+**Important deviation from the frozen design, worth knowing:** `_shared/authz.ts` as actually deployed is **duplicated identically into both Edge Functions**, not imported as one true shared file. This happened because a first deploy attempt with the real shared-import path sent placeholder content by mistake; rather than guess again at the deploy tool's cross-function import resolution, both functions were made self-contained. Verified byte-identical and correct in both copies. **Any future authorization-logic change must be made in both places.**
+
+## Deployment status
+
+- **Backend:** `dashboard-read` v15, `dashboard-write` v23 — live on `hydhezpeuhqhcugnpupu`.
+- **Frontend:** live at `https://velour-platform.redpersimmon.workers.dev/` (website) and `https://velour-platform.redpersimmon.workers.dev/dashboard.html` (dashboard). Cloudflare Workers project, GitHub-integrated, auto-deploys on push to `main`.
+- **Rollback:** redeploy the saved `_pre-authz-snapshots/` files to both function slugs — clean, since no schema/RPC changes are involved.
+
+## Validation completed
+
+Full regression matrix, executed live against the deployed system with a real browser (Demo salon credentials):
+
+| Area | Result |
+|---|---|
+| Cross-salon read/write exploit | Confirmed fixed, live |
+| Dashboard data (6 entity types) | PASS |
+| Services & Technicians CRUD | PASS |
+| Booking lifecycle (create/reschedule/checkout/cancel/no-show) | PASS |
+| Settings (Business Info, Hours, Passcode, Payroll PIN) | PASS |
+| Owner-Aivy | BLOCKED / OUT OF SCOPE — pre-existing, separate architecture |
+| Website booking + Manage Appointment | PASS |
+| Edge Function runtime logs | Zero errors observed |
+
+Every failure encountered during the regression matrix (5 total) was traced to a mistake in test-script parameters, not a code defect — each confirmed via direct SQL before being dismissed, not assumed.
+
+**Not yet directly tested:** Red Persimmon's own passcode against the new deployment (all live browser testing used Demo, per stated preference for Demo-first validation). Recommended as a quick follow-up, not a blocker.
+
+## Known limitations
+
+- `_shared/authz.ts` duplication (above).
+- Owner-Aivy's authentication is separate, legacy, single-tenant, and untouched — see `ARCHITECTURE.md` §13.
+- Double-`unlock()` on the dashboard (without a page reload) can freeze the tab — no known normal-use trigger.
+- Website "Reschedule" is cancel-then-rebook (by original design), not atomic.
+
+## Remaining work
+
+See `NEXT_PROJECT_ROADMAP.md` for prioritized follow-up work, and `ARCHITECTURE.md` §13 for the full consolidated technical debt list (including items pre-dating this project and unaffected by it).
