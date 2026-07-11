@@ -1,0 +1,86 @@
+# Velour — Next Project Roadmap
+
+Ordered highest value → lowest value. "Value" here means proximity to real revenue/risk, per the project's own feature filter (revenue, owner workload, customer experience) plus security risk where relevant. Each item includes estimated complexity and dependencies.
+
+---
+
+## 1. Confirm Red Persimmon's passcode against the new deployment
+**Value:** closes the one untested gap between "validated on Demo" and "confirmed working for the actual paying client."
+**Complexity:** trivial (~5 minutes).
+**Dependencies:** none — can be done immediately.
+
+## 2. `aivy-chat` rate limiting + Turnstile
+**Value:** the one remaining **Critical** launch blocker unrelated to this project. Booking spam / cost exposure risk on the customer-facing AI assistant.
+**Complexity:** small-medium — Turnstile widget integration on the website, rate-limit logic in the Edge Function.
+**Dependencies:** none.
+
+## 3. Owner-Aivy authentication redesign
+**Value:** high — currently a real security gap (global passcode, no salon scoping) sitting right next to the exact vulnerability class this project just fixed elsewhere. Also blocks Owner-Aivy from ever working correctly for a second salon.
+**Complexity:** medium — needs the same architectural rigor as the dashboard authorization project (design review before code), but the underlying pattern (bind a salon, scope a call) is now a proven template from this project, so it should move faster the second time. Also involves a product decision: does the system prompt become salon-aware (pull salon name/context dynamically instead of hardcoding "Kristy at Red Persimmon"), and does the client (dashboard) need to start sending `salon_id`.
+**Dependencies:** none technically, but should reuse the `ENTITY_REGISTRY`/`AUTH_SCOPE` pattern conceptually rather than reinvent it.
+
+## 4. Browser-validate Checkout and Payroll end-to-end **for Red Persimmon**
+**Value:** high — real money flows, backend already RPC-tested and now also validated on Demo via this project's regression matrix, but never click-tested against Red Persimmon specifically.
+**Complexity:** small — mostly repeating this project's regression-matrix technique against the production salon instead of Demo.
+**Dependencies:** item 1 (need working RP credentials first).
+
+## 5. `payments`/`payment_line_items` RLS gap
+**Value:** medium-high — real security hardening (defense in depth) on the two tables handling actual revenue data, though currently mitigated by both only being touched via service-role Edge Functions.
+**Complexity:** medium — needs a deliberate, careful pass since existing read/write flows depend on the current unrestricted state; not a blind "enable RLS" toggle.
+**Dependencies:** none, but do with dedicated focus, not as a side effect of something else.
+
+## 6. Consolidate `_shared/authz.ts` into a true shared module
+**Value:** medium — pure maintainability. Functionally correct today (both copies verified identical), but every future authorization change requires remembering to edit both files, recreating exactly the kind of "forgot to update one place" risk this project's registry design was built to eliminate elsewhere.
+**Complexity:** small — either verify the correct relative-import path convention (low-stakes, testable via a Supabase database branch first) or formally accept duplication with a lint/diff check that fails CI if the two copies diverge.
+**Dependencies:** none.
+
+## 7. Double-`unlock()` tab-freeze fix
+**Value:** low — no known normal user path triggers it.
+**Complexity:** small — add an in-flight guard to `boot()`/`loadAll()`.
+**Dependencies:** none.
+
+## 8. Website "Reschedule" atomicity
+**Value:** low-medium — real but narrow customer-experience risk (losing a slot mid-reschedule). Needs a product decision first, not just an engineering fix.
+**Complexity:** medium if it becomes a true `reschedule_booking_by_token` RPC; small if the decision is instead to just improve the messaging/flow around the existing cancel-then-rebook behavior.
+**Dependencies:** product decision on desired behavior.
+
+## 9. Business Hours conflict banner fix
+**Value:** low-medium — real bug (always shows zero conflicts), but low-risk and well-understood; root cause already confirmed, fix already proposed (`store.bookings` → `store.assembled`).
+**Complexity:** small.
+**Dependencies:** none.
+
+## 10. `close_salon_day` time-off backfill gap
+**Value:** low — narrow edge case, more relevant now that Staff's archive/reactivate flow exists.
+**Complexity:** small-medium.
+**Dependencies:** none.
+
+## 11. `mark_booking_status` cancellation-notify exception guard
+**Value:** low — edge-case robustness (a notify failure shouldn't be able to block a cancellation).
+**Complexity:** small.
+**Dependencies:** none.
+
+## 12. Website inline email/phone validation
+**Value:** low — pure UX polish; server already validates.
+**Complexity:** small.
+**Dependencies:** none.
+
+## 13. `booking_services.service_id` backfill
+**Value:** low — would let various archive/reporting checks match by id instead of name, but name-matching works today.
+**Complexity:** medium — needs a backfill migration plus a decision on how to handle historical rows with ambiguous name matches.
+**Dependencies:** none.
+
+## 14. Payment line item correction/void UI
+**Value:** low today — schema is ready, but no real correction need has arisen yet. Explicitly "do when a real need arises, no rush" per prior project notes.
+**Complexity:** medium.
+**Dependencies:** none.
+
+## 15. Demo sandbox data cleanup (Kevin/wrong-salon booking)
+**Value:** negligible — sandbox-only, cosmetic.
+**Complexity:** trivial.
+**Dependencies:** none.
+
+---
+
+## Explicitly not on this list
+
+Owner-Aivy tool-calling (beyond the auth fix in item 3), time-in/flexible scheduling, split/multi-tender payments, deposits, gift cards, packages/memberships, multi-location support, de-static website content, Reputation Engine — real future work, but product/business decisions to pick up when there's a reason to, not implementation cleanup with a natural place in this priority order.
