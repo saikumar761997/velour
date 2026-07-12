@@ -649,6 +649,8 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
   #bm-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
 }
 </style>
+<!-- Cloudflare Turnstile -- invisible bot check for the Aivy chat widget -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <!-- ===== VELOUR customer "Manage my appointment" overlay (shows only for ?manage=token) ===== -->
@@ -1560,9 +1562,21 @@ function toggleIvyChat() { ivyChatOpen ? closeIvyChat() : openIvyChat(); }
 
 
 
-async function callClaude(userMessage, history) {
+async function callClaude(userMessage, history, isRetry) {
   const messages = history.map(m => ({ role: m.role, content: m.content }));
   messages.push({ role: 'user', content: userMessage });
+
+  const body = { messages, salon_id: SALON_ID, session_id: ivySessionId };
+  if (ivyTrustToken) {
+    body.trust_token = ivyTrustToken;
+  } else {
+    const tsToken = await getIvyTurnstileToken();
+    if (!tsToken) {
+      return "I'm having a moment! Please call (603) 621-7469 — we'd love to help 💅";
+    }
+    body.turnstile_token = tsToken;
+  }
+
   const res = await fetch(`${SUPA_URL}/functions/v1/aivy-chat`, {
     method: 'POST',
     headers: {
@@ -1570,9 +1584,26 @@ async function callClaude(userMessage, history) {
       'apikey': SUPA_KEY,
       'Authorization': `Bearer ${SUPA_KEY}`
     },
-    body: JSON.stringify({ messages })
+    body: JSON.stringify(body)
   });
   const data = await res.json();
+
+  if (data.trust_token) {
+    ivyTrustToken = data.trust_token;
+    sessionStorage.setItem('ivyTrustToken', ivyTrustToken);
+  }
+
+  // A stored trust token can go stale (expired, or the server was
+  // restarted with a rotated signing secret) without the visitor doing
+  // anything wrong. Rather than surface that as a failure, clear it and
+  // silently retry once with a fresh Turnstile check -- invisible to a
+  // real customer, and still just as protected against abuse.
+  if (data.require_turnstile && !isRetry) {
+    ivyTrustToken = null;
+    sessionStorage.removeItem('ivyTrustToken');
+    return callClaude(userMessage, history, true);
+  }
+
   return data.reply || "I'm having a moment! Please call (603) 621-7469 — we'd love to help 💅";
 }
 
@@ -1676,6 +1707,52 @@ const SUPA_URL  = 'https://hydhezpeuhqhcugnpupu.supabase.co';
 const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5ZGhlenBldWhxaGN1Z25wdXB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDIzNzAsImV4cCI6MjA5ODUxODM3MH0.pMtwRJNK1lS3wgxhgdUfx856QDGFnEtv4LoBA9fJXIQ';
 const SALON_ID  = 'a0000000-0000-0000-0000-000000000001';
 const BUFFER    = 10;
+
+// ---------- Aivy chat identity (Turnstile + rate limiting) ----------
+// Public site key from the Cloudflare Turnstile widget -- not a secret,
+// safe to ship in client code. The matching secret key lives only in
+// Supabase and is used server-side in aivy-chat.
+const TURNSTILE_SITE_KEY = '0x4AAAAAAD0CXlWPooyJ_mqe';
+
+// One random session id per browser tab session (sessionStorage, not
+// localStorage) -- identifies a single conversation for rate-limiting
+// purposes. Survives a page refresh, dies when the tab closes, which is
+// exactly the scope the rate limiter's session counter expects.
+let ivySessionId = sessionStorage.getItem('ivySessionId');
+if (!ivySessionId) {
+  ivySessionId = (crypto.randomUUID ? crypto.randomUUID() : ('sess-' + Date.now() + '-' + Math.random().toString(36).slice(2)));
+  sessionStorage.setItem('ivySessionId', ivySessionId);
+}
+
+// Signed trust token from a prior successful Turnstile check, if we have
+// one and it hasn't expired -- lets us skip re-challenging the visitor on
+// every message. aivy-chat verifies this cryptographically; there's no
+// server-side lookup involved.
+let ivyTrustToken = sessionStorage.getItem('ivyTrustToken') || null;
+
+let ivyTurnstileWidgetId = null;
+
+// Renders (or re-renders) the invisible Turnstile widget and resolves with
+// a fresh token once the visitor's browser passes the check. Resolves
+// null on error/timeout so callClaude can fall back gracefully rather
+// than hang.
+function getIvyTurnstileToken() {
+  return new Promise((resolve) => {
+    if (typeof turnstile === 'undefined') { resolve(null); return; }
+    const container = document.getElementById('ivy-turnstile');
+    if (!container) { resolve(null); return; }
+    if (ivyTurnstileWidgetId !== null) {
+      try { turnstile.remove(ivyTurnstileWidgetId); } catch (e) {}
+    }
+    ivyTurnstileWidgetId = turnstile.render(container, {
+      sitekey: TURNSTILE_SITE_KEY,
+      size: 'invisible',
+      callback: (token) => resolve(token),
+      'error-callback': () => resolve(null),
+      'timeout-callback': () => resolve(null),
+    });
+  });
+}
 const MAX_DAYS  = 28;
 const MIN_HRS   = 2;
 const DAY_KEYS  = ['sun','mon','tue','wed','thu','fri','sat'];
@@ -2934,6 +3011,9 @@ document.addEventListener('DOMContentLoaded', initDrag);
 
 <!-- IVY FLOATING WIDGET (opened by hero card button) -->
 <div id="ivy-widget">
+  <!-- Invisible Turnstile anchor -- renders nothing visible, needed only
+       as a mount point for the widget instance. -->
+  <div id="ivy-turnstile" style="display:none;"></div>
   <div class="ivy-widget-hdr">
     <div class="chat-avatar" style="width:36px;height:36px;font-size:18px;flex-shrink:0;">I</div>
     <div>
