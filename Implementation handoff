@@ -1,59 +1,72 @@
-# Velour — Implementation Handoff
-## Dashboard Authorization Redesign & Deployment
+# Implementation Handoff — Velour
 
-## What was completed
+Covers everything completed through the dashboard authorization fix and the Aivy chat security project. Both are complete, deployed, and frozen (see `ARCHITECTURE.md` §17). This handoff summarizes; `ARCHITECTURE.md` is the full source of truth.
 
-- Discovered, confirmed live, and fixed a critical broken-access-control vulnerability in `dashboard-read`/`dashboard-write`: passcode authentication was never bound to the data subsequently read or written, allowing cross-salon access.
-- Designed and implemented a centralized authorization layer (`ENTITY_REGISTRY`, `ACTION_REGISTRY`, `AUTH_SCOPE`, two-step ID resolution, default-deny, structured internal logging) — architecture reviewed and approved before any code was written.
-- Self-code-review before deployment caught and fixed 4 real issues: a query-building bug (would have broken payroll-history/booking-services reads), a missing recursion depth guard, a JS prototype-chain registry-check bypass, an unbounded read-scoping query.
-- Removed the legacy global-passcode fallback entirely, after confirming no dependents.
-- Deployed both Edge Functions to the live Supabase project, recovering cleanly from a mid-deploy mistake (placeholder content sent for the shared module on the first `dashboard-read` deploy — caught and corrected before any real traffic hit it).
-- Deployed the frontend (`dashboard.html`, `website.html`) to Cloudflare via a GitHub-integrated Workers project — recovered from a build-command filename mismatch (caught via build log, fixed).
-- Executed a full functional regression matrix against the **live deployed system** with a real, connected browser, using Demo credentials: dashboard data integrity, Services/Technicians CRUD, full booking lifecycle, Settings, and the public website's booking + Manage Appointment flow.
+---
 
-## Files modified
+## Everything completed
 
-- `edge-functions/_shared/authz.ts` — new, but see note below.
-- `edge-functions/dashboard-read.ts` — rewritten.
-- `edge-functions/dashboard-write.ts` — rewritten.
-- `edge-functions/_pre-authz-snapshots/dashboard-read.v13.ts`, `dashboard-write.v22.ts` — new, exact pre-change source, for rollback.
-- **`dashboard.html` and `website.html` — NOT modified.** Confirmed by design and by exhaustive source audit that zero frontend changes were needed; both files deployed exactly as they existed in the repo.
-- No database migrations. No RPC changes.
+**Dashboard broken-access-control fix:**
+- Found and confirmed live a vulnerability where a session authenticated with one salon's passcode could read/write another salon's data.
+- Built a centralized authorization layer (`_shared/authz.ts`, duplicated into both Edge Functions): `ENTITY_REGISTRY` (16 entities), `ACTION_REGISTRY` (28 actions), `AUTH_SCOPE` as a `Set`, default-deny, two-step ID resolution, structured internal logging.
+- Removed the legacy global-passcode fallback entirely.
+- Found and fixed four hardening issues during self-review before deploy (prototype-chain lookup bypass, a query-building bug that would have broken `payroll_period_totals`, an unbounded recursion risk, unbounded read cost).
 
-**Important deviation from the frozen design, worth knowing:** `_shared/authz.ts` as actually deployed is **duplicated identically into both Edge Functions**, not imported as one true shared file. This happened because a first deploy attempt with the real shared-import path sent placeholder content by mistake; rather than guess again at the deploy tool's cross-function import resolution, both functions were made self-contained. Verified byte-identical and correct in both copies. **Any future authorization-logic change must be made in both places.**
+**Aivy chat security (rate limiting + Turnstile):**
+- Designed and built a generic, reusable rate limiter — one table (`rate_limit_counters`), one RPC (`check_and_increment_rate_limit`) — not Aivy-specific, deliberately kept that way through an extended design review.
+- Layered defense: Cloudflare Turnstile (invisible mode) + signed HMAC trust token (25-min, no database table) + three-tier rate limiting (session, hashed IP, salon-wide).
+- Rewrote `aivy-chat`: salon_id allowlist, locked-down CORS (no more `*`), Turnstile/trust-token verification, rate limiting before any Anthropic call, fail-open on Turnstile outages / fail-closed on rate-limiter outages.
+- Updated `website/index.html`'s chat widget: session identity (sessionStorage), Turnstile integration, transparent token-refresh retry.
+- Mid-project, the session limit was changed from 30 to 15 after a customer-experience review — confirmed to require exactly one line changed, validating the "single source of truth" design goal.
 
 ## Deployment status
 
-- **Backend:** `dashboard-read` v15, `dashboard-write` v23 — live on `hydhezpeuhqhcugnpupu`.
-- **Frontend:** live at `https://velour-platform.redpersimmon.workers.dev/` (website) and `https://velour-platform.redpersimmon.workers.dev/dashboard.html` (dashboard). Cloudflare Workers project, GitHub-integrated, auto-deploys on push to `main`.
-- **Rollback:** redeploy the saved `_pre-authz-snapshots/` files to both function slugs — clean, since no schema/RPC changes are involved.
+| Component | Status |
+|---|---|
+| `dashboard-read` | v17, ACTIVE, live |
+| `dashboard-write` | v25, ACTIVE, live |
+| `aivy-chat` | v7, ACTIVE, live (includes 15-message session limit) |
+| `owner-aivy` | v3, ACTIVE, live — **unchanged legacy**, not part of either completed project |
+| `website/index.html` | live, includes Turnstile widget + updated chat identity logic |
+| `dashboard/velour-dashboard.html` | live, unchanged by the Aivy security project |
+| `rate_limit_counters` table + RPC | live, deployed via migration |
+
+All deployed via Supabase Edge Function deploys (backend) and GitHub push → Cloudflare Workers auto-deploy (frontend). No manual file uploads to Cloudflare.
 
 ## Validation completed
 
-Full regression matrix, executed live against the deployed system with a real browser (Demo salon credentials):
+Both projects followed the same standard: "verified" means a live proof-of-concept against real Supabase data, a direct SQL reproduction of exact deployed logic, or a real connected browser driving the actual deployed system — never code-review-only.
 
-| Area | Result |
-|---|---|
-| Cross-salon read/write exploit | Confirmed fixed, live |
-| Dashboard data (6 entity types) | PASS |
-| Services & Technicians CRUD | PASS |
-| Booking lifecycle (create/reschedule/checkout/cancel/no-show) | PASS |
-| Settings (Business Info, Hours, Passcode, Payroll PIN) | PASS |
-| Owner-Aivy | BLOCKED / OUT OF SCOPE — pre-existing, separate architecture |
-| Website booking + Manage Appointment | PASS |
-| Edge Function runtime logs | Zero errors observed |
+**Dashboard authz:** vulnerability proven live before the fix (cross-salon read of real data), full regression matrix executed live post-fix with a real browser against Demo credentials (dashboard data, CRUD, booking lifecycle, Settings, website booking flow — all PASS).
 
-Every failure encountered during the regression matrix (5 total) was traced to a mistake in test-script parameters, not a code defect — each confirmed via direct SQL before being dismissed, not assumed.
+**Aivy chat security:** schema constraints (PK collision, CHECK constraints, RLS, cleanup index) verified via direct SQL. RPC verified for: normal path, over-limit path, duplicate-key rejection, forced-failure transaction rollback (proved a genuine mid-transaction abort rolls back everything including a `CREATE FUNCTION` in the same batch), sequential concurrency, and stale-window correctness without cleanup. End-to-end browser validation against the live production site covered: first message (no visible challenge), trust-token reuse (instrumented directly, confirmed zero Turnstile calls), token refresh after simulated expiry (confirmed exactly one fresh Turnstile call, transparent retry), the message limit at both 30 and, after the change, 15 (message 16 denied, cross-checked against the database counter), and graceful client-side failure when Turnstile is unavailable.
 
-**Not yet directly tested:** Red Persimmon's own passcode against the new deployment (all live browser testing used Demo, per stated preference for Demo-first validation). Recommended as a quick follow-up, not a blocker.
+## Known technical debt
 
-## Known limitations
+See `ARCHITECTURE.md` §16 for the full consolidated list (16 items). Highlights:
 
-- `_shared/authz.ts` duplication (above).
-- Owner-Aivy's authentication is separate, legacy, single-tenant, and untouched — see `ARCHITECTURE.md` §13.
-- Double-`unlock()` on the dashboard (without a page reload) can freeze the tab — no known normal-use trigger.
-- Website "Reschedule" is cancel-then-rebook (by original design), not atomic.
+- Owner-Aivy's authentication is separate, legacy, single-tenant (global passcode, no `salon_id`) — same vulnerability class as the dashboard fix, not yet applied here.
+- `_shared/authz.ts` is duplicated across both dashboard Edge Functions, not a true shared import.
+- `payments`/`payment_line_items` RLS is disabled (mitigated by service-role-only access, not a substitute for RLS).
+- No scheduled cleanup job exists yet for `rate_limit_counters` — correctness doesn't depend on it, but it will grow unbounded without one eventually.
+- Aivy's Turnstile widget renders lazily on first message rather than on chat-open — minor first-message latency, not a correctness issue.
+- Website content (hero, gallery, testimonials, promotions, About, social links, SEO) is hardcoded per deployment — the core problem the planned Website CMS (`ARCHITECTURE.md` §14) exists to solve.
 
-## Remaining work
+## Deferred items (explicit, not oversights)
 
-See `NEXT_PROJECT_ROADMAP.md` for prioritized follow-up work, and `ARCHITECTURE.md` §13 for the full consolidated technical debt list (including items pre-dating this project and unaffected by it).
+- Conversation analytics/history for Aivy — deliberately not built; no proven question yet for it to answer. Revisit when post-launch usage data creates a real need (roadmap item 9).
+- A true `session_trust` persistence layer — deliberately replaced with a signed token instead; not deferred, actively decided against.
+- Split/multi-tender payments, deposits, refunds/voids UI, gift cards, packages/memberships — real future work, not urgent.
+- Time-in/flexible scheduling, multi-location support beyond the `AUTH_SCOPE` groundwork already in place.
+
+## Next engineering priorities
+
+See `NEXT_PROJECT_ROADMAP.md` for the full, ordered list with complexity/dependencies/timing. Immediate next steps:
+
+1. Confirm Red Persimmon's own passcode against the current deployment (trivial, ~5 min, still not done).
+2. Remove fake website content (reviews, promotions, placeholder images) — launch-blocking honesty issue, not cosmetic.
+3. Gather real salon photos from Kristy — blocks both item 2 and the eventual premium redesign.
+4. Final production audit + Checkout/Payroll browser validation, specifically against Red Persimmon (not just Demo).
+5. `payments`/`payment_line_items` RLS gap — real security hardening, recommended before/at launch.
+
+After launch readiness: the conversion-focused website redesign, then the Website CMS (the largest single item on the roadmap — expect its own multi-session design review before any schema work, same rigor as both completed security projects).
