@@ -13,6 +13,9 @@
 <meta name="geo.placename" content="Manchester">
 <link rel="canonical" href="https://redpersimmon-nails.netlify.app">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://hydhezpeuhqhcugnpupu.supabase.co" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +37,11 @@
   --border-gold:rgba(201,150,58,0.20);
 }
 html { scroll-behavior: smooth; }
+/* Nothing on the page may exceed the viewport width — prevents the
+   horizontal drag/overflow seen on mobile. */
+html, body { max-width: 100%; overflow-x: hidden; }
 body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--charcoal); -webkit-font-smoothing: antialiased; }
+img, iframe { max-width: 100%; }
 
 /* NAV */
 nav {
@@ -45,56 +52,125 @@ nav {
   display: flex; align-items: center; justify-content: space-between;
   height: 64px;
 }
-.nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #fff; letter-spacing: 0.02em; line-height: 1.2; }
-.nav-logo span { display: block; font-size: 10px; font-weight: 400; font-family: 'Inter', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-lt); }
+.nav-logo { display: flex; align-items: center; gap: 12px; font-family: 'Cormorant Garamond', serif; font-size: 25px; font-weight: 600; color: #fff; letter-spacing: 0.02em; line-height: 1.2; }
+.nav-logo > span { display: block; }
+.nav-logo span span { display: block; font-size: 10px; font-weight: 400; font-family: 'Inter', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-lt); }
 .nav-links { display: flex; gap: 24px; align-items: center; }
 .nav-links a { font-size: 12px; color: rgba(255,255,255,0.75); text-decoration: none; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
 .nav-links a:hover { color: var(--gold-lt); }
 .nav-book { background: var(--gold) !important; color: var(--crimson-dk) !important; padding: 8px 20px; border-radius: 2px; font-weight: 600 !important; }
 .nav-book:hover { background: var(--gold-lt) !important; }
 
-/* HERO */
-.hero { min-height: 94vh; display: grid; grid-template-columns: 1.25fr 0.9fr; align-items: center; max-width: 1200px; margin: 0 auto; padding: 60px 5%; gap: 80px; }
-.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; display: flex; align-items: center; gap: 14px; }
-.hero-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--gold); }
-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 5.5vw, 72px); font-weight: 500; line-height: 1.06; letter-spacing: -0.5px; color: var(--crimson-dk); margin-bottom: 22px; }
-h1 em { font-style: italic; color: var(--crimson-lt); }
-.hero-sub { font-size: 16px; color: var(--text-mid); line-height: 1.8; margin-bottom: 36px; max-width: 420px; }
-.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+/* HERO — full-bleed photographic. Approved direction: the real salon photo
+   (wsHeroImg) is the primary visual, filling the entire frame; a short
+   bottom-anchored scrim gives the headline contrast without washing out
+   the photo. No pattern overlay — a plain gradient is the ONLY fallback,
+   and only visible pre-photo-upload. */
+.hero { position: relative; height: min(84vh, 740px); min-height: 600px; display: flex; align-items: flex-end; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; z-index: 0; background: linear-gradient(160deg, var(--crimson) 0%, var(--crimson-dk) 100%); }
+#wsHeroImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% center; }
+/* Mobile keeps the subject in frame instead of cropping to the centre. */
+@media (max-width: 768px) { #wsHeroImg { object-position: center center; } }
+.hero-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(10,4,4,.92) 0%, rgba(10,4,4,.72) 30%, rgba(10,4,4,.25) 60%, rgba(10,4,4,0) 80%); }
+.hero-content { position: relative; z-index: 2; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 5% 64px; }
+.hero-left { max-width: 640px; }
+.hero-brand { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 28px; color: var(--gold-lt); letter-spacing: 0.04em; margin-bottom: 14px; }
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+.hero-eyebrow::before { content: ''; display: block; width: 36px; height: 1px; background: var(--gold-lt); }
+h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(44px, 6.4vw, 92px); font-weight: 600; line-height: 1.0; letter-spacing: -0.5px; color: #fff; margin-bottom: 22px; }
+h1 em { font-style: italic; color: var(--gold-lt); }
+.hero-sub { font-size: 16px; color: rgba(255,255,255,.78); line-height: 1.75; margin-bottom: 32px; max-width: 440px; }
+.hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .btn-primary { background: var(--crimson); color: #fff; padding: 14px 32px; border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; display: inline-block; border: none; cursor: pointer; transition: background 0.15s; font-family: 'Inter', sans-serif; }
 .btn-primary:hover { background: var(--crimson-dk); }
-.btn-gold { background: var(--gold); color: var(--crimson-dk); padding: 14px 32px; border-radius: 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; }
+.btn-gold { background: var(--gold); color: var(--crimson-dk); padding: 15px 34px; border-radius: 2px; font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; }
 .btn-gold:hover { background: var(--gold-lt); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(201,150,58,0.28); }
 .btn-ghost { border: 1px solid rgba(139,26,26,0.25); color: var(--text-mid); padding: 13px 28px; border-radius: 2px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: all 0.15s; }
 .btn-ghost:hover { border-color: var(--crimson); color: var(--crimson); }
-.hero-badges { margin-top: 36px; display: flex; gap: 24px; flex-wrap: wrap; }
-.hero-badge { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-.hero-badge::before { content: '✦'; color: var(--gold); font-size: 10px; }
+/* Hero-specific ghost override — inside the hero these sit on a dark photo,
+   not the cream page background, so they need light-on-dark contrast. */
+.hero-actions .btn-ghost { border: 1px solid rgba(255,255,255,.35); color: #fff; padding: 14px 30px; }
+.hero-actions .btn-ghost:hover { border-color: var(--gold-lt); color: var(--gold-lt); }
+/* #wsHeroBadges is populated live by computeOpenStatusAndBadges() with
+   real salon_hours data — one or two .hero-badge pills, unchanged JS,
+   restyled here to read as a status pill next to the CTA. */
+.hero-badges, #wsHeroBadges { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-left: 4px; }
+.hero-badge { font-size: 12px; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: 7px; padding: 8px 2px; }
+.hero-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-lt); flex-shrink: 0; }
+
+/* Fanned photo stack — bottom-anchored on the same baseline as the CTA
+   row, so the photos and the headline read as one composition instead of
+   two elements in opposite corners. Cards run upward from that shared
+   baseline toward headline height, closing the vertical gap that made
+   the hero feel empty. Real gallery photos only, capped at 3, hero photo
+   excluded. Clicking opens the existing lightbox at that photo's real
+   position in LIVE.galleryImages. */
+#wsHeroGalleryFan{
+  position:absolute; z-index:2; bottom:66px; right:3%; width:300px; height:380px; display:none;
+}
+#wsHeroGalleryFan.show{display:block;}
+.fan-card{
+  position:absolute; bottom:0; left:0; width:240px; aspect-ratio:4/5; overflow:hidden;
+  border:8px solid #fff; box-shadow:0 20px 44px rgba(0,0,0,.4);
+  cursor:pointer; transition:transform .18s ease;
+}
+.fan-card img{width:100%; height:100%; object-fit:cover; display:block;}
+.fan-card.f1{transform:rotate(-6deg) translate(-5px,-7px); z-index:1;}
+.fan-card.f2{transform:rotate(2deg) translate(23px,-16px); z-index:2;}
+.fan-card.f3{transform:rotate(9deg) translate(53px,-25px); z-index:3;}
+.fan-card.f1:hover{transform:rotate(-6deg) translate(-5px,-7px) translateY(-6px) scale(1.02);}
+.fan-card.f2:hover{transform:rotate(2deg) translate(23px,-16px) translateY(-6px) scale(1.02);}
+.fan-card.f3:hover{transform:rotate(9deg) translate(53px,-25px) translateY(-6px) scale(1.02);}
+/* Circular badge overlapping the top-right of the fan — real tech count,
+   just repositioned as a badge instead of caption text. */
+#wsHeroTechCaption{
+  position:absolute; z-index:5; bottom:auto; top:0; right:0;
+  width:76px; height:76px; border-radius:50%; background:var(--warm-white);
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.35); text-align:center;
+}
+#wsHeroTechCaption.show{display:flex;}
+#wsHeroTechCaption b{color:var(--crimson-dk); font-family:'Cormorant Garamond',serif; font-size:22px; font-style:normal; letter-spacing:0; line-height:1;}
+#wsHeroTechCaption span{font-size:8px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-top:2px;}
+@media (max-width:768px){ #wsHeroGalleryFan, #wsHeroTechCaption{display:none !important;} }
 
 /* CHAT WIDGET */
-.chat-wrap { background: var(--crimson-dk); border-radius: 6px; overflow: hidden; box-shadow: 0 40px 100px rgba(92,15,15,0.3), 0 8px 24px rgba(0,0,0,0.15); }
-.chat-header { background: linear-gradient(135deg, var(--crimson-dk), var(--crimson)); padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
-.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--crimson-dk); flex-shrink: 0; }
-.chat-header-name { font-size: 14px; font-weight: 600; color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 16px; }
-.chat-header-status { font-size: 11px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+.chat-wrap { background: var(--crimson-dk); border-radius: 6px; overflow: hidden; box-shadow: 0 40px 100px rgba(92,15,15,0.3), 0 8px 24px rgba(0,0,0,0.15); display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.chat-header { background: var(--crimson-dk); padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 700; color: var(--crimson-dk); flex-shrink: 0; }
+.chat-header-name { font-weight: 600; color: #fff; font-family: 'Cormorant Garamond', serif; font-size: 14px; line-height: 1.1; }
+.chat-header-status { font-size: 10px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px; margin-top: 1px; }
 .chat-header-status::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-.chat-live { margin-left: auto; background: var(--gold); color: var(--crimson-dk); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; }
-.chat-messages { padding: 16px; height: 290px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: linear-gradient(180deg, #3a0808 0%, var(--crimson-dk) 100%); }
+.chat-live { display: none; }
+.chat-messages { padding: 16px 14px; flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; background: var(--crimson-dk); }
 .chat-messages::-webkit-scrollbar { width: 3px; }
 .chat-messages::-webkit-scrollbar-thumb { background: var(--crimson-lt); border-radius: 2px; }
 .msg { max-width: 85%; font-size: 13.5px; line-height: 1.6; }
-.msg-bot { align-self: flex-start; background: rgba(255,255,255,0.09); color: #f8e8e8; padding: 10px 14px; border-radius: 2px 14px 14px 14px; }
+/* Aivy messages carry a small avatar disc; customer messages sit opposite
+   with no avatar — the structure from Sai's sketch. */
+.msg-bot {
+  align-self: flex-start; background: rgba(255,255,255,0.09); color: #f8e8e8;
+  padding: 10px 14px; border-radius: 2px 14px 14px 14px;
+  position: relative; margin-left: 38px;
+}
+.msg-bot::before {
+  content: 'A'; position: absolute; left: -38px; bottom: 0;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--crimson); color: #fff;
+  font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+}
 .msg-user { align-self: flex-end; background: var(--gold); color: var(--crimson-dk); padding: 10px 14px; border-radius: 14px 2px 14px 14px; font-weight: 500; }
 .msg-typing { align-self: flex-start; background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.4); padding: 10px 18px; border-radius: 2px 14px 14px 14px; font-size: 20px; letter-spacing: 4px; display: none; }
-.chat-suggestions { padding: 10px 16px; background: rgba(92,15,15,0.8); display: flex; gap: 6px; flex-wrap: wrap; }
+.chat-suggestions { padding: 8px 14px 0; background: var(--crimson-dk); display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
 .suggestion { background: transparent; border: 1px solid rgba(201,150,58,0.35); color: var(--gold-lt); font-size: 11px; padding: 5px 10px; border-radius: 2px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s; letter-spacing: 0.02em; }
 .suggestion:hover { background: rgba(201,150,58,0.15); border-color: var(--gold); color: var(--gold); }
-.chat-footer { padding: 12px 16px; background: var(--crimson-dk); display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); }
-.chat-input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+.chat-footer { padding: 10px 14px; background: var(--crimson-dk); display: flex; gap: 8px; flex-shrink: 0; }
+.chat-input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
 .chat-input::placeholder { color: rgba(255,255,255,0.3); }
 .chat-input:focus { border-color: var(--gold); }
-.chat-send { background: var(--gold); border: none; border-radius: 2px; padding: 10px 18px; cursor: pointer; font-size: 13px; color: var(--crimson-dk); transition: background 0.15s; font-weight: 700; }
+.chat-send { background: var(--gold); border: none; border-radius: 20px; padding: 10px 18px; cursor: pointer; font-size: 13px; color: var(--crimson-dk); transition: background 0.15s; font-weight: 700; }
 .chat-send:hover { background: var(--gold-lt); }
 
 /* GOLD DIVIDER */
@@ -108,27 +184,47 @@ h1 em { font-style: italic; color: var(--crimson-lt); }
 .stat-div { width: 1px; height: 40px; background: rgba(255,255,255,0.1); }
 
 /* SECTIONS */
-.section { padding: 90px 5%; max-width: 1200px; margin: 0 auto; }
+.section { padding: 60px 5%; max-width: 1280px; margin: 0 auto; position: relative; }
+/* Subtle recurring depth motif — soft gold glow, one per section corner.
+   Alternates sides so it doesn't feel mechanically repeated. Purely
+   decorative: no pointer events, sits behind all real content, never
+   reduces text contrast since it never overlaps the text column directly. */
+.section::before {
+  content: ''; position: absolute; top: -80px; right: -100px; width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(201,150,58,0.09) 0%, transparent 72%);
+  z-index: 0; pointer-events: none;
+}
+.section:nth-of-type(even)::before { right: auto; left: -100px; }
+.section > * { position: relative; z-index: 1; }
 .section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
 h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 500; color: var(--crimson-dk); letter-spacing: -0.3px; line-height: 1.12; margin-bottom: 14px; }
 .section-sub { font-size: 16px; color: var(--text-mid); max-width: 500px; line-height: 1.75; margin-bottom: 52px; }
 
 /* SERVICE TABS */
-.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 40px; flex-wrap: wrap; }
-.tab-btn { padding: 13px 22px; font-size: 12px; font-weight: 500; color: var(--text-muted); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.15s; margin-bottom: -1px; }
-.tab-btn:hover { color: var(--crimson); }
-.tab-btn.active { color: var(--crimson); border-bottom-color: var(--crimson); font-weight: 600; }
+.tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+.tab-btn {
+  padding: 10px 20px; font-size: 11.5px; font-weight: 600; color: var(--text-mid);
+  background: var(--warm-white); border: 1px solid var(--border); border-radius: 20px;
+  cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.06em; text-transform: uppercase;
+  transition: all 0.2s;
+}
+.tab-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+.tab-btn.active { color: #fff; background: var(--crimson); border-color: var(--crimson); }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
 /* SERVICE ITEMS WITH EXPAND */
-.services-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-.service-row { border-bottom: 1px solid var(--border); background: var(--warm-white); }
-.service-row:last-child { border-bottom: none; }
-.service-header { display: flex; align-items: center; padding: 16px 20px; gap: 16px; cursor: pointer; transition: background 0.15s; }
+.services-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+.service-row {
+  background: var(--warm-white); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  border-radius: 4px; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.service-row:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(92,15,15,0.12); border-left-color: var(--crimson); }
+.service-header { display: flex; align-items: center; padding: 18px 20px; gap: 16px; cursor: pointer; transition: background 0.15s; }
 .service-header:hover { background: var(--crimson-xs); }
 .service-header.open { background: var(--crimson-xs); }
 .service-main { flex: 1; display: flex; align-items: baseline; gap: 16px; justify-content: space-between; }
+.category-photo { width: 100%; height: auto; max-height: 320px; object-fit: cover; border-radius: 4px; margin-bottom: 20px; display: block; }
 .service-name { font-size: 14px; font-weight: 500; color: var(--charcoal); line-height: 1.4; }
 .service-note-inline { font-size: 12px; color: var(--text-muted); margin-left: 6px; font-weight: 400; }
 .service-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--crimson); white-space: nowrap; flex-shrink: 0; }
@@ -137,23 +233,113 @@ h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px)
 .service-desc { max-height: 0; opacity: 0; overflow: hidden; padding: 0 20px; font-size: 13.5px; color: var(--text-mid); line-height: 1.75; border-top: 0 solid var(--border); background: var(--crimson-xs); transition: max-height 0.28s ease, opacity 0.22s ease, padding 0.28s ease, border-top-width 0.28s ease; }
 .service-desc.open { max-height: 600px; opacity: 1; padding: 14px 20px 16px; border-top-width: 1px; }
 
-/* STAFF */
-.staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
-.staff-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px; padding: 36px 24px; text-align: center; transition: all 0.2s; }
-.staff-card:hover { border-color: var(--crimson); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(139,26,26,0.1); }
-.staff-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--crimson), var(--crimson-lt)); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #fff; font-weight: 600; margin: 0 auto 18px; border: 3px solid var(--gold-pale); }
-.staff-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--crimson-dk); margin-bottom: 8px; }
-.staff-spec { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 22px; letter-spacing: 0.03em; }
-.staff-book { display: block; background: var(--crimson); color: #fff; padding: 11px 20px; border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; text-decoration: none; transition: background 0.15s; }
-.staff-book:hover { background: var(--crimson-dk); }
-
-.staff-avail {
-  font-size: 11px; color: var(--crimson); font-weight: 600;
-  letter-spacing: 0.05em; text-transform: uppercase;
-  margin: 4px 0 14px; padding: 4px 10px;
-  background: var(--crimson-xs); border-radius: 20px;
-  display: inline-block;
+/* SIDE-BY-SIDE — shared pattern for Team and Work sections: short text
+   column on the left, horizontal-scroll media row with a single arrow on
+   the right. Keeps the page short — no long vertical stacks of cards or
+   photos, everything real (LIVE.technicians / LIVE.galleryImages) stays
+   reachable by scrolling sideways instead of scrolling the whole page. */
+/* EDITORIAL SECTION — the one reusable two-column pattern. Fixed-width
+   heading column on the left keeps every section heading vertically
+   aligned down the page. Content column on the right stretches. Both
+   columns start at the same top. Any section that opts into this layout
+   (Services, Team, Gallery, FAQ+Booking) uses this same class instead of
+   inventing its own grid. */
+.editorial-section { display: grid; grid-template-columns: 340px 1fr; gap: 72px; align-items: start; }
+.editorial-left { min-width: 0; }
+.editorial-left .section-sub { margin-bottom: 20px; }
+.editorial-right { min-width: 0; }
+.hscroll-wrap { position: relative; padding: 0 4px; min-width: 0; }
+.hscroll-arrow {
+  position: absolute; top: 42%; transform: translateY(-50%); z-index: 2;
+  width: 38px; height: 38px; border-radius: 50%; background: var(--warm-white);
+  border: 1px solid var(--border-gold); color: var(--crimson-dk); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+  box-shadow: 0 8px 20px rgba(92,15,15,0.14); transition: background 0.15s;
 }
+.hscroll-arrow:hover { background: var(--gold-xs); }
+.hscroll-arrow.prev { left: -8px; }
+.hscroll-arrow.next { right: -8px; }
+@media (max-width: 900px) {
+  .editorial-section { grid-template-columns: 1fr; gap: 32px; }
+  .hscroll-arrow { display: none; }
+}
+
+/* STAFF — compact horizontal cards, scroll-snap row. Real technician photo
+   drops straight into .staff-portrait the moment t.photo_url exists — no
+   redesign needed then, just an img tag swapping in for the initial. */
+.staff-grid {
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x proximity;
+  scrollbar-width: none; padding: 2px 2px 6px;
+}
+.staff-grid::-webkit-scrollbar { display: none; }
+.staff-card {
+  flex: 0 0 150px; scroll-snap-align: start;
+  background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px;
+  overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.staff-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(92,15,15,0.14); }
+.staff-body { padding: 9px 10px 10px; }
+.staff-name { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--crimson-dk); margin-bottom: 2px; line-height: 1.1; }
+.staff-spec { font-size: 9.5px; color: var(--text-mid); letter-spacing: 0.01em; line-height: 1.35; margin-bottom: 1px; }
+.staff-avail { font-size: 9px; color: var(--text-muted); letter-spacing: 0.01em; margin-bottom: 6px; }
+.staff-book {
+  display: block; background: none; border: 1px solid var(--border-gold); border-radius: 2px;
+  padding: 5px 8px; font-size: 8.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--crimson); cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  width: 100%; text-align: center;
+}
+.staff-card:hover .staff-book { background: var(--crimson-xs); border-color: var(--crimson); }
+.staff-portrait { aspect-ratio: 4 / 3; position: relative; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(150deg, var(--crimson) 0%, var(--crimson-dk) 100%); overflow: hidden;
+}
+.staff-portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.staff-portrait-initial { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 28px; color: rgba(255,255,255,0.9); position: relative; z-index: 1; }
+
+/* GALLERY — featured left, stacked thumbs right, per reference. Real photos
+   only (client_work pool). Clicking any image opens the existing lightbox
+   at that image's real index. */
+/* GALLERY — horizontal scroll of real client_work photos with arrows.
+   Uses the shared hscroll() helper. Clicking a card opens the existing
+   lightbox at its true index in the client_work pool. */
+.gallery-hscroll {
+  display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity;
+  scrollbar-width: none; padding: 2px 2px 6px;
+}
+.gallery-hscroll::-webkit-scrollbar { display: none; }
+.gallery-hscroll .gallery-img-card {
+  flex: 0 0 200px; scroll-snap-align: start; aspect-ratio: 4/5; border-radius: 4px;
+  overflow: hidden; cursor: pointer; position: relative;
+}
+.gallery-hscroll .gallery-img-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s; }
+.gallery-hscroll .gallery-img-card:hover img { transform: scale(1.05); }
+
+/* ABOUT — dark editorial band, text left, real photo tiles right,
+   per reference image 3. Tiles pull from the same hero_accent pool as
+   the hero fan (no new schema, no new fetch). Honest empty state — no
+   stock photography, no invented imagery. */
+.about-band { background: var(--crimson-dk); padding: 56px 5%; }
+.about-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 340px 1fr; gap: 72px; align-items: center; }
+.about-copy { min-width: 0; }
+.about-copy h2 { margin-bottom: 20px; }
+.about-tiles {
+  min-width: 0;
+  display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity;
+  scrollbar-width: none; padding: 2px 2px 6px;
+}
+.about-tiles::-webkit-scrollbar { display: none; }
+.about-tile { flex: 0 0 200px; scroll-snap-align: start; aspect-ratio: 3/4; border-radius: 4px; overflow: hidden; background: rgba(255,255,255,.04); position: relative; }
+.about-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-tile-empty { display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: rgba(255,255,255,.35); }
+@media (max-width: 900px) {
+  .about-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* FAQ — 2-column grid of accordion items, per reference. Fewer questions,
+   arranged side-by-side to keep page length compact. */
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+@media (max-width: 780px) { .faq-grid { grid-template-columns: 1fr; } }
+.gallery-featured-slot,
+.gallery-stack-slot { display: none; }
 
 
 /* INFO STRIP */
@@ -168,7 +354,7 @@ h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px)
 .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 .booking-features { display: flex; flex-direction: column; gap: 14px; margin: 28px 0 36px; }
 .booking-feature { display: flex; gap: 12px; font-size: 14px; color: var(--text-mid); line-height: 1.6; }
-.booking-feature::before { content: '✦'; color: var(--gold); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+.booking-feature::before { content: '—'; color: var(--gold); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
 .booking-card { background: linear-gradient(135deg, var(--gold-pale), var(--gold-xs)); border: 1px solid var(--border-gold); border-radius: 6px; padding: 48px 40px; text-align: center; }
 .booking-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--crimson-dk); margin-bottom: 12px; font-weight: 500; }
 .booking-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.65; }
@@ -180,46 +366,24 @@ footer { background: var(--charcoal); padding: 48px 5%; }
 .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--gold-lt); font-weight: 500; }
 .footer-logo span { display: block; font-size: 11px; font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
 footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
+.footer-contact { color: rgba(255,255,255,0.75) !important; }
+.footer-contact a { color: var(--gold-lt); text-decoration: none; font-weight: 500; }
+.footer-contact a:hover { color: var(--gold); text-decoration: underline; }
 
 @media (max-width: 768px) {
-  .hero { grid-template-columns: 1fr; gap: 48px; padding: 48px 5%; min-height: auto; }
+  .hero { height: 62vh; min-height: 460px; }
+  .hero-brand { font-size: 19px; margin-bottom: 8px; }
+  .nav-logo { font-size: 18px; gap: 9px; }
+  .nav-logo span span { font-size: 8.5px; letter-spacing: 0.12em; }
+  .hero-content { padding: 0 6% 48px; }
   .nav-links { display: none; }
   .booking-grid { grid-template-columns: 1fr; gap: 40px; }
-  .stats-strip { gap: 32px; }
+  .stats-strip { gap: 20px; padding: 18px 5%; }
+  .stats-strip .stat-num { font-size: 26px; }
+  .stats-strip .stat-label { font-size: 9px; letter-spacing: 0.08em; }
+  .stat-div { display: none; }
   .stat-div { display: none; }
 }
-
-/* STAFF EXPAND */
-.staff-expand-btn {
-  background: transparent;
-  border: 1px solid var(--border-gold);
-  color: var(--gold);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 2px;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 0.04em;
-  margin-bottom: 14px;
-  transition: all 0.15s;
-  width: 100%;
-}
-.staff-expand-btn:hover { background: var(--gold-pale); }
-.staff-expand-btn.open { background: var(--crimson-xs); border-color: var(--crimson); color: var(--crimson); }
-.staff-detail {
-  display: none;
-  font-size: 13px;
-  color: var(--text-mid);
-  line-height: 1.7;
-  background: var(--gold-xs);
-  border: 1px solid var(--border-gold);
-  border-radius: 4px;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  text-align: left;
-}
-.staff-detail.open { display: block; }
 
 /* REVIEWS */
 .review-card { background: #fff; border: 1px solid var(--border-gold); border-radius: 4px; padding: 28px 24px; }
@@ -364,13 +528,17 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 /* Drag handle */
 .ivy-widget-hdr { cursor: grab; }
 .ivy-widget-hdr.dragging { cursor: grabbing; }
-/* Gallery images */
+/* Gallery images — masonry via CSS columns, so real photo variety (portrait,
+   landscape, square) isn't force-cropped into a uniform grid, and adding
+   the 500th photo costs nothing structurally — it just becomes one more
+   column item, no layout recalculation needed. */
+.gallery-masonry { column-count: 4; column-gap: 12px; }
 .gallery-img-card {
-  aspect-ratio: 1; border-radius: 4px; overflow: hidden;
-  position: relative; border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--border);
+  break-inside: avoid; margin-bottom: 12px; cursor: pointer;
 }
 .gallery-img-card img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%; height: auto; display: block;
   transition: transform 0.4s ease;
 }
 .gallery-img-card:hover img { transform: scale(1.06); }
@@ -381,6 +549,32 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
   color: var(--gold-lt); font-size: 11px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
 }
+@media (max-width: 900px) { .gallery-masonry { column-count: 3; } }
+@media (max-width: 600px) { .gallery-masonry { column-count: 2; } }
+.gallery-load-more {
+  display: block; margin: 28px auto 0; background: transparent;
+  border: 1px solid var(--crimson); color: var(--crimson);
+  padding: 13px 32px; border-radius: 2px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+.gallery-load-more:hover { background: var(--crimson); color: #fff; }
+/* Lightbox */
+.gallery-lightbox {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: rgba(26,16,14,0.94); align-items: center; justify-content: center; padding: 40px;
+}
+.gallery-lightbox.open { display: flex; }
+.gallery-lightbox img { max-width: 100%; max-height: 85vh; border-radius: 4px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.gallery-lightbox-close, .gallery-lightbox-prev, .gallery-lightbox-next {
+  position: absolute; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center; transition: background 0.15s;
+}
+.gallery-lightbox-close:hover, .gallery-lightbox-prev:hover, .gallery-lightbox-next:hover { background: rgba(255,255,255,0.22); }
+.gallery-lightbox-close { top: 20px; right: 20px; }
+.gallery-lightbox-prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.gallery-lightbox-next { right: 20px; top: 50%; transform: translateY(-50%); }
 .gallery-img-fallback {
   width: 100%; height: 100%;
   background: linear-gradient(135deg, var(--crimson-xs), var(--gold-pale));
@@ -399,6 +593,9 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
   transition: transform 0.2s, background 0.2s;
 }
 #ivy-fab:hover { transform: scale(1.1); background: var(--crimson-dk); }
+/* While the chat is open the launcher is redundant and was overlapping the
+   chat's own buttons — hide it entirely rather than layering it on top. */
+#ivy-fab.ivy-hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
 #ivy-fab.ivy-fab-open { background: var(--crimson-dk); }
 .ivy-fab-dot {
   position: absolute; top: 3px; right: 3px;
@@ -409,7 +606,8 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 }
 #ivy-widget {
   position: fixed; bottom: 168px; right: 24px; z-index: 997;
-  width: 360px;
+  width: 370px; height: min(560px, calc(100vh - 200px));
+  display: flex; flex-direction: column;
   background: var(--crimson-dk);
   border-radius: 12px; overflow: hidden;
   box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 4px 16px rgba(0,0,0,0.2);
@@ -467,18 +665,37 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     right: 0 !important;
     left: 0 !important;
     bottom: 0 !important;
-    border-radius: 20px 20px 0 0;
-    max-height: 72vh;
+    top: auto !important;
+    border-radius: 18px 18px 0 0;
+    /* dvh tracks the visible viewport when the keyboard opens, so the
+       conversation stays visible instead of being pushed off-screen. */
+    height: 76dvh;
+    max-height: 76dvh;
     transform: translateY(100%);
   }
-  #ivy-widget.ivy-open {
-    transform: translateY(0) scale(1);
-  }
-  #ivyMessages {
-    height: 38vh !important;
-    max-height: 38vh !important;
-  }
-  #ivy-fab { right: 12px; bottom: 90px; }
+  #ivy-widget.ivy-open { transform: translateY(0) scale(1); }
+  /* Messages area flexes to fill whatever height remains — no fixed vh,
+     so an open keyboard shrinks it gracefully instead of clipping input. */
+  #ivyMessages { height: auto !important; max-height: none !important; flex: 1 1 auto; min-height: 0; }
+  /* Launcher sits clear of the sticky booking bar and page CTAs. */
+  #ivy-fab { right: 14px; bottom: 120px; width: 50px; height: 50px; }
+
+  /* --- Mobile polish pass --- */
+  /* Tighter, more even section rhythm; desktop padding felt cramped-then-empty. */
+  .section { padding: 40px 6%; }
+  h2 { font-size: clamp(28px, 8vw, 38px); line-height: 1.12; }
+  .section-sub { font-size: 14.5px; line-height: 1.7; }
+  .editorial-section { gap: 24px; }
+  /* Cards sized for thumb reach, not shrunken desktop cards. */
+  .staff-card { flex: 0 0 46vw; max-width: 190px; }
+  .gallery-hscroll .gallery-img-card { flex: 0 0 44vw; max-width: 180px; }
+  .about-tile { flex: 0 0 60vw; max-width: 220px; }
+  /* Services grid was 2-up at tablet widths and cramped on phones. */
+  .services-list { grid-template-columns: 1fr; gap: 10px; }
+  .service-header { padding: 15px 16px; }
+  /* Find Us stacks; map gets real height instead of a sliver. */
+  /* Sticky booking bar must never sit under the Aivy launcher. */
+  #booking-bar { padding-right: 74px; }
 }
 
 /* ===== STAFF SERVICE PICKER MODAL ===== */
@@ -622,6 +839,8 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 .bm-inp { width: 100%; padding: 11px 13px; border: 1.5px solid #e5e5e5; border-radius: 6px; font-family: 'Inter',sans-serif; font-size: 14px; color: var(--charcoal); margin-bottom: 10px; box-sizing: border-box; transition: border-color 0.15s; }
 .bm-inp:focus { outline: none; border-color: var(--crimson); }
 .bm-inp.bm-err { border-color: #ef4444; }
+.bm-email-suggest { margin: -6px 0 10px 2px; font-size: 12.5px; color: var(--charcoal); }
+.bm-email-suggest a { color: var(--crimson); font-weight: 600; text-decoration: underline; cursor: pointer; }
 .bm-ta { height: 80px; resize: none; }
 /* Summary */
 .bm-sum-card { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 14px; margin-bottom: 16px; }
@@ -703,15 +922,15 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     return t?JSON.parse(t):null;
   }
   function details(d){
-    return '<div class="mg-details"><div>📅 <b>'+esc(d.date)+'</b> at <b>'+esc(d.time)+'</b></div>'+
-      '<div>👤 With '+esc(d.technician)+'</div><div>💅 '+esc(d.services||'Service')+'</div></div>';
+    return '<div class="mg-details"><div><b>'+esc(d.date)+'</b> at <b>'+esc(d.time)+'</b></div>'+
+      '<div>With '+esc(d.technician)+'</div><div>'+esc(d.services||'Service')+'</div></div>';
   }
   async function load(){
     try{
       var d = await rpc('get_booking_by_token',{p_token:token});
       if(!d || !d.found){ body.innerHTML='<h2>Appointment not found</h2><p>This link may be invalid or expired.</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; return; }
       if(d.status==='cancelled'){ body.innerHTML='<h2>Already cancelled</h2>'+details(d)+'<p>This appointment has been cancelled.</p><a class="mg-link" href="'+SITE+'">Book a new appointment</a>'; return; }
-      if(d.status==='completed'){ body.innerHTML='<h2>All done</h2>'+details(d)+'<p>Hope you loved it! 💅</p><a class="mg-link" href="'+SITE+'">Book again</a>'; return; }
+      if(d.status==='completed'){ body.innerHTML='<h2>All done</h2>'+details(d)+'<p>Hope you loved it.</p><a class="mg-link" href="'+SITE+'">Book again</a>'; return; }
       if(!d.can_manage){ body.innerHTML='<h2>Your appointment</h2>'+details(d)+'<p>This appointment is soon — to change it, please call us'+(d.salon_phone?' at <b>'+esc(d.salon_phone)+'</b>':'')+'.</p><a class="mg-link" href="'+SITE+'">Go to our website</a>'; return; }
       body.innerHTML='<h2>Your appointment</h2>'+details(d)+
         '<button class="mg-btn mg-primary" id="mg-resched">Reschedule</button>'+
@@ -791,17 +1010,18 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     var t = await r.text(); if(!r.ok) throw new Error(t||('rpc '+r.status)); return t?JSON.parse(t):null;
   }
 
-  async function load(){
+  async function load(isPoll){
     try{
       var d = await rpc('get_tech_schedule',{p_token:token});
       if(!d || !d.found){
+        if(isPoll) return; // don't blow away a working screen over one bad poll
         document.getElementById('ts-card').innerHTML =
           '<div class="ts-wm">Red Persimmon</div><h2>Schedule not found</h2><div class="ts-sub">This link may be invalid or was reset. Please ask the salon for a new one.</div>';
         return;
       }
       var appts = d.appointments || [];
       var header = '<h2>'+esc(d.tech)+"'s schedule</h2><div class=\"ts-sub\">Next 7 days · updates automatically</div>";
-      if(!appts.length){ body.innerHTML = header + '<div class="ts-empty">No appointments in the next 7 days. 🌸</div>'; return; }
+      if(!appts.length){ body.innerHTML = header + '<div class="ts-empty">No appointments in the next 7 days.</div>'; return; }
       // group by date (already ordered)
       var html = header, curDate = null;
       appts.forEach(function(a){
@@ -814,638 +1034,127 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
       html += '<div class="ts-foot">Read-only · your appointments only</div>';
       body.innerHTML = html;
     }catch(e){
+      if(isPoll) return; // silent — same reasoning, a background refresh failing shouldn't nuke a working view
       document.getElementById('ts-card').innerHTML =
         '<div class="ts-wm">Red Persimmon</div><h2>Something went wrong</h2><div class="ts-sub">Please try again in a moment.</div>';
     }
   }
-  load();
+  load(false);
+  // Actually make good on the "updates automatically" promise already in
+  // the header — this was previously just copy with no real polling behind
+  // it. 30s while this tab/page stays open; stops on its own if the page
+  // is closed (setInterval dies with the page, nothing to clean up).
+  setInterval(function(){ load(true); }, 30000);
 })();
 </script>
 <!-- ===== end technician schedule overlay ===== -->
 
 <!-- ANNOUNCEMENT BAR -->
 <div id="announcebar" style="background:linear-gradient(90deg,var(--gold),#E8C27A,var(--gold));padding:9px 5%;text-align:center;position:relative;">
-  <p style="font-size:13px;font-weight:600;color:var(--crimson-dk);letter-spacing:0.03em;">🎉 New clients get <strong>10% off</strong> their first visit! &nbsp;·&nbsp; 👆 Tap on a service to book in store &nbsp;·&nbsp; Walk-ins always welcome · Call <a href="tel:6036217469" style="color:var(--crimson-dk);text-decoration:underline;" id="wsAnnounceBarPhone">(603) 621-7469</a></p>
+  <p style="font-size:13px;font-weight:600;color:var(--crimson-dk);letter-spacing:0.03em;"><span id="wsOpenStatus"></span> · Call <a href="tel:6036217469" style="color:var(--crimson-dk);text-decoration:underline;" id="wsAnnounceBarPhone">(603) 621-7469</a></p>
   <button onclick="document.getElementById('announcebar').style.display='none'" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--crimson-dk);font-weight:700;">×</button>
 </div>
 <nav>
-  <div class="nav-logo">
-    Red Persimmon
-    <span>Nails & Spa · Manchester, NH</span>
+  <div class="nav-logo" id="wsNavLogoWrap">
+    <span id="wsNavLogoText">Red Persimmon
+    <span>Nails & Spa · Manchester, NH</span></span>
   </div>
   <div class="nav-links" id="navLinks">
     <a href="#services" onclick="closeMenu()">Services</a>
+    <a href="#gallery" onclick="closeMenu()">Gallery</a>
+    <a href="#about" onclick="closeMenu()">About</a>
     <a href="#team" onclick="closeMenu()">Our Team</a>
     <a href="#faq" onclick="closeMenu()">FAQ</a>
     <a href="#visit" onclick="closeMenu()">Visit Us</a>
-    <a href="#" class="nav-ivy" onclick="openIvyChat();closeMenu();return false;">Ask Aivy 💅</a>
-    <a href="#booking" class="nav-book" onclick="closeMenu()">Book Appointment</a>
+    <a href="#" class="nav-ivy" onclick="openIvyChat();closeMenu();return false;">Ask Aivy</a>
+    <a href="#" class="nav-book" onclick="closeMenu();openIvyChat();startWizard();return false;">Book Appointment</a>
   </div>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- HERO -->
-<div style="max-width:1200px;margin:0 auto;">
+<!-- HERO — full-bleed photographic. wsHeroImg fills the frame; the old
+     boxed two-column layout and diagonal pattern are gone per design
+     review. Every id below is unchanged, so renderWebsiteContent(),
+     renderHeroFloatingElements(), and computeOpenStatusAndBadges() need
+     zero JS changes. -->
 <div class="hero">
-  <div>
-    <div class="hero-eyebrow" id="wsHeroLocation">1500 S. Willow St · Across American Eagle · Manchester, NH</div>
-    <h1>Where every nail<br>tells <em>your story.</em></h1>
-    <p class="hero-sub">Premium nail care, lash extensions, waxing, and spa treatments. Expert technicians, warm atmosphere, results that speak for themselves.</p>
-    <div class="hero-actions">
-      <a href="#booking" class="btn-gold">Book Appointment</a>
-      <a href="#services" class="btn-ghost">View Services</a>
-    </div>
-    <div class="hero-badges">
-      <div class="hero-badge">Walk-ins Welcome</div>
-      <div class="hero-badge">Gift Certificates</div>
-      <div class="hero-badge">Mon–Thu 10am–8pm</div>
-      <div class="hero-badge">Fri–Sat 10am–9pm</div>
-      <div class="hero-badge">Sun 11am–6pm</div>
-    </div>
-  </div>
+  <div class="hero-bg"></div>
+  <img id="wsHeroImg" src="" alt="Red Persimmon Nails &amp; Spa" style="display:none;" fetchpriority="high" decoding="async">
+  <div class="hero-scrim"></div>
 
-  <!-- IVY INTRO CARD -->
-  <div>
-    <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;text-align:center;">AI-Powered · Available 24/7 · Instant answers</div>
-    <div style="background:#fff;border:1px solid var(--crimson-xs);border-radius:10px;overflow:hidden;box-shadow:0 18px 44px rgba(92,15,15,0.12);">
-      <div style="background:linear-gradient(135deg,var(--crimson-dk),var(--crimson));padding:18px 22px;display:flex;align-items:center;gap:14px;">
-        <div class="chat-avatar" style="flex-shrink:0;">I</div>
-        <div>
-          <div style="font-size:17px;font-weight:600;color:#fff;font-family:'Cormorant Garamond',serif;">Aivy — Your AI Assistant</div>
-          <div class="chat-header-status">Online now · Here whenever you need</div>
+  <!-- Inset accent: real second gallery photo + real tech count, tucked
+       into the corner of the same frame instead of floating beside it. -->
+  <!-- Fanned real gallery photos, populated by renderHeroFloatingElements()
+       from LIVE.galleryImages. Empty until JS runs; no placeholder markup. -->
+  <div id="wsHeroGalleryFan"></div>
+  <div id="wsHeroTechCaption"></div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-brand" id="wsHeroBrand">Red Persimmon Nails &amp; Spa</div>
+      <h1 id="wsHeroHeadline">Where every nail<br>tells <em>your story.</em></h1>
+      <p class="hero-sub" id="wsHeroSubheadline">Premium nail care, lash extensions, waxing, and spa treatments. Expert technicians, warm atmosphere, results that speak for themselves.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-gold" onclick="openIvyChat();startWizard();return false;">Book Appointment</a>
+        <a href="#services" class="btn-ghost">View Services</a>
+        <div class="hero-badges" id="wsHeroBadges">
+          <!-- populated live from business hours: today's hours + open/closed -->
         </div>
-        <span class="chat-live">LIVE</span>
-      </div>
-      <div style="padding:22px;display:flex;flex-direction:column;gap:16px;">
-        <div style="display:flex;gap:13px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">💅</span>
-          <div>
-            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Services &amp; Pricing</div>
-            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Ask about any service and get instant pricing and details</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:13px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">📅</span>
-          <div>
-            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Book the right technician</div>
-            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Tell Aivy what you need — she matches you with the perfect specialist</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:13px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:19px;flex-shrink:0;">⚡</span>
-          <div>
-            <div style="font-size:14px;font-weight:600;color:var(--crimson-dk);margin-bottom:2px;">Answers 24/7, no hold music</div>
-            <div style="font-size:13px;color:var(--text-muted);line-height:1.55;">Aivy knows everything about Red Persimmon — available any hour</div>
-          </div>
-        </div>
-      </div>
-      <div style="padding:0 22px 22px;">
-        <button onclick="openIvyChat()" onmouseover="this.style.background='var(--gold-xs)'" onmouseout="this.style.background='transparent'" style="width:100%;background:transparent;color:var(--crimson-dk);border:1.5px solid var(--gold);border-radius:3px;padding:13px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;cursor:pointer;transition:background 0.15s;">
-          💬 Ask Aivy →
-        </button>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <!-- STATS STRIP -->
 <div class="stats-strip">
-  <div class="stat"><div class="stat-num">10</div><div class="stat-label">Expert Technicians</div></div>
+  <div class="stat"><div class="stat-num" id="wsTechCount">10</div><div class="stat-label">Expert Technicians</div></div>
   <div class="stat-div"></div>
-  <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Services Offered</div></div>
+  <div class="stat"><div class="stat-num" id="wsServiceCount">—</div><div class="stat-label">Services Offered</div></div>
   <div class="stat-div"></div>
-  <div class="stat"><div class="stat-num">7</div><div class="stat-label">Days a Week</div></div>
-  <div class="stat-div"></div>
-  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Ivy Always Available</div></div>
+  <div class="stat"><div class="stat-num" id="wsDaysOpenCount">—</div><div class="stat-label">Days a Week</div></div>
 </div>
 
 <div class="gold-rule"></div>
 
 <!-- SERVICES -->
 <div class="section" id="services">
-  <div class="section-eyebrow">Our Services</div>
-  <h2>Crafted for you,<br>priced honestly.</h2>
-  <p class="section-sub">Tap the <strong style="color:var(--gold);">+</strong> on any service to learn more about what's included. Every treatment is performed by our expert technicians with premium products.</p>
-
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('nails', this)">Nail Care</button>
-    <button class="tab-btn" onclick="showTab('enhancements', this)">Enhancements</button>
-    <button class="tab-btn" onclick="showTab('polish', this)">Polish Change</button>
-    <button class="tab-btn" onclick="showTab('lashes', this)">Lashes & Brows</button>
-    <button class="tab-btn" onclick="showTab('waxing', this)">Waxing</button>
-    <button class="tab-btn" onclick="showTab('additional', this)">Additional</button>
-  </div>
-
-  <!-- NAIL CARE -->
-  <div class="tab-content active" id="tab-nails">
-    <div class="services-list">
-
-      <div class="service-row" data-live-name="Natural Manicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Natural Manicure <span class="service-note-inline">+$15 for Gel/Shellac</span></div>
-            <div class="service-price">$25</div>
-          </div>
-        </div>
-        <div class="service-desc">A relaxing, nourishing hand massage and detailed grooming of the nails and cuticles follows. Hydrating nail soak prepares hands for a detailed grooming of nails and cuticles. A nourishing hand massage and perfect polish finish leaves your nails looking naturally beautiful and stronger.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Spa Me Perfect Manicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Spa Me Perfect Manicure</div>
-            <div class="service-price">$40</div>
-          </div>
-        </div>
-        <div class="service-desc">Intensive therapy for dry, parched hands. After detailed grooming of the nails and cuticles, dead skin cells will be exfoliated. Your hands will then be cocooned in aromatherapy paraffin and nestled in warm mitts. Your hands will feel so soft and luxurious — the result is stronger, more beautiful looking natural nails.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Scrub Me Pedicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Scrub Me Pedicure</div>
-            <div class="service-price">$45</div>
-          </div>
-        </div>
-        <div class="service-desc">A complete foot treatment with invigorating scrub and nourishment at your tired feet. The treatment and nourishment will leave your feet so refreshed. Pampering is completed with a hot towel and deeply hydrated with warm therapeutic massage. With combination of BYE-EE CALLUSES for additional $10. Includes a beautiful nail polish finish with combination of nail polish for additional $10.</div>
-      </div>
-
-      <div class="service-row" data-live-name="I Am Classy Pedicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">I Am Classy Pedicure</div>
-            <div class="service-price">$38</div>
-          </div>
-        </div>
-        <div class="service-desc">Relax in our hydrotherapy tubs and enjoy a detailed grooming of the nails and cuticles. Feet will be revitalized by a moisturizing foot massage. Final touch with nail polish for a beautiful finish. With combination of BYE-EE CALLUSES for additional $10.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Spa Me Perfect Pedicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Spa Me Perfect Pedicure</div>
-            <div class="service-price">$55</div>
-          </div>
-        </div>
-        <div class="service-desc">An invigorating scrub and nourishment at your tired feet. The treatment will leave your feet so refreshed and energized. Pampering is completed with a hot towel then be deeply hydrated with warm therapeutic massage. With combination of BYE-EE CALLUSES for additional $10.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Rock and Roll Pedicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Rock and Roll Pedicure</div>
-            <div class="service-price">$75</div>
-          </div>
-        </div>
-        <div class="service-desc">This is the ultimate therapy in foot care! Exfoliation, intensive hydrating treatment, callus treatment, hydrating mask, and paraffin treatment. For an exquisite experience, therapeutic hot stones are massaged on the lower legs and feet, enhancing circulation and reducing stress and tension. With combination of BYE-EE CALLUSES for additional $5.</div>
-      </div>
-
-      <div class="service-row" data-live-name="I Am So Beautiful Pedicure">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">I Am So Beautiful Pedicure</div>
-            <div class="service-price">$85</div>
-          </div>
-        </div>
-        <div class="service-desc">This treatment is a special blend of organic minerals to comfort overworked feet at all organic nature blend at massage with limit edition lotion and nature blend at organic French oils, vitamins, and Honey. Start with the clean and exfoliating, then collagen cream mask rejuvenate follow by organic lotion massage. Isn't that enough to make your feet beautiful? Please ask for choices at different type of collagen/organic we have. With combination of BYE-EE CALLUSES for additional $5.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Bye-EE Calluses">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Bye-EE Calluses Treatment</div>
-            <div class="service-price">$5–$10</div>
-          </div>
-        </div>
-        <div class="service-desc">Say Bye-EE to calluses and hello to soft, smooth skin in seconds. Our machine plus extra strength formula works to gently take away tough, stubborn calluses and is enhanced with vanilla extract lotion to leave feet soft and smooth. This fast acting formula quickly breaks down thick calluses for soft, smooth skin in seconds.</div>
-      </div>
-
-      <div class="service-row" data-live-name="Henna">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main">
-            <div class="service-name">Henna</div>
-            <div class="service-price">From $20</div>
-          </div>
-        </div>
-        <div class="service-desc">Beautiful traditional henna art applied by our skilled technicians. Perfect for special occasions, events, or just to express your personal style. Please ask for details on designs and pricing based on complexity.</div>
-      </div>
-
+  <div class="editorial-section">
+    <div class="editorial-left">
+      <div class="section-eyebrow">Our Services</div>
+      <h2>Crafted for you,<br>priced honestly.</h2>
+      <p class="section-sub">Tap the <strong style="color:var(--gold);">+</strong> on any service to learn more about what's included. Every treatment is performed by our expert technicians with premium products.</p>
+    </div>
+    <div class="editorial-right">
+      <div class="tabs" id="servicesTabs"></div>
+      <div id="servicesTabContent"></div>
     </div>
   </div>
-
-  <!-- ENHANCEMENTS -->
-  <div class="tab-content" id="tab-enhancements">
-    <div class="services-list">
-      <div class="service-row" data-live-name="Full Set White Tips">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – White Tips</div><div class="service-price">$50+</div></div>
-        </div>
-        <div class="service-desc">Classic white tip nail enhancements. Price may vary due to the length, shape, and design chosen. Our technicians will create the perfect set tailored to your style.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – Pink Only</div><div class="service-price">$45+</div></div>
-        </div>
-        <div class="service-desc">Natural-looking pink nail enhancements, perfect for a clean and polished everyday look. Price varies by length and shape.</div>
-      </div>
-      <div class="service-row" data-live-name="Full Set Pink & White">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – Pink & White</div><div class="service-price">$55+</div></div>
-        </div>
-        <div class="service-desc">The classic pink and white combination — timeless, elegant, and always on trend. Perfect for any occasion. Price varies by length and design.</div>
-      </div>
-      <div class="service-row" data-live-name="Full Set Acrylic w/Gel">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – Acrylic w/Gel/Shellac</div><div class="service-price">$60+</div></div>
-        </div>
-        <div class="service-desc">Durable acrylic enhancements finished with a gel or shellac topcoat for extra shine and long-lasting color. Price varies by length, shape, and design.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Refill – Pink & White</div><div class="service-price">$45+</div></div>
-        </div>
-        <div class="service-desc">Maintenance refill to keep your pink & white nails looking fresh and beautiful. Recommended every 2-3 weeks.</div>
-      </div>
-      <div class="service-row" data-live-name="Acrylic Refill">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Refill – Acrylic w/Gel/Shellac</div><div class="service-price">$45+</div></div>
-        </div>
-        <div class="service-desc">Maintenance refill for your acrylic nails with a fresh gel or shellac color update. Recommended every 2-3 weeks for best results.</div>
-      </div>
-      <div class="service-row" data-live-name="Full Set Gel Builder">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – Gel Builder</div><div class="service-price">$60+</div></div>
-        </div>
-        <div class="service-desc">Gel builder nails are a strong, flexible alternative to acrylic — lighter weight with a more natural feel. Great for those wanting durable enhancements without the thickness of acrylic.</div>
-      </div>
-      <div class="service-row" data-live-name="Full Set Ombre">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Full Set – Ombre</div><div class="service-price">$65+</div></div>
-        </div>
-        <div class="service-desc">Beautiful gradient ombre nail enhancements — a seamless blend from one color to another. Our technicians are skilled in creating smooth, stunning ombre effects in any color combination.</div>
-      </div>
-      <div class="service-row" data-live-name="Dipping Powder">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Dipping Powder</div><div class="service-price">$55+</div></div>
-        </div>
-        <div class="service-desc">Dipping powder nails are odorless, lightweight, and extremely durable. No UV light needed — the powder adheres directly to your natural nail for a long-lasting, chip-resistant finish that can last 3-4 weeks.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Dipping – Pink & White</div><div class="service-price">$60+</div></div>
-        </div>
-        <div class="service-desc">Classic pink and white in dipping powder form — combining the timeless French look with the durability and ease of dipping powder technology.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Dipping with Extensions</div><div class="service-price">$55+</div></div>
-        </div>
-        <div class="service-desc">Dipping powder applied over nail extensions for those who want extra length. Combines the strength of extensions with the durability and natural look of dipping powder.</div>
-      </div>
-      <div class="service-row" data-live-name="Dipping Ombre">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Dipping – Ombre</div><div class="service-price">$65+</div></div>
-        </div>
-        <div class="service-desc">Stunning ombre gradient effect using dipping powder — a long-lasting and chip-resistant way to achieve the popular fade look. Available in any color combination.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- POLISH CHANGE -->
-  <div class="tab-content" id="tab-polish">
-    <div class="services-list">
-      <div class="service-row" data-live-name="Regular Polish">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Reg Polish on Natural Nails <span class="service-note-inline">Includes trim & file</span></div><div class="service-price">$15</div></div>
-        </div>
-        <div class="service-desc">Fresh regular polish applied on your natural nails. Service includes a trim and file to shape your nails before the polish is applied. A quick, affordable way to keep your nails looking neat and polished.</div>
-      </div>
-      <div class="service-row" data-live-name="French Manicure by Hand">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">French Manicure by Hand</div><div class="service-price">$15</div></div>
-        </div>
-        <div class="service-desc">Classic French manicure painted by hand — a timeless, clean look with a natural pink base and crisp white tips. Our technicians are skilled at creating precise, even French lines.</div>
-      </div>
-      <div class="service-row" data-live-name="Gel/Shellac Change">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Polish Change Gel/Shellac on Acrylic</div><div class="service-price">$30</div></div>
-        </div>
-        <div class="service-desc">Update the color on your existing acrylic nails with a fresh gel or shellac polish. Long-lasting, chip-resistant color in any shade from our collection.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Polish Change Gel/Shellac on Natural</div><div class="service-price">$30</div></div>
-        </div>
-        <div class="service-desc">Fresh gel or shellac polish applied to your natural nails. Lasts up to 2-3 weeks without chipping. Cured under UV/LED light for a glossy, durable finish.</div>
-      </div>
-      <div class="service-row" data-live-name="Remove Gel/Shellac">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Take Off Gel/Shellac</div><div class="service-price">$5</div></div>
-        </div>
-        <div class="service-desc">Safe and gentle removal of gel or shellac polish. Our technicians use proper techniques to protect the health of your natural nails during removal.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Take Off Dip/Acrylic</div><div class="service-price">$15</div></div>
-        </div>
-        <div class="service-desc">Professional removal of dipping powder or acrylic nails. We take care to preserve the integrity of your natural nails throughout the removal process.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LASHES & BROWS -->
-  <div class="tab-content" id="tab-lashes">
-    <div class="services-list">
-      <div class="service-row" data-live-name="Hybrid Full Set">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Hybrid Full Set</div><div class="service-price">$150</div></div>
-        </div>
-        <div class="service-desc">Eyelash extensions are cosmetic enhancements where individual natural fibers are glued to your natural eyelashes, creating a fuller, longer, and darker lash look without the need for mascara. The lash extension creates effortlessly beautiful eye line, curl, and length of the lashes. Hybrid combines classic and volume lashes for a natural yet dramatic effect.</div>
-      </div>
-      <div class="service-row" data-live-name="Volume Full Set">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Volume Full Set</div><div class="service-price">$170</div></div>
-        </div>
-        <div class="service-desc">Volume lashes use multiple lightweight extensions per natural lash, creating a fuller, more dramatic look. You will love skipping the morning makeup routine — no more mascara! They will make your eyes pop and noticeably more feminine yet dramatic.</div>
-      </div>
-      <div class="service-row" data-live-name="Mega Volume Full Set">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Mega Volume Full Set</div><div class="service-price">$190</div></div>
-        </div>
-        <div class="service-desc">The most dramatic lash look available — maximum fullness and volume using the finest, most lightweight extensions. Perfect for those who want a bold, glamorous look that commands attention.</div>
-      </div>
-      <div class="service-row" data-live-name="Lash Fill (2-week)">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Fill Every 2 Weeks</div><div class="service-price">$80</div></div>
-        </div>
-        <div class="service-desc">Regular maintenance fills to keep your lash extensions looking full and beautiful. Fills every 2 weeks are recommended to replace extensions that have naturally shed with your lash growth cycle.</div>
-      </div>
-      <div class="service-row" data-live-name="Lash Fill (3-week)">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Fill Every 3 Weeks</div><div class="service-price">$90</div></div>
-        </div>
-        <div class="service-desc">Maintenance fills every 3 weeks for lash extension upkeep. Slightly more work required at this interval due to natural lash shedding, hence the slightly higher price than 2-week fills.</div>
-      </div>
-      <div class="service-row" data-live-name="Lash Lift">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Natural Curve Lashes Lift <span class="service-note-inline">Lasts 3–4 weeks</span></div><div class="service-price">$85</div></div>
-        </div>
-        <div class="service-desc">A lash lift curls and lifts your natural lashes from the base, creating the appearance of longer, more lifted lashes without extensions. Results last 3-4 weeks. No maintenance fills needed — just beautiful natural lashes.</div>
-      </div>
-      <div class="service-row" data-live-name="Microblading">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Microblading – Initial Session</div><div class="service-price">$500+</div></div>
-        </div>
-        <div class="service-desc">Microblading and Nano strokes have gained immense popularity in the beauty industry as a technique to achieve natural looking and defined, fuller, more defined, smudge-proof, water-proof, effortless brows. "Don't let your brows hold you back — Shine bright!" Initial session includes the first treatment. Results last significantly longer than traditional makeup.</div>
-      </div>
-      <div class="service-row">
-        <div class="service-header" onclick="toggleService(this)">
-          <div class="service-main"><div class="service-name">Microblading – 2nd Touch Up</div><div class="service-price">FREE</div></div>
-        </div>
-        <div class="service-desc">A complimentary touch-up session included with your initial microblading treatment. This follow-up appointment perfects and refines the results after your skin has healed from the initial session.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WAXING -->
-  <div class="tab-content" id="tab-waxing">
-    <div class="services-list">
-      <div class="service-row" data-live-name="Eyebrows Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Eyebrows</div><div class="service-price">$15+</div></div></div><div class="service-desc">Precise eyebrow waxing to define and shape your brows beautifully. Our technicians take time to understand your desired shape before waxing.</div></div>
-      <div class="service-row" data-live-name="Lip or Chin Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Lip or Chin</div><div class="service-price">$10</div></div></div><div class="service-desc">Quick and effective waxing for the upper lip or chin area. Removes unwanted hair for a smooth, clean finish that lasts weeks longer than shaving.</div></div>
-      <div class="service-row" data-live-name="Full Face Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Face</div><div class="service-price">$15+</div></div></div><div class="service-desc">Complete facial waxing covering all areas of the face including forehead, cheeks, lip, chin, and sides. Leaves skin smooth and hair-free for weeks.</div></div>
-      <div class="service-row" data-live-name="Full Arms Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Arms</div><div class="service-price">$50+</div></div></div><div class="service-desc">Complete arm waxing from wrist to shoulder. Smooth, hair-free arms that last significantly longer than shaving. Results typically last 3-6 weeks.</div></div>
-      <div class="service-row" data-live-name="Half Arms Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Half Arms</div><div class="service-price">$40+</div></div></div><div class="service-desc">Waxing from the wrist to the elbow. A great option for those who prefer partial arm hair removal. Long-lasting smooth results.</div></div>
-      <div class="service-row" data-live-name="Underarms Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Underarms</div><div class="service-price">$40+</div></div></div><div class="service-desc">Underarm waxing for smooth, clean results that last 3-6 weeks. Far longer-lasting than shaving with less irritation over time.</div></div>
-      <div class="service-row" data-live-name="Full Legs Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Full Legs</div><div class="service-price">$65+</div></div></div><div class="service-desc">Complete leg waxing from ankle to upper thigh. Smooth, silky legs that stay hair-free for weeks. One of our most popular services.</div></div>
-      <div class="service-row" data-live-name="Half Legs Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Half Legs</div><div class="service-price">$40+</div></div></div><div class="service-desc">Waxing from the ankle to the knee. Perfect for those who prefer lower leg hair removal or as a more affordable leg waxing option.</div></div>
-      <div class="service-row" data-live-name="Bikini Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Bikini</div><div class="service-price">$40+</div></div></div><div class="service-desc">Bikini line waxing for a clean, confident look. Our technicians ensure your comfort and privacy throughout the service.</div></div>
-      <div class="service-row" data-live-name="Brazilian Wax"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Brazilian / Playboy</div><div class="service-price">$55–$60+</div></div></div><div class="service-desc">Complete intimate waxing performed with care and professionalism. Our experienced technicians prioritize your comfort throughout the entire service.</div></div>
-    </div>
-  </div>
-
-  <!-- ADDITIONAL -->
-  <div class="tab-content" id="tab-additional">
-    <div class="services-list">
-      <div class="service-row" data-live-name="Children's Manicure"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Children's Manicure <span class="service-note-inline">10 and under</span></div><div class="service-price">$20</div></div></div><div class="service-desc">A fun, gentle manicure experience designed especially for our youngest clients (age 10 and under). Includes nail shaping and polish in their favorite color. A wonderful way to introduce children to nail care.</div></div>
-      <div class="service-row" data-live-name="Children's Pedicure"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Children's Pedicure</div><div class="service-price">$35</div></div></div><div class="service-desc">A gentle, fun pedicure experience for children. Includes a foot soak, nail trim, and polish in their favorite color. Perfect for a special mother-daughter or family outing.</div></div>
-      <div class="service-row" data-live-name="Paraffin Hands"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Paraffin on Hands</div><div class="service-price">$10</div></div></div><div class="service-desc">Warm paraffin wax treatment for the hands — deeply moisturizing and great for relieving joint stiffness. Hands are dipped in warm paraffin and wrapped to let the heat and moisture absorb into the skin.</div></div>
-      <div class="service-row" data-live-name="Paraffin Feet"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Paraffin on Feet</div><div class="service-price">$15</div></div></div><div class="service-desc">Warm paraffin wax treatment for the feet — intensely hydrating and softening. Especially beneficial for dry, cracked heels. Feet are wrapped in paraffin and warm towels for maximum absorption.</div></div>
-      <div class="service-row" data-live-name="Nail Repair"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Nail Repair</div><div class="service-price">$5+ each</div></div></div><div class="service-desc">Professional repair for broken or damaged nails. Our technicians can fix chips, cracks, or broken extensions to restore your nails to their full beauty.</div></div>
-      <div class="service-row" data-live-name="Nail Art & Design"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Nail Design</div><div class="service-price">$7+ each</div></div></div><div class="service-desc">Custom nail art and designs created by our talented technicians. From simple accents to detailed artwork — tell us your vision and we'll bring it to life. Price varies by complexity of design.</div></div>
-      <div class="service-row" data-live-name="Remove Gel/Shellac"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Remove Gel/Shellac</div><div class="service-price">$15</div></div></div><div class="service-desc">Safe, professional removal of gel or shellac polish using proper techniques that protect your natural nail health. No harsh scraping or damaging methods.</div></div>
-      <div class="service-row" data-live-name="Remove Dipping Powder"><div class="service-header" onclick="toggleService(this)"><div class="service-main"><div class="service-name">Remove Dipping Powder</div><div class="service-price">$15</div></div></div><div class="service-desc">Professional and safe removal of dipping powder. Our technicians use gentle soaking methods to preserve the health and integrity of your natural nails.</div></div>
-    </div>
-  </div>
-
 </div>
 
 <div class="gold-rule"></div>
 
 <!-- TEAM -->
 <div class="section" id="team">
-  <div class="section-eyebrow">Our Team</div>
-  <h2>Book with your<br>favourite technician.</h2>
-  <p class="section-sub">Every client deserves a technician they trust. Choose your preferred artist and book directly — your appointment goes straight into their calendar, no overlap, no surprises.</p>
-
-  <div class="staff-grid">
-    <div class="staff-card">
-      <div class="staff-avatar">K</div>
-      <div class="staff-name">Kristy</div>
-      <div class="staff-spec">Nail Enhancements · Waxing · Lash Extensions · Microblading</div>
-      <div class="staff-avail">📅 Mon – Wed, Fri – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kristy</button>
-      <div class="staff-detail">
-        <p>Kristy is our versatile multi-specialist — from nail enhancements, waxing, and lash extensions to microblading. She brings precision and care to every service. Not available Thursdays.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Acrylics · Lash Extensions · Microblading · Waxing</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('kristy','Kristy')">Select Service & Book →</button>
+  <div class="editorial-section">
+    <div class="editorial-left">
+      <div class="section-eyebrow">Our Team</div>
+      <h2>Book with your favourite technician.</h2>
+      <p class="section-sub">Every client deserves a technician they trust. Choose your preferred artist and book directly — your appointment goes straight into their calendar, no overlap, no surprises.</p>
     </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">K</div>
-      <div class="staff-name">Kevin</div>
-      <div class="staff-spec">Nail Enhancements · Nail Art & Design</div>
-      <div class="staff-avail">📅 Thu – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kevin</button>
-      <div class="staff-detail">
-        <p>Kevin is our nail art and enhancement expert. From custom designs and acrylics to dipping and gel sets, he brings creativity and precision to every client. Available Thursday through Sunday.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Nail Art · Acrylics · Dipping · Gel X</p>
+    <div class="editorial-right">
+      <div class="hscroll-wrap">
+        <div class="staff-grid" id="teamGrid"></div>
+        <button class="hscroll-arrow prev" onclick="hscroll('teamGrid', -1)" aria-label="See previous technicians">&larr;</button>
+        <button class="hscroll-arrow next" onclick="hscroll('teamGrid', 1)" aria-label="See more technicians">&rarr;</button>
       </div>
-      <button class="staff-book" onclick="openStaffModal('kevin','Kevin')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">P</div>
-      <div class="staff-name">Peter</div>
-      <div class="staff-spec">Nail Enhancements · Pedicures · Manicures</div>
-      <div class="staff-avail">📅 Every Day</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Peter</button>
-      <div class="staff-detail">
-        <p>Peter is available every single day of the week. He specializes in nail enhancements and offers a wide range of services including pedicures, manicures, acrylics, and gel sets.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Nail Enhancements · Pedicures · Acrylics · Gel</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('peter','Peter')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">T</div>
-      <div class="staff-name">Tina</div>
-      <div class="staff-spec">Pedicures · Nail Enhancements · Waxing · Henna</div>
-      <div class="staff-avail">📅 Every Day</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Tina</button>
-      <div class="staff-detail">
-        <p>Tina is available every day and is loved for her thorough pedicures, nail enhancements, and waxing services. She also offers henna art. A great all-rounder for multiple services in one visit.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Enhancements · Waxing · Henna</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('tina','Tina')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">A</div>
-      <div class="staff-name">Alex</div>
-      <div class="staff-spec">Pedicure Specialist</div>
-      <div class="staff-avail">📅 Mon – Wed & Fri</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Alex</button>
-      <div class="staff-detail">
-        <p>Alex specializes in pedicures and nail care. Available Monday, Tuesday, Wednesday, and Friday. Ideal for clients wanting a relaxing and thorough pedicure experience.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Manicures · Polish</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('alex','Alex')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">S</div>
-      <div class="staff-name">Sweety</div>
-      <div class="staff-spec">Pedicures · Manicures · Waxing · Henna</div>
-      <div class="staff-avail">📅 Thu – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Sweety</button>
-      <div class="staff-detail">
-        <p>Sweety is known for her gentle touch and detailed work in pedicures, manicures, henna, and waxing. Available Thursday through Sunday — book early as she fills up fast!</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Waxing · Henna · Manicures</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('sweety','Sweety')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">S</div>
-      <div class="staff-name">Sony</div>
-      <div class="staff-spec">Pedicures · Henna · Manicures</div>
-      <div class="staff-avail">📅 Tuesday Only</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Sony</button>
-      <div class="staff-detail">
-        <p>Sony specializes in pedicures and henna art. Available Tuesdays only — a hidden gem for clients who want a calm, focused appointment. Slots go quickly so book ahead!</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Henna · Manicures</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('sony','Sony')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">A</div>
-      <div class="staff-name">Ammu</div>
-      <div class="staff-spec">Pedicures · Nail Enhancements · Henna</div>
-      <div class="staff-avail">📅 Sat – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Ammu</button>
-      <div class="staff-detail">
-        <p>Ammu is our weekend specialist offering pedicures, nail enhancements, and henna on Saturdays and Sundays. Perfect for clients with busy weekday schedules.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Nail Enhancements · Henna</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('ammu','Ammu')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">K</div>
-      <div class="staff-name">Kim</div>
-      <div class="staff-spec">Pedicures · Nail Enhancements · Waxing</div>
-      <div class="staff-avail">📅 Wed – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Kim</button>
-      <div class="staff-detail">
-        <p>Kim offers pedicures, nail enhancements, and waxing with great attention to detail. Available Wednesday through Sunday — a reliable choice for a wide range of nail and waxing services.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Acrylics · Dipping · Waxing</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('kim','Kim')">Select Service & Book →</button>
-    </div>
-
-    <div class="staff-card">
-      <div class="staff-avatar">L</div>
-      <div class="staff-name">Lori</div>
-      <div class="staff-spec">Pedicures · Manicures</div>
-      <div class="staff-avail">📅 Mon & Wed – Sun</div>
-      <button class="staff-expand-btn" onclick="toggleStaff(this)">+ About Lori</button>
-      <div class="staff-detail">
-        <p>Lori specializes in relaxing pedicures and manicures. Available most days of the week (closed Tuesdays). Perfect for clients looking for a calm and thorough nail care experience.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--gold);font-weight:600;">Best for: Pedicures · Manicures · Polish · Nail Care</p>
-      </div>
-      <button class="staff-book" onclick="openStaffModal('lori','Lori')">Select Service & Book →</button>
     </div>
   </div>
 </div>
 
 <div class="gold-rule"></div>
 
-<!-- INFO STRIP -->
-<div class="info-strip" id="visit">
-  <div class="info-strip-inner">
-    <div class="info-block">
-      <h3>Hours</h3>
-      <p>Mon – Thu: 10:00 AM – 8:00 PM<br>Fri – Sat: 10:00 AM – 9:00 PM<br>Sun: 11:00 AM – 6:00 PM</p>
-    </div>
-    <div class="info-block">
-      <h3>Location</h3>
-      <p><span id="wsFindUsAddress1">1500 S. Willow Street<br>Across from American Eagle<br>Close to Food Court<br>Manchester, NH 03103</span><br><br><a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" id="wsFindUsMapsLink1">Get directions →</a></p>
-    </div>
-    <div class="info-block">
-      <h3>Contact</h3>
-      <p><a href="tel:6036217469" id="wsFindUsPhone1">(603) 621-7469</a><br><a href="mailto:red_persimmon@gmail.com" id="wsFindUsEmail1">red_persimmon@gmail.com</a><br><br>Walk-ins always welcome!</p>
-    </div>
-    <div class="info-block">
-      <h3>Gift Certificates</h3>
-      <p>Give the gift of beauty.<br>Available in any amount.<br><br>Ask us in store or call to purchase. Never expires.</p>
-    </div>
-  </div>
-</div>
-
-<!-- BOOKING -->
-<div class="section" id="booking">
-  <div class="booking-grid">
-    <div>
-      <div class="section-eyebrow">Book an Appointment</div>
-      <h2>Ready for<br>your next visit?</h2>
-      <p style="font-size:16px;color:var(--text-mid);line-height:1.8;">Book online in seconds. Choose your technician, pick your time, and we'll take care of the rest. Your appointment syncs directly to their calendar.</p>
-      <div class="booking-features">
-        <div class="booking-feature">Instant confirmation — no waiting for a callback</div>
-        <div class="booking-feature">Book with your favourite technician directly</div>
-        <div class="booking-feature">Real-time availability — no double bookings ever</div>
-        <div class="booking-feature">Walk-ins also always welcome!</div>
-      </div>
-      <a href="#services" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'});return false;" class="btn-gold" style="display:inline-block;margin-bottom:12px;">+ Browse & Add Services →</a>
-      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">Pick your services from the menu above, choose your professional, and your appointment arrives pre-filled in their calendar. Or chat with Ivy 24/7 — she'll guide you to the right technician! 💅</p>
-    </div>
-    <div class="booking-card">
-      <h3>Prefer to call?</h3>
-      <p>Our team is happy to help you book the perfect appointment over the phone during business hours.</p>
-      <a href="tel:6036217469" class="btn-primary" style="display:block;text-align:center;">(603) 621-7469</a>
-      <div class="booking-divider"></div>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Or ask Ivy above — she can answer any question and guide you to the right service and technician 24/7!</p>
-      <p style="font-size:12px;color:var(--gold);font-weight:600;letter-spacing:0.06em;">GIFT CERTIFICATES AVAILABLE ✦</p>
-    </div>
-  </div>
-</div>
-
-<div class="gold-rule"></div>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo">
-      <span id="wsFooterName" style="display:inline;font-size:inherit;text-transform:none;letter-spacing:normal;color:inherit;margin-top:0;">Red Persimmon Nails &amp; Spa</span>
-      <span id="wsFooterAddress">1500 S. Willow Street · Across American Eagle · Manchester, NH 03103</span>
-    </div>
-    <p><a href="tel:6036217469" id="wsFooterPhone">(603) 621-7469</a> · <a href="mailto:red_persimmon@gmail.com" id="wsFooterEmail">red_persimmon@gmail.com</a></p>
-    <p>© 2025 <span id="wsFooterCopyrightName">Red Persimmon Nails &amp; Spa</span>. All rights reserved.</p>
-  </div>
-</footer>
 
 <script>
 const SYSTEM_PROMPT = `You are Aivy, the warm and friendly AI assistant for Red Persimmon Nails & Spa in Manchester, NH.
@@ -1550,15 +1259,91 @@ let ivyChatOpen = false;
 function openIvyChat() {
   const w = document.getElementById('ivy-widget');
   if (w) w.classList.add('ivy-open');
+  const fab = document.getElementById('ivy-fab');
+  if (fab) fab.classList.add('ivy-hidden');
   ivyChatOpen = true;
+  window.dispatchEvent(new Event('ivy-chat-opened'));
   setTimeout(() => { const i = document.getElementById('ivyInput'); if (i) i.focus(); }, 250);
 }
 function closeIvyChat() {
   const w = document.getElementById('ivy-widget');
   if (w) w.classList.remove('ivy-open');
+  const fab = document.getElementById('ivy-fab');
+  if (fab) fab.classList.remove('ivy-hidden');
   ivyChatOpen = false;
+  if (w) { w.style.height = ''; w.style.bottom = ''; }
 }
+
+// BUG 4: on mobile the on-screen keyboard shrinks the visible viewport but
+// not the layout viewport, so the panel kept its full height and its top
+// (including the whole conversation) was pushed off-screen — that's the big
+// empty red area in Sai's screenshot. visualViewport reports the ACTUAL
+// visible height, so we size the panel to it and the conversation stays put.
+(function keyboardSafeChat(){
+  const vv = window.visualViewport;
+  if(!vv) return; // older browsers keep the dvh-based CSS fallback
+  function fit(){
+    const w = document.getElementById('ivy-widget');
+    if(!w || !ivyChatOpen) return;
+    if(window.innerWidth > 640){ w.style.height = ''; return; }
+    // Cap at 88% of what's actually visible, and sit it on the visible bottom.
+    w.style.height = Math.round(vv.height * 0.88) + 'px';
+    w.style.bottom = Math.round(window.innerHeight - vv.height - vv.offsetTop) + 'px';
+  }
+  vv.addEventListener('resize', fit);
+  vv.addEventListener('scroll', fit);
+  window.addEventListener('ivy-chat-opened', fit);
+})();
 function toggleIvyChat() { ivyChatOpen ? closeIvyChat() : openIvyChat(); }
+
+// Draggable Aivy launcher — the person can move it anywhere on screen if it
+// covers something. Distinguishes a drag from a tap so dragging never
+// accidentally opens the chat. Position is remembered for the session only.
+let ivyFabDidDrag = false;
+(function initIvyFabDrag(){
+  const fab = document.getElementById('ivy-fab');
+  if(!fab) return;
+  let startX=0, startY=0, originLeft=0, originTop=0, dragging=false;
+
+  function onDown(e){
+    const pt = e.touches ? e.touches[0] : e;
+    const r = fab.getBoundingClientRect();
+    originLeft = r.left; originTop = r.top;
+    startX = pt.clientX; startY = pt.clientY;
+    dragging = true; ivyFabDidDrag = false;
+    fab.style.transition = 'none';
+  }
+  function onMove(e){
+    if(!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const dx = pt.clientX - startX, dy = pt.clientY - startY;
+    if(Math.abs(dx) > 4 || Math.abs(dy) > 4){
+      ivyFabDidDrag = true;
+      if(e.cancelable) e.preventDefault();
+    }
+    const w = fab.offsetWidth, h = fab.offsetHeight;
+    const left = Math.min(Math.max(0, originLeft + dx), window.innerWidth - w);
+    const top  = Math.min(Math.max(0, originTop + dy), window.innerHeight - h);
+    fab.style.left = left + 'px';
+    fab.style.top = top + 'px';
+    fab.style.right = 'auto';
+    fab.style.bottom = 'auto';
+  }
+  function onUp(){
+    if(!dragging) return;
+    dragging = false;
+    fab.style.transition = '';
+    // Let the click handler read ivyFabDidDrag, then reset it.
+    setTimeout(function(){ ivyFabDidDrag = false; }, 0);
+  }
+
+  fab.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  fab.addEventListener('touchstart', onDown, {passive:true});
+  window.addEventListener('touchmove', onMove, {passive:false});
+  window.addEventListener('touchend', onUp);
+})();
 
 
 
@@ -1624,7 +1409,7 @@ function renderMessage(text, role, container) {
       const a = document.createElement('a');
       a.href = m[0]; a.target = '_blank'; a.rel = 'noopener';
       a.className = 'msg-booking-btn';
-      a.textContent = '📅 Tap to Book Appointment →';
+      a.textContent = 'Tap to Book Appointment →';
       div.appendChild(a);
       last = m.index + m[0].length;
     }
@@ -1685,13 +1470,6 @@ function toggleService(header) {
   const isOpen = header.classList.contains('open');
   header.classList.toggle('open', !isOpen);
   header.nextElementSibling.classList.toggle('open', !isOpen);
-}
-function toggleStaff(btn) {
-  const detail = btn.nextElementSibling;
-  const isOpen = btn.classList.contains('open');
-  btn.classList.toggle('open', !isOpen);
-  detail.classList.toggle('open', !isOpen);
-  btn.textContent = isOpen ? btn.textContent.replace('− ', '+ ') : btn.textContent.replace('+ ', '− ');
 }
 function toggleFaq(el) {
   el.classList.toggle('open');
@@ -1764,8 +1542,9 @@ const MONTHS    = ['January','February','March','April','May','June','July','Aug
 // matching first name, not hand-maintained. This is the only "lookup" left;
 // everything that used to live in TECH_DB/SVC_DUR/SALON_HRS (days, prices,
 // durations, hours) now comes from the real tables below, live, every load.
-const TECH_KEYS = ['kristy','kevin','peter','tina','alex','sweety','sony','ammu','kim','lori'];
-let TECH_KEY_TO_ID = {};
+// Technicians are referenced by their real database id everywhere now —
+// no more hardcoded name-key list. This was the root cause of new
+// technicians being invisible on the site regardless of dashboard setup.
 
 // ============================================================
 // LIVE booking data — single source of truth is the database.
@@ -1780,6 +1559,8 @@ const LIVE = {
   techHours: {},       // technician_id -> day_of_week -> {is_available, start_time, end_time}
   techQuals: {},       // technician_id -> Set(service_id)
   salonHours: {},      // day_of_week -> {is_open, open_time, close_time}
+  websiteSettings: null,  // single website_settings row for this salon, or null
+  galleryImages: [],       // active website_gallery_images rows, ordered
   loaded: false,
   loadError: null,
 };
@@ -1788,18 +1569,44 @@ function svcByName(name){
   const norm = String(name||'').toLowerCase().trim();
   return LIVE.services.find(s => s.name.toLowerCase().trim() === norm) || null;
 }
-function techIdByKey(key){ return TECH_KEY_TO_ID[key] || null; }
 
 async function loadLiveBookingData(){
   try{
     // Phase 1: this salon's own services/technicians/hours — every fetch
     // scoped by salon_id, so row counts can never become a cross-salon
     // problem as the platform grows.
-    const [services, technicians, salonHoursRows] = await Promise.all([
+    //
+    // website_settings / website_gallery_images ride in this same batch
+    // (one network pass, one pipeline — no second loading pattern) but
+    // each has its own .catch(): this is marketing content, not booking-
+    // critical, and a salon mid-onboarding is EXPECTED to have an empty
+    // website_settings row. A failure or empty result here must never
+    // throw and take booking down with it.
+    const [services, technicians, salonHoursRows, websiteSettingsRows, galleryRows, categoryImageRows] = await Promise.all([
       dbGet('services', `salon_id=eq.${SALON_ID}&limit=200`),
       dbGet('technicians', `salon_id=eq.${SALON_ID}&limit=50`),
       dbGet('salon_hours', `salon_id=eq.${SALON_ID}&limit=10`),
+      dbGet('website_settings', `salon_id=eq.${SALON_ID}&limit=1`)
+        .catch(e => { console.warn('website_settings fetch failed (non-fatal):', e.message); return []; }),
+      dbGet('website_gallery_images', `salon_id=eq.${SALON_ID}&active=eq.true&order=display_order.asc.nullslast&limit=50`)
+        .catch(e => { console.warn('website_gallery_images fetch failed (non-fatal):', e.message); return []; }),
+      dbGet('service_category_images', `salon_id=eq.${SALON_ID}&limit=100`)
+        .catch(e => { console.warn('service_category_images fetch failed (non-fatal):', e.message); return []; }),
     ]);
+
+    // Commit and render website content now, before any booking-critical
+    // check can throw below — content rendering must never depend on
+    // booking data being intact, and vice versa. LIVE.salonHours is built
+    // here too (moved up from below, harmless — it's a pure transform of
+    // data already fetched) since the hero badges are hours-derived and
+    // must be available even if a later booking-critical check throws.
+    LIVE.websiteSettings = (Array.isArray(websiteSettingsRows) && websiteSettingsRows[0]) || null;
+    LIVE.galleryImages = Array.isArray(galleryRows) ? galleryRows : [];
+    LIVE.categoryImages = {};
+    (Array.isArray(categoryImageRows) ? categoryImageRows : []).forEach(c => { LIVE.categoryImages[c.category] = c.image_url; });
+    LIVE.salonHours = {};
+    salonHoursRows.forEach(h => { LIVE.salonHours[h.day_of_week] = h; });
+    renderWebsiteContent();
 
     if(!technicians.length) throw new Error('no technicians found for this salon');
     if(!salonHoursRows.length) throw new Error('no salon hours configured for this salon');
@@ -1825,18 +1632,14 @@ async function loadLiveBookingData(){
     techHoursRows.forEach(h => { (LIVE.techHours[h.technician_id] ||= {})[h.day_of_week] = h; });
     LIVE.techQuals = {};
     techQualRows.forEach(q => { (LIVE.techQuals[q.technician_id] ||= new Set()).add(q.service_id); });
-    LIVE.salonHours = {};
-    salonHoursRows.forEach(h => { LIVE.salonHours[h.day_of_week] = h; });
-
-    TECH_KEY_TO_ID = {};
-    TECH_KEYS.forEach(key => {
-      const t = LIVE.technicians.find(t => (t.name||'').toLowerCase().trim() === key && t.active !== false);
-      if(t) TECH_KEY_TO_ID[key] = t.id;
-    });
+    // LIVE.salonHours already built above, before the booking-critical checks.
 
     LIVE.loaded = true;
     LIVE.loadError = null;
-    refreshStaffAvailabilityDisplay();
+    renderTeamGrid();
+    renderTechDropdownOptions();
+    renderServicesSection();
+    renderHeroStats();
   }catch(e){
     console.error('loadLiveBookingData failed:', e.message);
     LIVE.loaded = false;
@@ -1868,9 +1671,9 @@ const DAY_FULL = {mon:'Monday',tue:'Tuesday',wed:'Wednesday',thu:'Thursday',fri:
 function fmtAvailabilityLine(techId){
   const hrs = LIVE.techHours[techId] || {};
   const availDays = DAY_ORDER_WEB.filter(d => hrs[d] && hrs[d].is_available);
-  if(availDays.length === 7) return '📅 Every Day';
-  if(availDays.length === 0) return '📅 Schedule not set';
-  if(availDays.length === 1) return `📅 ${DAY_FULL[availDays[0]]} Only`;
+  if(availDays.length === 7) return 'Every Day';
+  if(availDays.length === 0) return 'Schedule not set';
+  if(availDays.length === 1) return `${DAY_FULL[availDays[0]]} Only`;
   const idxs = availDays.map(d => DAY_ORDER_WEB.indexOf(d)).sort((a,b)=>a-b);
   const runs = [];
   let i = 0;
@@ -1881,19 +1684,111 @@ function fmtAvailabilityLine(techId){
     i = j + 1;
   }
   const parts = runs.map(([a,b]) => a===b ? DAY_ABBR[DAY_ORDER_WEB[a]] : `${DAY_ABBR[DAY_ORDER_WEB[a]]} – ${DAY_ABBR[DAY_ORDER_WEB[b]]}`);
-  return '📅 ' + parts.join(' & ');
+  return parts.join(' & ');
 }
-function refreshStaffAvailabilityDisplay(){
-  const cards = document.querySelectorAll('.staff-avail');
-  cards.forEach((el, i) => {
-    const key = TECH_KEYS[i];
-    const realId = key ? techIdByKey(key) : null;
-    if(realId) el.textContent = fmtAvailabilityLine(realId);
-  });
+// Renders the entire "Our Team" section from LIVE.technicians — no fixed
+// array, no fixed count. A new technician added in the dashboard appears
+// here automatically. Specialty/"Best for" lines are computed from the
+// services actually linked to them (technician_services), not hand-typed.
+function renderHeroStats(){
+  // Replaces two previously hardcoded numbers ("50+" services, "7" days)
+  // with real computed values — same data everything else on the page
+  // already reads, just never wired to the stats strip.
+  const svcEl = document.getElementById('wsServiceCount');
+  if(svcEl) svcEl.textContent = (LIVE.services || []).length;
+
+  const daysEl = document.getElementById('wsDaysOpenCount');
+  if(daysEl){
+    const openDays = Object.values(LIVE.salonHours || {}).filter(h => h.is_open).length;
+    daysEl.textContent = openDays;
+  }
+}
+
+// Shared by Team + Work section arrows — scrolls the row by roughly one
+// card's width per click, either direction, works for any #id row.
+function hscroll(rowId, dir){
+  const row = document.getElementById(rowId);
+  if(!row) return;
+  const card = row.firstElementChild;
+  const step = card ? card.getBoundingClientRect().width + 16 : 200;
+  row.scrollBy({ left: dir * step * 2, behavior: 'smooth' });
+}
+
+function renderTeamGrid(){
+  const grid = document.getElementById('teamGrid');
+  if(!grid) return;
+  const techs = (LIVE.technicians||[]).filter(t => t.active !== false).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+
+  const countEl = document.getElementById('wsTechCount');
+  if(countEl) countEl.textContent = techs.length;
+
+  grid.innerHTML = techs.map(t => {
+    const svcs = techServicesFor(t.id);
+    const categories = [...new Set(svcs.map(s => s.category || 'other'))].map(wizardCategoryLabel);
+    const specialty = categories.length ? categories.join(' · ') : 'General services';
+    const initial = (t.name||'?').trim().charAt(0).toUpperCase();
+    // Forward-compatible: the moment t.photo_url exists, this swaps in
+    // automatically — no card redesign needed when real photos arrive.
+    const portrait = t.photo_url
+      ? `<img src="${wsEsc(t.photo_url)}" alt="${wsEsc(t.name)}" loading="lazy">`
+      : `<span class="staff-portrait-initial">${wsEsc(initial)}</span>`;
+    return `<div class="staff-card">
+      <div class="staff-portrait">${portrait}</div>
+      <div class="staff-body">
+        <div class="staff-name">${wsEsc(t.name)}</div>
+        <div class="staff-spec">${wsEsc(specialty)}</div>
+        <div class="staff-avail">${fmtAvailabilityLine(t.id)}</div>
+        <button class="staff-book" onclick="openStaffModal('${t.id}')">Book with ${wsEsc(t.name)}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Scrolls the technician filmstrip by roughly one card-width per click —
+// used by the desktop prev/next arrows. Touch/trackpad users can just
+// scroll the row directly; this is a convenience for mouse users.
+
+// Rebuilds the booking bar's technician dropdown from LIVE.technicians,
+// filtered to whoever is actually qualified for every currently-selected
+// service (LIVE.techQuals). Called on load and every time the service
+// selection changes — this is the real fix for being able to book an
+// unqualified technician, not just a display refresh.
+function renderTechDropdownOptions(){
+  const sel = document.getElementById('bb-tech-select');
+  if(!sel) return;
+  const prevValue = sel.value;
+  const allTechs = (LIVE.technicians||[]).filter(t => t.active !== false);
+
+  const selectedServiceIds = (bbServices||[])
+    .map(s => svcByName(s.name))
+    .filter(Boolean)
+    .map(s => s.id);
+
+  // Nothing selected yet — nothing to qualify against, so show everyone.
+  const qualified = selectedServiceIds.length
+    ? allTechs.filter(t => selectedServiceIds.every(sid => (LIVE.techQuals[t.id]||new Set()).has(sid)))
+    : allTechs;
+
+  const options = [
+    '<option value="">Select professional ▾</option>',
+    '<option value="no_preference">No Preference — We\'ll assign best available</option>',
+  ].concat(qualified.sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(t => {
+    const cats = [...new Set(techServicesFor(t.id).map(s=>s.category||'other'))].map(wizardCategoryLabel);
+    const label = cats.length ? `${t.name} — ${cats.join(' & ')}` : t.name;
+    return `<option value="${t.id}">${wsEsc(label)}</option>`;
+  }));
+
+  sel.innerHTML = options.join('');
+
+  // Keep the previous selection only if still valid for the new filter —
+  // if a service change makes the current pick unqualified, reset rather
+  // than silently leave an invalid technician selected.
+  const stillValid = prevValue === '' || prevValue === 'no_preference' || qualified.some(t=>t.id===prevValue);
+  sel.value = stillValid ? prevValue : '';
 }
 
 // State
-let bm = { step:1, techKey:'', techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null };
+let bm = { step:1, techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null };
 let calOff = 0;
 
 // DB helpers
@@ -1930,6 +1825,287 @@ async function dbGet(table, qs='') {
 // ============================================================
 function wsSetText(id, val){ const el = document.getElementById(id); if(el && val) el.textContent = val; }
 function wsSetHref(id, val){ const el = document.getElementById(id); if(el && val) el.href = val; }
+function wsSetSrc(id, val){ const el = document.getElementById(id); if(el && val){ el.src = val; el.style.display = ''; } }
+function wsEsc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ============================================================
+// WEBSITE MANAGEMENT — live sync from website_settings / website_gallery_images
+// Same dbGet()/SALON_ID/public-RLS pattern as everything else. Runs as part
+// of loadLiveBookingData()'s existing fetch batch (no second pipeline), but
+// is content, not booking data: never throws, always renders something
+// reasonable, and is called again (idempotent) once loadBusinessInfo()
+// resolves so SEO/review-link fallbacks have real data regardless of which
+// fetch finishes first — reusing that existing fetch rather than a new one.
+// ============================================================
+let BUSINESS_INFO = null; // populated by loadBusinessInfo(); shared, not re-fetched here
+
+function computeOpenStatusAndBadges(){
+  const DOW = ['sun','mon','tue','wed','thu','fri','sat'];
+  const now = new Date();
+  const todayHours = LIVE.salonHours[DOW[now.getDay()]];
+  const statusEl = document.getElementById('wsOpenStatus');
+  const badgesEl = document.getElementById('wsHeroBadges');
+  if(!todayHours) return;
+
+  const fmtTime = (t) => {
+    if(!t) return '';
+    const [h,m] = String(t).split(':').map(Number);
+    const ampm = h>=12 ? 'pm':'am';
+    const h12 = ((h+11)%12)+1;
+    return m ? `${h12}:${String(m).padStart(2,'0')}${ampm}` : `${h12}${ampm}`;
+  };
+
+  let isOpenNow = false;
+  if(todayHours.is_open && todayHours.open_time && todayHours.close_time){
+    const nowMin = now.getHours()*60 + now.getMinutes();
+    const [oh,om] = String(todayHours.open_time).split(':').map(Number);
+    const [ch,cm] = String(todayHours.close_time).split(':').map(Number);
+    isOpenNow = nowMin >= (oh*60+om) && nowMin < (ch*60+cm);
+  }
+
+  if(statusEl){
+    statusEl.textContent = !todayHours.is_open ? 'Closed Today'
+      : isOpenNow ? `Open Now · Closes ${fmtTime(todayHours.close_time)}`
+      : `Opens Today ${fmtTime(todayHours.open_time)}`;
+  }
+
+  if(badgesEl){
+    badgesEl.innerHTML = '';
+    const b1 = document.createElement('div');
+    b1.className = 'hero-badge';
+    b1.textContent = !todayHours.is_open ? 'Closed Today' : (isOpenNow ? 'Open Now' : 'Opens Today');
+    badgesEl.appendChild(b1);
+    if(todayHours.is_open && todayHours.open_time && todayHours.close_time){
+      const b2 = document.createElement('div');
+      b2.className = 'hero-badge';
+      b2.textContent = `Today ${fmtTime(todayHours.open_time)}–${fmtTime(todayHours.close_time)}`;
+      badgesEl.appendChild(b2);
+    }
+  }
+}
+
+function renderGallery(){
+  const grid = document.getElementById('wsGalleryGrid');
+  const viewAllBtn = document.getElementById('wsGalleryViewAllBtn');
+  if(!grid) return;
+  // client_work only — real client results, never a generated hero-accent
+  // photo landing here even if one exists in the same table.
+  const imgs = clientWorkImages();
+  if(imgs.length){
+    grid.innerHTML = imgs.map((img, i) => `
+      <div class="gallery-img-card" onclick="openLightbox(${i}, clientWorkImages())">
+        <img src="${wsEsc(img.image_url)}" alt="${wsEsc(img.alt_text || img.caption || 'Nail art by Red Persimmon Nails & Spa')}" loading="lazy">
+      </div>
+    `).join('');
+    if(viewAllBtn) viewAllBtn.style.display = imgs.length > 4 ? '' : 'none';
+  }else{
+    // Designed placeholder only — never stock photography, never another
+    // salon's photos. Honest about being unconfigured, not broken-looking.
+    grid.innerHTML = [1,2,3].map(() => `
+      <div class="gallery-img-card" style="background:var(--gold-xs);display:flex;align-items:center;justify-content:center;cursor:default;">
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--text-muted);">Photos coming soon</div>
+      </div>
+    `).join('');
+    if(viewAllBtn) viewAllBtn.style.display = 'none';
+  }
+}
+
+// Lightbox — the markup and CSS for this already existed on the page, but
+// nothing ever actually opened it: no click handler on the photos, and
+// openLightbox/closeLightbox/lightboxNav were never defined. Wiring it up
+// for real here, keyed off the same LIVE.galleryImages array everything
+// else on the page already reads from — no new data source.
+// Two real photo pools now, split by photo_type: client_work (real client
+// results, shown in "Our Work" + its lightbox) and hero_accent (the hero
+// fan). The lightbox remembers which pool opened it so prev/next stays
+// within that pool — clicking a hero accent photo should never accidentally
+// wander into real client photos, and vice versa.
+function clientWorkImages(){ return (LIVE.galleryImages || []).filter(g => (g.photo_type || 'client_work') === 'client_work'); }
+function heroAccentImages(){ return (LIVE.galleryImages || []).filter(g => g.photo_type === 'hero_accent'); }
+function aboutStoryImages(){ return (LIVE.galleryImages || []).filter(g => g.photo_type === 'about'); }
+
+let lightboxIndex = 0;
+let lightboxImages = [];
+function openLightbox(i, imgs){
+  lightboxImages = imgs || clientWorkImages();
+  if(!lightboxImages.length) return;
+  lightboxIndex = i;
+  const img = lightboxImages[lightboxIndex];
+  const lb = document.getElementById('wsGalleryLightbox');
+  const lbImg = document.getElementById('wsLightboxImg');
+  lbImg.src = img.image_url;
+  lbImg.alt = img.alt_text || img.caption || 'Nail art by Red Persimmon Nails & Spa';
+  lb.classList.add('open');
+  document.documentElement.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  document.getElementById('wsGalleryLightbox').classList.remove('open');
+  document.documentElement.style.overflow = '';
+}
+function lightboxNav(dir){
+  if(!lightboxImages.length) return;
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  const img = lightboxImages[lightboxIndex];
+  const lbImg = document.getElementById('wsLightboxImg');
+  lbImg.src = img.image_url;
+  lbImg.alt = img.alt_text || img.caption || 'Nail art by Red Persimmon Nails & Spa';
+}
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('wsGalleryLightbox');
+  if(!lb || !lb.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLightbox();
+  if(e.key === 'ArrowLeft') lightboxNav(-1);
+  if(e.key === 'ArrowRight') lightboxNav(1);
+});
+
+function renderSocialLinks(ws){
+  const wrap = document.getElementById('wsFooterSocial');
+  if(!wrap) return;
+  const links = [];
+  if(ws && ws.social_instagram) links.push(`<a href="${wsEsc(ws.social_instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+  if(ws && ws.social_facebook)  links.push(`<a href="${wsEsc(ws.social_facebook)}" target="_blank" rel="noopener">Facebook</a>`);
+  if(ws && ws.social_yelp)      links.push(`<a href="${wsEsc(ws.social_yelp)}" target="_blank" rel="noopener">Yelp</a>`);
+  if(ws && ws.social_tiktok)    links.push(`<a href="${wsEsc(ws.social_tiktok)}" target="_blank" rel="noopener">TikTok</a>`);
+  wrap.innerHTML = links.join(' · ');
+  wrap.style.display = links.length ? '' : 'none';
+}
+
+function setSeoTags(ws, biz){
+  const title = (ws && ws.seo_title)
+    || (biz && biz.name ? `${biz.name} | ${[biz.city, biz.state].filter(Boolean).join(', ')} Nail Salon` : null);
+  const desc = ws && ws.seo_description;
+  const ogImg = (ws && ws.seo_og_image_url) || (ws && ws.hero_image_url);
+
+  if(title){
+    document.title = title;
+    const ogT = document.querySelector('meta[property="og:title"]');
+    if(ogT) ogT.setAttribute('content', title);
+  }
+  if(desc){
+    const md = document.querySelector('meta[name="description"]');
+    if(md) md.setAttribute('content', desc);
+    const ogD = document.querySelector('meta[property="og:description"]');
+    if(ogD) ogD.setAttribute('content', desc);
+  }
+  if(ogImg){
+    let ogI = document.querySelector('meta[property="og:image"]');
+    if(!ogI){ ogI = document.createElement('meta'); ogI.setAttribute('property','og:image'); document.head.appendChild(ogI); }
+    ogI.setAttribute('content', ogImg);
+  }
+}
+
+function setReviewLink(ws, biz){
+  const el = document.getElementById('wsReviewLink');
+  if(!el) return;
+  if(ws && ws.google_review_url){
+    el.href = ws.google_review_url;
+  }else if(biz && biz.name){
+    // Computed from real Business Info — a real, working link, never invented text.
+    const q = [biz.name, biz.city, biz.state].filter(Boolean).join(' ');
+    el.href = `https://www.google.com/search?q=${encodeURIComponent(q + ' reviews')}`;
+  }
+}
+
+// Real depth for the hero — a second photo floating over the first, and a
+// stat badge — both pulled from data that's already loaded (a gallery
+// photo different from the hero image, and the real technician count).
+// Neither element renders at all if the data isn't there yet; no
+// placeholder photo, no invented number.
+function renderAboutTiles(){
+  // Sources from the dedicated 'about' photo pool — owner-curated "our
+  // story" photos, distinct from the hero's decorative accent photos.
+  // Shows every real photo in a scrollable row (same pattern as Team and
+  // Our Work); a fixed 3-tile grid used to hard-cap this at 3 with no way
+  // to see more, including on mobile — fixed here.
+  const wrap = document.getElementById('wsAboutTiles');
+  if(!wrap) return;
+  const tiles = aboutStoryImages();
+  if(tiles.length){
+    wrap.innerHTML = tiles.map(t => `
+      <div class="about-tile">
+        <img src="${wsEsc(t.image_url)}" alt="${wsEsc(t.alt_text || t.caption || 'Inside Red Persimmon Nails & Spa')}" loading="lazy">
+      </div>
+    `).join('');
+  }else{
+    wrap.innerHTML = [1,2,3].map(() => `
+      <div class="about-tile about-tile-empty">Photo coming soon</div>
+    `).join('');
+  }
+}
+
+function renderHeroFloatingElements(){
+  // Fan sources ONLY from photo_type='hero_accent' — real client work in
+  // 'client_work' never appears here, and (per Sai's explicit call) these
+  // accent photos may be AI-generated/stock, kept structurally separate
+  // from the real "Our Work" section by the photo_type column itself, not
+  // just by convention. Hero photo itself still excluded to avoid
+  // duplicating the full-bleed background if the same image is reused.
+  const heroUrl = (LIVE.websiteSettings && LIVE.websiteSettings.hero_image_url) || '';
+  const accentImgs = heroAccentImages();
+  const fanEntries = accentImgs
+    .map((g, idx) => ({ g, idx }))
+    .filter(e => e.g.image_url !== heroUrl)
+    .slice(0, 3);
+  const fanEl = document.getElementById('wsHeroGalleryFan');
+  if(fanEl){
+    fanEl.innerHTML = '';
+    fanEntries.forEach((entry, i) => {
+      const card = document.createElement('div');
+      card.className = 'fan-card f' + (i + 1);
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'View photo in gallery');
+      card.onclick = () => openLightbox(entry.idx, accentImgs);
+      card.onkeydown = (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLightbox(entry.idx, accentImgs); } };
+      const img = document.createElement('img');
+      img.src = entry.g.image_url;
+      img.alt = entry.g.alt_text || entry.g.caption || 'A recent set from Red Persimmon';
+      card.appendChild(img);
+      fanEl.appendChild(card);
+    });
+    fanEl.classList.toggle('show', fanEntries.length > 0);
+  }
+
+  const techCount = (LIVE.technicians || []).filter(t => t.active !== false).length;
+  const capEl = document.getElementById('wsHeroTechCaption');
+  if(capEl){
+    if(techCount > 0 && fanEntries.length > 0){
+      capEl.innerHTML = `<b>${techCount}</b><span>Expert techs</span>`;
+      capEl.classList.add('show');
+    } else {
+      capEl.classList.remove('show');
+    }
+  }
+}
+
+function renderWebsiteContent(){
+  const ws = LIVE.websiteSettings;
+
+  wsSetText('wsHeroHeadline', ws && ws.hero_headline);
+  wsSetText('wsHeroSubheadline', ws && ws.hero_subheadline);
+  // Fallback chain: dedicated hero photo, then a hero_accent photo (if any
+  // exist), then a client_work photo as a last resort — never a bare
+  // gradient once any real/accent photo exists anywhere.
+  const heroImgUrl = (ws && ws.hero_image_url)
+    || (heroAccentImages()[0] && heroAccentImages()[0].image_url)
+    || (LIVE.galleryImages && LIVE.galleryImages[0] && LIVE.galleryImages[0].image_url);
+  wsSetSrc('wsHeroImg', heroImgUrl);
+
+  // Logo and name sit side by side. Previously the name was hidden whenever
+  // a logo existed, which made small logos unreadable with no fallback text.
+
+  // About: render real text, or a plain Velour placeholder — never
+  // generated from other business data. Rendering, not authoring.
+  wsSetText('wsAboutText', (ws && ws.about_text) || 'Business description coming soon.');
+  renderAboutTiles();
+
+  renderGallery();
+  renderHeroFloatingElements();
+  computeOpenStatusAndBadges();
+  renderSocialLinks(ws);
+  setSeoTags(ws, BUSINESS_INFO);
+  setReviewLink(ws, BUSINESS_INFO);
+}
 
 async function loadBusinessInfo(){
   let s;
@@ -1939,22 +2115,27 @@ async function loadBusinessInfo(){
   }catch(e){ console.warn('loadBusinessInfo failed:', e.message); return; }
   if(!s || !s.name) return; // fetch failed or empty — keep the hardcoded content exactly as-is
 
+  // Shared with renderWebsiteContent() (SEO title fallback, review-link
+  // fallback) instead of a second fetch of this same row. Re-render now in
+  // case loadLiveBookingData() already ran without this data being ready yet.
+  BUSINESS_INFO = s;
+  renderWebsiteContent();
+
   const digits = String(s.phone||'').replace(/\D/g,'');
   const phoneDisplay = digits.length===10 ? `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}` : '';
   const telHref = digits.length===10 ? `tel:${digits}` : '';
   const cityStateZip = [ [s.city, s.state].filter(Boolean).join(', '), s.zip ].filter(Boolean).join(' ');
   const addrLines = [s.address, s.address2, cityStateZip].filter(Boolean).join('<br>');
-  const addrShort = [s.address, [s.city, s.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
+  // Was street + city/state only — dropped the real landmark (address2) the
+  // eyebrow line has room for. Now includes it when set, same as the full
+  // "Find Us" block already does.
+  const addrShort = [s.address, s.address2, [s.city, s.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ');
 
   wsSetText('wsHeroLocation', addrShort);
+  wsSetText('wsHeroBrand', s.name);
 
-  const addr1El = document.getElementById('wsFindUsAddress1');
-  if(addr1El && addrLines) addr1El.innerHTML = addrLines;
-  wsSetHref('wsFindUsMapsLink1', s.maps_url);
-  wsSetText('wsFindUsPhone1', phoneDisplay);
-  wsSetHref('wsFindUsPhone1', telHref);
-  wsSetText('wsFindUsEmail1', s.email);
-  wsSetHref('wsFindUsEmail1', s.email ? `mailto:${s.email}` : '');
+  wsSetText('wsFindUsEmail2', s.email);
+  wsSetHref('wsFindUsEmail2', s.email ? `mailto:${s.email}` : '');
 
   const addr2El = document.getElementById('wsFindUsAddress2');
   if(addr2El && addrLines) addr2El.innerHTML = addrLines;
@@ -1973,15 +2154,6 @@ async function loadBusinessInfo(){
   wsSetText('wsAnnounceBarPhone', phoneDisplay);
   wsSetHref('wsAnnounceBarPhone', telHref);
 
-  // Map embed: Google's no-API-key "output=embed" trick, built from the same
-  // structured address fields used everywhere else above — not from the
-  // freeform maps_url text, which can't be reliably transformed into an
-  // embeddable src for every URL style an owner might paste in.
-  const fullAddress = [s.address, s.city, s.state, s.zip].filter(Boolean).join(', ');
-  const mapEl = document.getElementById('wsMapEmbed');
-  if(mapEl && fullAddress){
-    mapEl.src = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
-  }
 }
 document.addEventListener('DOMContentLoaded', loadBusinessInfo);
 async function dbPost(table, data) {
@@ -2037,12 +2209,11 @@ function dateStr(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStar
 // Open/close
 async function openBookingModal() {
   const sel = document.getElementById('bb-tech-select');
-  bm.techKey  = sel.value;
-  if (sel.value === 'no_preference') {
+  if (sel.value === 'no_preference' || !sel.value) {
     bm.techId   = null;
     bm.techName = 'Best Available';
   } else {
-    bm.techId   = techIdByKey(sel.value);
+    bm.techId   = sel.value;
     bm.techName = sel.options[sel.selectedIndex].text.split('—')[0].trim();
   }
   bm.services = [...bbServices];
@@ -2052,7 +2223,7 @@ async function openBookingModal() {
 
   // Reset all buttons and form fields from previous booking
   const confirmBtn = document.getElementById('bm-confirm-btn');
-  if(confirmBtn){ confirmBtn.disabled=false; confirmBtn.textContent='Confirm Booking 💅'; }
+  if(confirmBtn){ confirmBtn.disabled=false; confirmBtn.textContent='Confirm Booking'; }
   const dateNext = document.getElementById('bm-date-next');
   if(dateNext) dateNext.disabled = true;
   const timeNext = document.getElementById('bm-time-next');
@@ -2134,7 +2305,7 @@ function bmBuildCal() {
     el.className='bm-day'; el.textContent=d;
     const isPast=date<new Date(today.getFullYear(),today.getMonth(),today.getDate());
     const tooFar=date>maxD;
-    const works = bm.techKey === 'no_preference' ? true : !!(LIVE.techHours[bm.techId]?.[dk]?.is_available);
+    const works = bm.techId === null ? true : !!(LIVE.techHours[bm.techId]?.[dk]?.is_available);
     if(isPast||tooFar||!works){ el.classList.add('bm-dis'); el.disabled=true; }
     else {
       if(date.toDateString()===today.toDateString()) el.classList.add('bm-today');
@@ -2162,7 +2333,7 @@ async function bmGoToTime(){
   document.getElementById('bm-time-sub').textContent=
     bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   document.getElementById('bm-dur-info').textContent=
-    '⏱ Your appointment will take approximately '+bm.dur+' minutes';
+    'Your appointment will take approximately '+bm.dur+' minutes';
   document.getElementById('bm-slots-wrap').innerHTML=
     '<div class="bm-spin-wrap"><div class="bm-spinner"></div>Checking availability...</div>';
   bmShowPane(2);
@@ -2238,7 +2409,7 @@ async function bmLoadSlots(){
     if(!clash) slots.push(s);
   }
   if(slots.length===0){
-    slotsWrap.innerHTML=bmState('📅','Fully booked that day',"No open times left here — try another day and we'll get you in. 🌸",'Choose another day','bmShowPane(1)');
+    slotsWrap.innerHTML=bmState('','Fully booked that day',"No open times left here — try another day and we'll get you in.",'Choose another day','bmShowPane(1)');
     return;
   }
   const grid=document.createElement('div');
@@ -2292,11 +2463,45 @@ function bmEmailValid(v){
   const tld=domain.split('.').pop();
   // no real TLD repeats a letter 3+ times (catches gmail.commmmm, .coooom, etc.)
   if(/(.)\1\1/.test(tld)) return false;
-  // gmail has exactly one correct spelling — catch gmail.con, gmail.co, gmail.cm...
-  const stem=domain.split('.')[0];
-  if(stem==='gmail' && domain!=='gmail.com') return false;
-  if(stem==='googlemail' && domain!=='googlemail.com') return false;
   return true;
+}
+// Common misspellings of the big email providers — a soft "did you mean"
+// nudge, not a hard block. A hard block risks rejecting someone's real,
+// unusual-looking-but-valid address; we can't know "gnail.com" isn't a
+// real domain someone owns, only that it closely resembles a much more
+// common one. This replaces the previous gmail-only hard block, which had
+// the same false-positive risk but without offering a fix.
+const EMAIL_TYPO_MAP = {
+  'gnail.com':'gmail.com','gmial.com':'gmail.com','gamil.com':'gmail.com','gmal.com':'gmail.com',
+  'gmaill.com':'gmail.com','gmail.co':'gmail.com','gmail.con':'gmail.com','gmail.cm':'gmail.com',
+  'gmail.comm':'gmail.com','gmali.com':'gmail.com',
+  'yaho.com':'yahoo.com','yahooo.com':'yahoo.com','yahoo.co':'yahoo.com','yaoo.com':'yahoo.com',
+  'hotmial.com':'hotmail.com','hotmal.com':'hotmail.com','hotmai.com':'hotmail.com','hotmail.co':'hotmail.com',
+  'homail.com':'hotmail.com',
+  'outlok.com':'outlook.com','outlook.co':'outlook.com','outllook.com':'outlook.com','outlool.com':'outlook.com',
+  'iclod.com':'icloud.com','icloud.co':'icloud.com','iclould.com':'icloud.com',
+  'aol.co':'aol.com','aoll.com':'aol.com',
+};
+function bmCheckEmailTypo(){
+  const el = document.getElementById('bm-email');
+  const box = document.getElementById('bm-email-suggest');
+  const val = el.value.trim().toLowerCase();
+  const at = val.indexOf('@');
+  const domain = at>-1 ? val.slice(at+1) : '';
+  const fix = EMAIL_TYPO_MAP[domain];
+  if(fix && at>-1){
+    const corrected = val.slice(0,at+1)+fix;
+    box.innerHTML = `Did you mean <a onclick="bmApplyEmailSuggestion('${corrected.replace(/'/g,"\\'")}')">${bmEsc(corrected)}</a>?`;
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+function bmApplyEmailSuggestion(corrected){
+  const el = document.getElementById('bm-email');
+  el.value = corrected;
+  el.classList.remove('bm-err');
+  document.getElementById('bm-email-suggest').style.display = 'none';
 }
 function bmBuildSummary(){
   const d=bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
@@ -2345,12 +2550,12 @@ async function bmConfirm(){
     // Show success
     const dd=bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
     document.getElementById('bm-suc-det').innerHTML=
-      `📅 ${bmEsc(dd)} at ${bmEsc(bm.slot)}<br>👤 With ${bmEsc(bm.techName)}<br>💅 ${bmEsc(bm.services.map(s=>s.name).join(', '))}<br>⏱ ~${bm.dur} minutes<br>📧 ${bmEsc(email)}`;
+      `${bmEsc(dd)} at ${bmEsc(bm.slot)}<br>With ${bmEsc(bm.techName)}<br>${bmEsc(bm.services.map(s=>s.name).join(', '))}<br>~${bm.dur} minutes<br>${bmEsc(email)}`;
     bmShowPane(5);
     bookingBarClear();
   } catch(e){
     console.error(e);
-    btn.disabled=false; btn.textContent='Confirm Booking 💅';
+    btn.disabled=false; btn.textContent='Confirm Booking';
     const err=document.getElementById('bm-confirm-err');
     const msg=String(e.message||'');
     if(msg.includes('SLOT_TAKEN')){
@@ -2388,10 +2593,11 @@ function techServicesFor(techId){
 var currentTechId = '';
 var modalSelected = [];
 
-async function openStaffModal(techKey, techName) {
+async function openStaffModal(techId) {
   const dataOk = await ensureLiveData();
-  const realId = dataOk ? techIdByKey(techKey) : null;
-  currentTechId = techKey;
+  const t = dataOk ? (LIVE.technicians||[]).find(x=>x.id===techId) : null;
+  const techName = t ? t.name : 'this technician';
+  currentTechId = techId;
   modalSelected = [];
   document.getElementById('modal-tech-name').textContent = techName;
   document.getElementById('modal-avatar').textContent = techName[0].toUpperCase();
@@ -2409,7 +2615,7 @@ async function openStaffModal(techKey, techName) {
     return;
   }
 
-  const svcs = realId ? techServicesFor(realId) : [];
+  const svcs = t ? techServicesFor(t.id) : [];
   svcs.forEach(function(svc, i) {
     var row = document.createElement('label');
     row.className = 'modal-service-row';
@@ -2446,12 +2652,12 @@ function modalToggle(checkbox) {
   var summaryText = document.getElementById('modal-summary-text');
   if (modalSelected.length > 0) {
     btn.disabled = false;
-    btn.textContent = '📅 Book ' + modalSelected.length + ' Service' + (modalSelected.length > 1 ? 's' : '') + ' with ' + document.getElementById('modal-tech-name').textContent + ' →';
+    btn.textContent = 'Book ' + modalSelected.length + ' Service' + (modalSelected.length > 1 ? 's' : '') + ' with ' + document.getElementById('modal-tech-name').textContent + ' →';
     summary.style.display = 'block';
     summaryText.textContent = modalSelected.join(' · ');
   } else {
     btn.disabled = true;
-    btn.textContent = '📅 Continue to Booking →';
+    btn.textContent = 'Continue to Booking →';
     summary.style.display = 'none';
   }
 }
@@ -2460,14 +2666,16 @@ function staffModalBook() {
   if (modalSelected.length === 0 || !currentTechId) return;
 
   // Build bbServices from selected services, prices from live data.
-  const realId = techIdByKey(currentTechId);
-  const svcs = realId ? techServicesFor(realId) : [];
+  const svcs = techServicesFor(currentTechId);
   bbServices = modalSelected.map(function(name) {
     var svcData = svcs.find(function(s){ return s.name === name; });
     return { name: name, price: svcData ? fmtWebsitePrice(svcData) : '' };
   });
 
-  // Set technician in booking bar dropdown
+  // Rebuild dropdown options for the new selection first, then set the
+  // technician — this technician is by definition qualified for what was
+  // just picked, so they'll be a valid option once options are rebuilt.
+  renderTechDropdownOptions();
   var sel = document.getElementById('bb-tech-select');
   if (sel) { sel.value = currentTechId; sel.classList.remove('bb-error'); }
 
@@ -2489,39 +2697,71 @@ document.addEventListener('keydown', function(e) {
 // ===== SERVICE BOOKING BAR =====
 let bbServices = []; // [{name, price}]
 
-// Inject "+" buttons onto every service row after DOM loads — using the
-// same LIVE.services source as every other booking path (technician
-// modal, Aivy wizard), not the row's own static text. Each row is tagged
-// with data-live-name pointing at the real database service name; rows
-// with no such tag are legacy/ambiguous marketing entries that no longer
-// correspond to a real bookable service and deliberately get no button.
-document.addEventListener('DOMContentLoaded', async function() {
-  const dataOk = await ensureLiveData();
-  if(!dataOk) return; // booking data unavailable — grid stays informational-only, no silent stale adds
-  document.querySelectorAll('.service-row').forEach(function(row) {
-    var header = row.querySelector('.service-header');
-    if (!header) return;
+// Builds the entire "Our Services" section from LIVE.services — category
+// tabs, rows, descriptions, and photos are now Dashboard-driven; nothing
+// here is a fixed template being synced into, the way it used to be. A
+// new service (with or without a description/photo) appears automatically,
+// which is the actual fix for services not showing up on the site.
+function renderServicesSection(){
+  const tabsEl = document.getElementById('servicesTabs');
+  const contentEl = document.getElementById('servicesTabContent');
+  if(!tabsEl || !contentEl) return;
 
-    var liveName = row.getAttribute('data-live-name');
-    if (!liveName) return; // legacy row — no longer a real bookable service
-    var svc = svcByName(liveName);
-    if (!svc) return; // not currently active in the database
+  const byCategory = {};
+  (LIVE.services||[]).forEach(s => { (byCategory[s.category||'other'] ||= []).push(s); });
+  const categories = Object.keys(byCategory).sort((a,b) => wizardCategoryLabel(a).localeCompare(wizardCategoryLabel(b)));
 
-    var rawName = svc.name;
-    var price = fmtWebsitePrice(svc);
+  if(!categories.length){
+    tabsEl.innerHTML = '';
+    contentEl.innerHTML = '<div class="services-list"><p style="padding:20px;color:var(--text-muted)">Services coming soon.</p></div>';
+    return;
+  }
 
-    var btn = document.createElement('button');
+  tabsEl.innerHTML = categories.map((cat, i) =>
+    `<button class="tab-btn ${i===0?'active':''}" onclick="showTab('${cat.replace(/'/g,"\\'")}', this)">${wsEsc(wizardCategoryLabel(cat).replace(/^[^\w]*\s*/,''))}</button>`
+  ).join('');
+
+  contentEl.innerHTML = categories.map((cat, i) => {
+    const catImg = (LIVE.categoryImages||{})[cat];
+    const catImgHtml = catImg ? `<img src="${wsEsc(catImg)}" alt="${wsEsc(wizardCategoryLabel(cat).replace(/^[^\w]*\s*/,''))} at Red Persimmon" class="category-photo" loading="lazy">` : '';
+    const rows = byCategory[cat].slice().sort((a,b)=>(a.display_order||0)-(b.display_order||0)).map(svc => {
+      const price = fmtWebsitePrice(svc);
+      const hasDesc = !!svc.description;
+      return `<div class="service-row" data-svc-name="${wsEsc(svc.name)}" data-svc-price="${wsEsc(price)}">
+        <div class="service-header" ${hasDesc ? 'onclick="toggleService(this)" style="cursor:pointer"' : ''}>
+          <div class="service-main">
+            <div class="service-name">${wsEsc(svc.name)}</div>
+            <div class="service-price">${price}</div>
+          </div>
+        </div>
+        ${hasDesc ? `<div class="service-desc">${wsEsc(svc.description)}</div>` : ''}
+      </div>`;
+    }).join('');
+    return `<div class="tab-content ${i===0?'active':''}" id="tab-${cat}">
+      ${catImgHtml}
+      <div class="services-list">${rows}</div>
+    </div>`;
+  }).join('');
+
+  // "+" buttons attached the same safe way the old sync code did (real
+  // event listeners reading data attributes), not inline onclick strings —
+  // avoids any quote-escaping issues with service names.
+  contentEl.querySelectorAll('.service-row').forEach(function(row){
+    const header = row.querySelector('.service-header');
+    if(!header) return;
+    const name = row.dataset.svcName;
+    const price = row.dataset.svcPrice;
+    const btn = document.createElement('button');
     btn.className = 'svc-add-btn';
     btn.innerHTML = '+';
-    btn.title = 'Add ' + rawName + ' to booking';
-    btn.addEventListener('click', function(e) {
+    btn.title = 'Add ' + name + ' to booking';
+    btn.addEventListener('click', function(e){
       e.stopPropagation();
-      bookingBarToggle(btn, rawName, price);
+      bookingBarToggle(btn, name, price);
     });
-
     header.appendChild(btn);
   });
-});
+}
 
 function bookingBarToggle(btn, name, price) {
   var idx = bbServices.findIndex(function(s) { return s.name === name; });
@@ -2540,6 +2780,7 @@ function bookingBarToggle(btn, name, price) {
 }
 
 function bookingBarUpdate() {
+  renderTechDropdownOptions();
   var bar = document.getElementById('booking-bar');
   var list = document.getElementById('bb-services-list');
   var countBadge = document.getElementById('bb-count');
@@ -2564,6 +2805,7 @@ function bookingBarClear() {
     btn.innerHTML = '+';
     btn.classList.remove('svc-added');
   });
+  renderTechDropdownOptions();
   document.getElementById('bb-tech-select').value = '';
   document.getElementById('bb-tech-select').classList.remove('bb-error');
   document.getElementById('booking-bar').classList.remove('bb-visible');
@@ -2581,11 +2823,11 @@ function bookingBarClear() {
 // being qualified for the same service, so the wizard now shows all of
 // them instead of guessing one.
 const WIZARD_CATEGORY_META = {
-  nail_care:    { label: '💅 Nail Care' },
-  enhancements: { label: '✨ Enhancements' },
-  polish:       { label: '🎨 Polish & Art' },
-  lashes:       { label: '👁 Lashes & Brows' },
-  waxing:       { label: '🌸 Waxing' },
+  nail_care:    { label: 'Nail Care' },
+  enhancements: { label: 'Enhancements' },
+  polish:       { label: 'Polish & Art' },
+  lashes:       { label: 'Lashes & Brows' },
+  waxing:       { label: 'Waxing' },
 };
 function wizardCategoryLabel(catId){
   return (WIZARD_CATEGORY_META[catId] && WIZARD_CATEGORY_META[catId].label) || ('💫 ' + catId);
@@ -2626,14 +2868,14 @@ function appendWizardMsg(step, data) {
 
   if (step === 'category') {
     const cats = wizardCategories();
-    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">What would you like to book today? 💅</div>
+    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">What would you like to book today?</div>
       <div class="wizard-chips">${cats.map(c =>
         `<button class="wizard-chip" onclick="wizardPickCategory('${c}','${wizardCategoryLabel(c).replace(/'/g,"&apos;")}')">${wizardCategoryLabel(c)}</button>`
       ).join('')}</div>`;
 
   } else if (step === 'service') {
     const services = LIVE.services.filter(s => (s.category||'other') === data.catId).sort((a,b)=>a.name.localeCompare(b.name));
-    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">Which service? ✨</div>
+    div.innerHTML = `<div style="margin-bottom:10px;font-weight:500;">Which service?</div>
       <div class="wizard-chips">${services.map(s =>
         `<button class="wizard-chip" onclick="wizardPickService('${s.id}','${s.name.replace(/'/g,"&apos;")}')">${s.name} <span style="color:var(--gold-lt);font-size:11px;">${fmtWebsitePrice(s)}</span></button>`
       ).join('')}</div>
@@ -2644,7 +2886,7 @@ function appendWizardMsg(step, data) {
     if(!techs.length){
       div.innerHTML = `<div style="margin-bottom:8px;font-weight:500;">We'll find you the right specialist for <em>${data.serviceName}</em>:</div>
         <div class="wizard-tech-card" onclick="wizardBook(null,'${data.serviceName.replace(/'/g,"&apos;")}')">
-          <div class="wizard-tech-avatar">✨</div>
+          <div class="wizard-tech-avatar"></div>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:600;color:#fff;">Best Available</div>
             <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4;">We'll match you with someone qualified</div>
@@ -2698,17 +2940,16 @@ function wizardBook(techId, service) {
   const svc = svcByName(service);
   bbServices = [{ name: service, price: svc ? fmtWebsitePrice(svc) : '' }];
 
-  // Set technician in the booking bar dropdown — it's keyed by the same
-  // lowercase name-key as everywhere else on the site, so reverse-map the
-  // real id back to that key (or 'no_preference' / blank if none).
+  // Dropdown options are real technician ids now — rebuild for the new
+  // selection first, then set directly, no key reverse-mapping needed.
+  renderTechDropdownOptions();
   const sel = document.getElementById('bb-tech-select');
   let techName = 'Best Available';
   if (sel) {
     if (!techId) {
       sel.value = 'no_preference';
     } else {
-      const key = Object.keys(TECH_KEY_TO_ID).find(k => TECH_KEY_TO_ID[k] === techId);
-      sel.value = key || 'no_preference';
+      sel.value = techId;
       const t = LIVE.technicians.find(t => t.id === techId);
       if (t) techName = t.name;
     }
@@ -2719,7 +2960,7 @@ function wizardBook(techId, service) {
   const msgBox = document.getElementById('ivyMessages');
   const d = document.createElement('div');
   d.className = 'msg msg-bot';
-  d.textContent = 'Opening our booking system for ' + techName + ' 💅 Pick your date and time!';
+  d.textContent = 'Opening our booking system for ' + techName + ' — pick your date and time.';
   msgBox.appendChild(d);
   msgBox.scrollTop = msgBox.scrollHeight;
   wizardActive = false;
@@ -2792,151 +3033,82 @@ document.addEventListener('DOMContentLoaded', initDrag);
 <!-- GALLERY -->
 <div class="gold-rule"></div>
 <div class="section" id="gallery">
-  <div class="section-eyebrow">Our Work</div>
-  <h2>Results that<br>speak for themselves.</h2>
-  <p class="section-sub">Every set is crafted with care, precision, and premium products. Browse some of our recent work below.</p>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Nail Enhancement" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">💅</div>
-      <div style="font-size:12px;font-weight:500;">Nail Enhancement</div>
+  <div class="editorial-section">
+    <div class="editorial-left">
+      <div class="section-eyebrow">Our Work</div>
+      <h2>Results that<br>speak for themselves.</h2>
+      <p class="section-sub">Every set is crafted with care, precision, and premium products.</p>
+      <button class="btn-ghost" id="wsGalleryViewAllBtn" onclick="openLightbox(0, clientWorkImages())" style="display:none;">View full gallery &rarr;</button>
     </div>
-    <div class="gallery-img-label">Nail Enhancement</div>
-  </div>
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1619607146034-5a05296c8f9a?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Ombre Set" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">✨</div>
-      <div style="font-size:12px;font-weight:500;">Ombre Set</div>
+    <div class="editorial-right">
+      <div class="hscroll-wrap">
+        <div id="wsGalleryGrid" class="gallery-hscroll"></div>
+        <button class="hscroll-arrow prev" onclick="hscroll('wsGalleryGrid', -1)" aria-label="See previous photos">&larr;</button>
+        <button class="hscroll-arrow next" onclick="hscroll('wsGalleryGrid', 1)" aria-label="See more photos">&rarr;</button>
+      </div>
     </div>
-    <div class="gallery-img-label">Ombre Set</div>
   </div>
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Lash Extensions" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">🌸</div>
-      <div style="font-size:12px;font-weight:500;">Lash Extensions</div>
+</div>
+
+<!-- GALLERY LIGHTBOX -->
+<div class="gallery-lightbox" id="wsGalleryLightbox" onclick="if(event.target===this) closeLightbox()">
+  <button class="gallery-lightbox-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+  <button class="gallery-lightbox-prev" onclick="lightboxNav(-1)" aria-label="Previous photo">&larr;</button>
+  <img id="wsLightboxImg" src="" alt="">
+  <button class="gallery-lightbox-next" onclick="lightboxNav(1)" aria-label="Next photo">&rarr;</button>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="about-band">
+  <div class="about-inner">
+    <div class="about-copy">
+      <div class="section-eyebrow" style="color:var(--gold);">Our Story</div>
+      <h2 style="color:#fff;">More than nails,<br>it's about you.</h2>
+      <p class="section-sub" id="wsAboutText" style="color:rgba(255,255,255,.7);max-width:420px;margin:0 0 28px 0;">Business description coming soon.</p>
+      <a href="#findus" onclick="document.getElementById('findus').scrollIntoView({behavior:'smooth'});return false;" class="btn-gold">Come visit us &rarr;</a>
     </div>
-    <div class="gallery-img-label">Lash Extensions</div>
-  </div>
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Nail Art" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">💎</div>
-      <div style="font-size:12px;font-weight:500;">Nail Art</div>
+    <div class="hscroll-wrap">
+      <div class="about-tiles" id="wsAboutTiles">
+        <!-- populated by renderAboutTiles() with every real 'about' photo
+             (owner-curated, separate from the hero's decorative accent
+             photos). Falls back to a designed 3-tile empty state if none
+             exist yet. -->
+      </div>
+      <button class="hscroll-arrow prev" onclick="hscroll('wsAboutTiles', -1)" aria-label="See previous story photos">&larr;</button>
+      <button class="hscroll-arrow next" onclick="hscroll('wsAboutTiles', 1)" aria-label="See more story photos">&rarr;</button>
     </div>
-    <div class="gallery-img-label">Nail Art</div>
   </div>
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Dipping Powder" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">🌺</div>
-      <div style="font-size:12px;font-weight:500;">Dipping Powder</div>
-    </div>
-    <div class="gallery-img-label">Dipping Powder</div>
-  </div>
-  <div class="gallery-img-card">
-    <img src="https://images.unsplash.com/photo-1550159930-40066082a4fc?w=400&h=400&fit=crop&auto=format&q=80"
-         alt="Spa Pedicure" loading="lazy"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="gallery-img-fallback" style="display:none;">
-      <div style="font-size:32px;margin-bottom:6px;">👑</div>
-      <div style="font-size:12px;font-weight:500;">Spa Pedicure</div>
-    </div>
-    <div class="gallery-img-label">Spa Pedicure</div>
-  </div>
-  </div>
-  <p style="font-size:13px;color:var(--text-muted);text-align:center;margin-top:20px;">📸 Real client photos coming soon — ask us to see our portfolio in store!</p>
 </div>
 
 <!-- REVIEWS -->
+<!-- No testimonial content here by design — Velour never fabricates reviews.
+     This is a real, working link only: website_settings.google_review_url if
+     set, otherwise a computed Google Maps search built from real Business
+     Info (never a dead link, never invented text). -->
 <div class="gold-rule"></div>
-<div style="background:var(--gold-xs);padding:90px 5%;">
-<div style="max-width:1200px;margin:0 auto;">
-  <div class="section-eyebrow">Client Love</div>
-  <h2>What our clients say.</h2>
-  <p class="section-sub">Don't just take our word for it — here's what our clients have to say about their Red Persimmon experience.</p>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;">
-
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Absolutely love this place! Kristy did my nails and they came out perfect. The salon is clean, cozy, and everyone is so friendly. My new go-to nail salon in Manchester!"</p>
-      <div class="review-author">
-        <div class="review-avatar">S</div>
-        <div><div class="review-name">Sarah M.</div><div class="review-source">Google Review</div></div>
-      </div>
-    </div>
-
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Ammu did my lash extensions and I'm obsessed! They look so natural and full. I've been getting fills every 2 weeks and she always makes them look brand new. Highly recommend!"</p>
-      <div class="review-author">
-        <div class="review-avatar">J</div>
-        <div><div class="review-name">Jessica L.</div><div class="review-source">Google Review</div></div>
-      </div>
-    </div>
-
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"The Rock and Roll pedicure is life-changing. Hot stones, the whole treatment — I left feeling completely rejuvenated. Sweety is so thorough and gentle. Worth every penny!"</p>
-      <div class="review-author">
-        <div class="review-avatar">M</div>
-        <div><div class="review-name">Maria R.</div><div class="review-source">Google Review</div></div>
-      </div>
-    </div>
-
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <p class="review-text">"Kevin is an artist! I showed him a design I wanted and he nailed it perfectly. The attention to detail is incredible. I get so many compliments on my nails. Will never go anywhere else!"</p>
-      <div class="review-author">
-        <div class="review-avatar">A</div>
-        <div><div class="review-name">Ashley T.</div><div class="review-source">Google Review</div></div>
-      </div>
-    </div>
-
-  </div>
-  <div style="text-align:center;margin-top:36px;">
-    <a href="https://maps.google.com/?q=Red+Persimmon+Nails+Spa+Manchester+NH" target="_blank" class="btn-ghost">Leave us a Google Review ★</a>
-  </div>
+<div style="background:var(--gold-xs);padding:60px 5%;">
+<div style="max-width:1200px;margin:0 auto;text-align:center;">
+  <p style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--crimson-dk);margin-bottom:8px;">Love your nails?</p>
+  <p style="font-size:15px;color:var(--text-mid);line-height:1.7;max-width:520px;margin:0 auto 22px;">Leave us a Google review and add a photo of your service — it helps other clients find us, and we love seeing your set out in the world.</p>
+  <a href="#" id="wsReviewLink" target="_blank" class="btn-gold">Write a review &amp; add a photo</a>
 </div>
 </div>
 
 <!-- FAQ -->
 <div class="gold-rule"></div>
 <div class="section" id="faq">
-  <div class="section-eyebrow">FAQ</div>
-  <h2>Questions we<br>hear all the time.</h2>
-  <div style="max-width:700px;">
+  <div class="editorial-section">
+    <div class="editorial-left">
+      <div class="section-eyebrow">FAQ</div>
+      <h2>Questions we<br>hear all the time.</h2>
+      <p class="section-sub">Everything you need to know before your visit. Still have questions? Chat with Aivy or give us a call — we're happy to help.</p>
+    </div>
+    <div class="editorial-right">
+      <div class="faq-grid">
 
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Do you take walk-ins? <span class="faq-icon">+</span></div>
       <div class="faq-a">Yes! Walk-ins are always welcome at Red Persimmon. However, booking ahead guarantees your preferred technician and time slot. For busy periods like weekends, we recommend booking in advance to avoid wait times.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">How long does a full set of nails take? <span class="faq-icon">+</span></div>
-      <div class="faq-a">A full set typically takes 60–90 minutes depending on the style and complexity. Simple sets take closer to an hour, while detailed nail art or ombre sets may take longer. We recommend booking a 90-minute slot for your first visit.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Can I request a specific technician? <span class="faq-icon">+</span></div>
-      <div class="faq-a">Absolutely! You can book directly with your preferred technician — Kristy, Kevin, Sweety, or Ammu — using their individual booking links on this page. You can also ask Ivy our AI assistant to help match you with the right technician for your service.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">What is your cancellation policy? <span class="faq-icon">+</span></div>
-      <div class="faq-a">We appreciate as much notice as possible if you need to cancel or reschedule. For groups of 6 or more, we ask for at least 24 hours notice. For individual appointments, please try to give us a heads up so we can offer the slot to another client.</div>
     </div>
 
     <div class="faq-item">
@@ -2945,8 +3117,18 @@ document.addEventListener('DOMContentLoaded', initDrag);
     </div>
 
     <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How long does a full set take? <span class="faq-icon">+</span></div>
+      <div class="faq-a">A full set typically takes 60–90 minutes depending on the style and complexity. Simple sets take closer to an hour, while detailed nail art or ombre sets may take longer. We recommend booking a 90-minute slot for your first visit.</div>
+    </div>
+
+    <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">How long do lash extensions last? <span class="faq-icon">+</span></div>
-      <div class="faq-a">Lash extensions typically last 2–3 weeks before needing a fill, depending on your natural lash growth cycle and how well you care for them. We recommend fills every 2 weeks to keep them looking full and beautiful. Avoid oil-based products near your eyes to maximize longevity.</div>
+      <div class="faq-a">Lash extensions typically last 2–3 weeks before needing a fill, depending on your natural lash growth cycle and how well you care for them. We recommend fills every 2 weeks to keep them looking full and beautiful.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I request a specific technician? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Absolutely! You can book directly with your preferred technician using their individual booking links on this page. You can also ask Aivy our AI assistant to help match you with the right technician for your service.</div>
     </div>
 
     <div class="faq-item">
@@ -2955,67 +3137,81 @@ document.addEventListener('DOMContentLoaded', initDrag);
     </div>
 
     <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">Do you do children's nails? <span class="faq-icon">+</span></div>
-      <div class="faq-a">Yes! We offer children's manicures ($20) and pedicures ($35) for kids aged 10 and under. It's a wonderful experience for mother-daughter outings or special occasions. Our technicians are patient and gentle with our youngest clients.</div>
+      <div class="faq-q" onclick="toggleFaq(this)">What is your cancellation policy? <span class="faq-icon">+</span></div>
+      <div class="faq-a">We appreciate as much notice as possible if you need to cancel or reschedule. For groups of 6 or more, we ask for at least 24 hours notice. For individual appointments, please try to give us a heads up so we can offer the slot to another client.</div>
     </div>
 
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you do children's nails? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Yes! We offer children's manicures ($20) and pedicures ($35) for kids aged 10 and under. It's a wonderful experience for mother-daughter outings or special occasions.</div>
+    </div>
+
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- GOOGLE MAPS -->
 <div class="gold-rule"></div>
-<div style="background:var(--charcoal);">
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:stretch;">
+<div id="findus" style="background:var(--charcoal);">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr;align-items:start;">
     <div style="padding:60px 5%;">
       <div class="section-eyebrow" style="color:var(--gold);">Find Us</div>
       <h2 style="color:#fff;margin-bottom:16px;">Come visit us<br>in Manchester.</h2>
       <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.8;margin-bottom:28px;">We're conveniently located on South Willow Street, across from American Eagle and close to the Food Court — easy to find with plenty of free parking.</p>
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📍</span>
+          
           <div>
             <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Address</div>
             <div style="font-size:14px;color:rgba(255,255,255,0.6);" id="wsFindUsAddress2">1500 S. Willow Street<br>Across from American Eagle · Near Food Court<br>Manchester, NH 03103</div>
           </div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">🕐</span>
+          
           <div>
             <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Hours</div>
             <div style="font-size:14px;color:rgba(255,255,255,0.6);">Mon–Thu: 10am–8pm<br>Fri–Sat: 10am–9pm<br>Sun: 11am–6pm</div>
           </div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <span style="color:var(--gold);font-size:18px;flex-shrink:0;">📞</span>
+          
           <div>
             <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Phone</div>
             <a href="tel:6036217469" style="font-size:14px;color:var(--gold-lt);text-decoration:none;" id="wsFindUsPhone2">(603) 621-7469</a>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;">Email</div>
+            <a href="mailto:red_persimmon@gmail.com" style="font-size:14px;color:var(--gold-lt);text-decoration:none;word-break:break-word;overflow-wrap:anywhere;display:inline-block;max-width:100%;" id="wsFindUsEmail2">red_persimmon@gmail.com</a>
           </div>
         </div>
       </div>
       <div style="margin-top:28px;">
         <a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" target="_blank" class="btn-gold" id="wsFindUsMapsLink2">Get Directions →</a>
       </div>
-    </div>
-    <div style="min-height:400px;">
-      <iframe
-        id="wsMapEmbed"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2940.1234!2d-71.4628!3d42.9634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s1500+S+Willow+St%2C+Manchester%2C+NH+03103!5e0!3m2!1sen!2sus!4v1234567890"
-        width="100%" height="100%" style="border:0;display:block;min-height:400px;" allowfullscreen="" loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
+      <p id="wsFooterSocial" style="display:none;margin-top:24px;"></p>
+      <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.4);">© 2025 <span id="wsFooterCopyrightName">Red Persimmon Nails &amp; Spa</span>. All rights reserved.</p>
     </div>
   </div>
 </div>
 
-
 <!-- IVY FLOATING WIDGET (opened by hero card button) -->
+<!-- Aivy floating launcher — always-accessible chat entry point, bottom-right.
+     CSS (#ivy-fab) and toggleIvyChat() already existed; the button element
+     itself was missing from the markup, so the launcher never rendered. -->
+<button id="ivy-fab" onclick="if(!ivyFabDidDrag) toggleIvyChat();" aria-label="Chat with Aivy">
+  <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;line-height:1;">A</span>
+  <span class="ivy-fab-dot"></span>
+</button>
+
 <div id="ivy-widget">
   <!-- Invisible Turnstile anchor -- renders nothing visible, needed only
        as a mount point for the widget instance. -->
   <div id="ivy-turnstile" style="display:none;"></div>
   <div class="ivy-widget-hdr">
-    <div class="chat-avatar" style="width:36px;height:36px;font-size:18px;flex-shrink:0;">I</div>
+    <div class="chat-avatar" style="width:32px;height:32px;font-size:16px;flex-shrink:0;">A</div>
     <div>
       <div style="font-size:15px;font-weight:600;color:#fff;font-family:'Cormorant Garamond',serif;line-height:1.2;">Aivy — Red Persimmon</div>
       <div class="chat-header-status">Online · 24/7 assistant</div>
@@ -3023,13 +3219,13 @@ document.addEventListener('DOMContentLoaded', initDrag);
     <button class="ivy-close-btn" onclick="closeIvyChat()">✕</button>
   </div>
   <div id="ivyMessages" class="chat-messages" style="height:300px;">
-    <div class="msg msg-bot">Welcome to Red Persimmon! 💅 I'm Aivy, your personal assistant. Ask me about services, pricing, or I can book you with the perfect technician. How can I help?</div>
+    <div class="msg msg-bot">Welcome to Red Persimmon. I'm Aivy, your personal assistant. Ask me about services, pricing, or I can book you with the perfect technician. How can I help?</div>
   </div>
   <div id="ivyTyping" class="ivy-typing">
     <span class="dot"></span><span class="dot"></span><span class="dot"></span>
   </div>
   <div id="ivySuggestions" style="padding:10px 12px;background:rgba(92,15,15,0.8);display:flex;flex-direction:column;gap:8px;">
-    <button class="wizard-start-btn" onclick="startWizard()">📅 Book Step-by-Step →</button>
+    <button class="wizard-start-btn" onclick="startWizard()">Book Step-by-Step →</button>
     <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button class="suggestion" onclick="sendIvySuggestion(this)">Nail prices</button>
       <button class="suggestion" onclick="sendIvySuggestion(this)">Hours & location</button>
@@ -3095,7 +3291,8 @@ document.addEventListener('DOMContentLoaded', initDrag);
       <h3>Your details</h3>
       <p class="bm-sub">We'll send your confirmation here</p>
       <input class="bm-inp" id="bm-name" type="text" placeholder="Full name *">
-      <input class="bm-inp" id="bm-email" type="email" placeholder="Email address *">
+      <input class="bm-inp" id="bm-email" type="email" placeholder="Email address *" oninput="bmCheckEmailTypo()" onblur="bmCheckEmailTypo()">
+      <div class="bm-email-suggest" id="bm-email-suggest" style="display:none"></div>
       <input class="bm-inp" id="bm-phone" type="tel" placeholder="Phone number *">
       <textarea class="bm-inp bm-ta" id="bm-notes" placeholder="Allergies, design ideas, any notes... (optional)"></textarea>
       <div class="bm-nav">
@@ -3120,14 +3317,14 @@ document.addEventListener('DOMContentLoaded', initDrag);
       <div class="bm-cerr" id="bm-confirm-err"></div>
       <div class="bm-nav">
         <button class="bm-btn-back" onclick="bmShowPane(3)">← Back</button>
-        <button class="bm-btn-next" id="bm-confirm-btn" onclick="bmConfirm()">Confirm Booking 💅</button>
+        <button class="bm-btn-next" id="bm-confirm-btn" onclick="bmConfirm()">Confirm Booking</button>
       </div>
     </div>
 
     <!-- PANE 5: SUCCESS -->
     <div class="bm-pane" id="bm-pane-5">
       <div class="bm-success">
-        <div class="bm-suc-icon">💅</div>
+        <div class="bm-suc-icon" style="font-family:'Cormorant Garamond',serif;font-style:italic;">A</div>
         <div class="bm-suc-h">Booking Confirmed!</div>
         <p class="bm-suc-p">We can't wait to see you! Check your email for the confirmation.</p>
         <div class="bm-suc-det" id="bm-suc-det"></div>
@@ -3154,7 +3351,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
         Selected: <strong id="modal-summary-text"></strong>
       </div>
       <button class="modal-book-btn" id="modal-book-btn" onclick="staffModalBook()" disabled>
-        📅 Continue to Booking →
+        Continue to Booking →
       </button>
       <span class="modal-cancel-link" onclick="closeStaffModal()">Cancel</span>
     </div>
@@ -3170,18 +3367,8 @@ document.addEventListener('DOMContentLoaded', initDrag);
   <select class="bb-select" id="bb-tech-select" onchange="this.classList.remove('bb-error')">
     <option value="">Select professional ▾</option>
     <option value="no_preference">No Preference — We'll assign best available</option>
-    <option value="kristy">Kristy — Enhancements & Pedicures</option>
-    <option value="kevin">Kevin — Nail Art & Design</option>
-    <option value="peter">Peter — Nail Enhancements & Pedicures</option>
-    <option value="tina">Tina — Pedicures, Enhancements & Waxing</option>
-    <option value="alex">Alex — Pedicure Specialist</option>
-    <option value="sweety">Sweety — Pedicures, Waxing & Henna</option>
-    <option value="sony">Sony — Pedicures & Henna</option>
-    <option value="ammu">Ammu — Pedicures & Nail Enhancements</option>
-    <option value="kim">Kim — Pedicures & Nail Enhancements</option>
-    <option value="lori">Lori — Pedicures & Manicures</option>
   </select>
-  <button class="bb-book-btn" onclick="bookingBarBook()">📅 Book Appointment →</button>
+  <button class="bb-book-btn" onclick="bookingBarBook()">Book Appointment →</button>
   <button class="bb-clear-btn" onclick="bookingBarClear()">✕ Clear all</button>
 </div>
 
