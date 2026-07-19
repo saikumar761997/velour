@@ -155,10 +155,10 @@
   .cp-notes{width:100%;min-height:70px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-family:inherit;font-size:14px;color:var(--ink);outline:none;resize:vertical}
   .cp-notes:focus{border-color:var(--persimmon);box-shadow:0 0 0 3px rgba(231,90,52,.14)}
   .cp-hist{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:10px}
-  .cp-visit{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--plum)}
+  .cp-visit{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--plum)}
   .cp-visit:last-child{border-bottom:none}
   .cp-visit.up{background:#FCF7F4}
-  .cp-vsvc{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cp-vsvc{flex:1;min-width:0}
   .cp-vamt{white-space:nowrap;font-weight:600;color:var(--ink)}
   .cp-none{color:var(--muted);font-size:13px;padding:4px 2px}
   /* Insights */
@@ -198,11 +198,26 @@
 
   /* ---------- App shell ---------- */
   #app{display:none;min-height:100vh}
-  #app.on{display:grid;grid-template-columns:236px 1fr}
+  #app.on{display:grid;grid-template-columns:236px 1fr;transition:grid-template-columns .18s ease}
+  #app.on.sidebar-collapsed{grid-template-columns:76px 1fr}
   aside{
     border-right:1px solid var(--line);padding:26px 20px;
-    display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh;
+    display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;
   }
+  .sidebar-toggle{
+    align-self:flex-end;width:28px;height:28px;border-radius:8px;flex-shrink:0;
+    background:var(--surface-2);border:1px solid var(--line);color:var(--plum-soft);
+    font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .sidebar-toggle:hover{border-color:var(--plum-soft);color:var(--plum)}
+  .wordmark-mini{display:none;font-family:"Fraunces",serif;font-weight:500;font-size:19px;color:var(--persimmon);text-align:center}
+  .sidebar-collapsed aside{padding:26px 10px;gap:18px}
+  .sidebar-collapsed .lbl, .sidebar-collapsed .lbl-block{display:none}
+  .sidebar-collapsed .sidebar-toggle{align-self:center}
+  .sidebar-collapsed .wordmark-mini{display:block}
+  .sidebar-collapsed .navlink{justify-content:center;padding:12px 0}
+  .sidebar-collapsed .navlink .dot{width:9px;height:9px}
+  .sidebar-collapsed .sidebar-toggle{transform:rotate(180deg)}
   .brand .wordmark{font-size:15px;color:var(--persimmon)}
   .brand .salon{font-size:14px;color:var(--plum-soft);margin-top:4px;line-height:1.35}
   .datestack{font-family:"Fraunces",serif}
@@ -229,6 +244,8 @@
   .view-head .sub{color:var(--muted);font-size:14px}
 
   /* ---------- Ledger strip ---------- */
+  .sched-section-title{font-size:15px;font-weight:700;color:var(--plum);margin:22px 0 10px;text-transform:uppercase;letter-spacing:.04em}
+  .sched-section-title:first-child{margin-top:0}
   .ledger{
     display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
     border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:30px;
@@ -309,7 +326,63 @@
   .settings-card .btn{margin-top:16px}
   .settings-card-note{font-size:12.5px;color:var(--plum-soft);margin-top:4px}
   .settings-success{color:var(--sage);font-size:13px;font-weight:600;margin-top:10px}
+  .settings-collapse{cursor:default}
+  .settings-collapse-head{display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;gap:12px}
+  .settings-collapse-head .car{transition:transform .15s;color:var(--muted);font-size:14px;flex-shrink:0;margin-top:2px}
+  .settings-collapse.open .settings-collapse-head .car{transform:rotate(180deg)}
+  .settings-collapse-body{display:none;margin-top:16px}
+  .settings-collapse.open .settings-collapse-body{display:block}
+  .settings-card textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-family:inherit;font-size:15px;color:var(--ink);outline:none;resize:vertical;transition:border-color .15s,box-shadow .15s}
+  .settings-card textarea:focus{border-color:var(--persimmon);box-shadow:0 0 0 3px rgba(231,90,52,.14)}
+  .ws-overview{max-width:680px}
+  .ws-overview-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .ws-live-pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+  .ws-url a{font-size:14px;color:var(--persimmon-deep);text-decoration:none;word-break:break-all}
+  .ws-url a:hover{text-decoration:underline}
+  .ws-readiness{text-align:right}
+  .ws-readiness-pct{font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+  .ws-readiness-label{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .ws-overview-meta{font-size:12.5px;color:var(--plum-soft);margin-top:12px}
+  .ws-overview-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .ws-overview-actions .btn{margin-top:0}
+  .settings-tabs-sub{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 16px;border-bottom:1px solid var(--line);padding-bottom:2px}
+  .settings-tab-sub{border:none;border-bottom:3px solid transparent;background:transparent;color:var(--plum-soft);padding:8px 4px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;margin-right:14px;transition:color .12s,border-color .12s}
+  .settings-tab-sub:hover{color:var(--persimmon-deep)}
+  .settings-tab-sub.active{color:var(--persimmon-deep);border-bottom-color:var(--persimmon)}
+  .ws-checklist{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+  .ws-check-row{font-size:14px;color:var(--plum-soft)}
+  .ws-check-row.done{color:var(--sage);font-weight:600}
+  .ws-advanced{margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+  .ws-advanced > a{font-size:12.5px;color:var(--muted)}
+  .ws-advanced #wsAdvancedWrap{margin-top:10px}
+  .ws-homepage-grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media (min-width:900px){ .ws-homepage-grid{grid-template-columns:1fr 1fr} .ws-homepage-grid .settings-card{max-width:none} }
+  .ws-optional-hint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
+  .ws-photo-picker{margin:14px 0}
+  .ws-photo-picker-row{display:flex;align-items:center;gap:14px;margin-top:6px}
+  .ws-photo-preview-wrap{width:72px;height:72px;flex-shrink:0;border-radius:10px;overflow:hidden;background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+  .ws-photo-preview-wrap img{width:100%;height:100%;object-fit:cover}
+  .ws-photo-preview-empty{font-size:26px;opacity:.4}
+  .ws-photo-status{font-size:12px;color:var(--muted);margin-top:4px;min-height:16px}
+  .ws-bizinfo-row{font-size:14px;color:var(--ink);margin-bottom:6px}
+  .ws-bizinfo-row strong{color:var(--plum-soft);font-weight:600}
+  .ws-photos-empty{text-align:center;padding:40px 24px;max-width:420px}
+  .ws-photos-empty-icon{font-size:40px;margin-bottom:8px}
+  .ws-photos-empty-title{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px}
+  .ws-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:14px}
+  .ws-photo-tile{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .ws-photo-tile.archived{opacity:.5}
+  .ws-photo-tile img{width:100%;height:110px;object-fit:cover;display:block;background:var(--surface-2)}
+  .ws-photo-tile-caption{font-size:12px;color:var(--plum-soft);padding:6px 8px 0}
+  .ws-photo-tile-actions{display:flex;gap:4px;flex-wrap:wrap;padding:6px 8px 8px}
+  .ws-photo-tile-actions button{background:none;border:1px solid var(--line);border-radius:6px;color:var(--plum-soft);cursor:pointer;font-size:11px;padding:4px 6px}
+  .ws-photo-tile-actions button:hover{border-color:var(--persimmon-deep);color:var(--persimmon-deep)}
+  .ws-photo-tile-actions button:disabled{opacity:.3;cursor:default}
+  .ws-photo-picker-row .btn{margin-top:0;margin-right:6px}
+  .ws-photo-remove{color:var(--persimmon-deep) !important;border-color:var(--line) !important;background:transparent !important}
   .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding:13px 44px 13px 15px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;box-sizing:border-box}
+  .pw-wrap input:focus{border-color:var(--persimmon);box-shadow:0 0 0 3px rgba(231,90,52,.14)}
   .pw-wrap input{padding-right:44px}
   .pw-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted);padding:6px 8px;line-height:1;border-radius:6px}
   .pw-toggle:hover{color:var(--plum);background:var(--surface-2)}
@@ -550,7 +623,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
     <h1>Red Persimmon</h1>
     <p>Nails &amp; Spa · Manchester, NH</p>
     <div class="pass-row">
-      <input id="passInput" type="password" placeholder="Enter passcode" autocomplete="off" />
+      <div class="pw-wrap" style="flex:1"><input id="passInput" type="password" placeholder="Enter passcode" autocomplete="off" style="width:100%" /><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('passInput', this)">👁</button></div>
       <button class="btn accent" id="unlockBtn">Unlock</button>
     </div>
     <div class="gate-err" id="gateErr"></div>
@@ -560,22 +633,25 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
 <!-- ============ APP ============ -->
 <div id="app">
   <aside>
+    <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse sidebar">‹</button>
     <div class="brand">
-      <div class="wordmark">Velour</div>
-      <div class="salon" id="brandSalonName">Red Persimmon<br>Nails &amp; Spa</div>
+      <div class="wordmark lbl">Velour</div>
+      <div class="wordmark-mini">V</div>
+      <div class="salon lbl" id="brandSalonName">Red Persimmon<br>Nails &amp; Spa</div>
     </div>
-    <div class="datestack" id="dateStack"></div>
+    <div class="datestack lbl" id="dateStack"></div>
     <nav>
-      <button class="navlink active" data-view="today"><span class="dot"></span>Today</button>
-      <button class="navlink navlink-aivy" data-view="aivy"><span class="dot"></span>Aivy ✨</button>
-      <button class="navlink" data-view="week"><span class="dot"></span>Week</button>
-      <button class="navlink" data-view="insights"><span class="dot"></span>Insights</button>
-      <button class="navlink" data-view="customers"><span class="dot"></span>Customers</button>
-      <button class="navlink" data-view="payroll"><span class="dot"></span>Payroll</button>
-      <button class="navlink" data-view="settings"><span class="dot"></span>Settings</button>
+      <button class="navlink active" data-view="today" title="Today"><span class="dot"></span><span class="lbl">Today</span></button>
+      <button class="navlink navlink-aivy" data-view="aivy" title="Aivy"><span class="dot"></span><span class="lbl">Aivy ✨</span></button>
+      <button class="navlink" data-view="week" title="Week"><span class="dot"></span><span class="lbl">Week</span></button>
+      <button class="navlink" data-view="insights" title="Insights"><span class="dot"></span><span class="lbl">Insights</span></button>
+      <button class="navlink" data-view="customers" title="Customers"><span class="dot"></span><span class="lbl">Customers</span></button>
+      <button class="navlink" data-view="payroll" title="Payroll"><span class="dot"></span><span class="lbl">Payroll</span></button>
+      <button class="navlink" data-view="settings" title="Settings"><span class="dot"></span><span class="lbl">Settings</span></button>
     </nav>
-    <div class="foot">
+    <div class="foot lbl-block">
       <button class="lock" id="lockBtn">Lock dashboard</button><br>
+      <button class="lock" id="refreshBtn" onclick="refreshDashboard()" style="margin-top:4px">↻ Refresh</button><br>
       <span id="refreshInfo" style="opacity:.8"></span>
     </div>
   </aside>
@@ -608,6 +684,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
         </div>
       </div>
       <div class="ledger" id="ledger"></div>
+      <div id="walkinsWrap"></div>
       <div id="schedWrap"></div>
     </section>
 
@@ -735,6 +812,8 @@ const api = {
       },
       body: JSON.stringify({ table, query, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID, payroll_pin: window.__VELOUR_PAYROLL_PIN || "" }),
     });
+    const tier = res.headers.get("X-Velour-Tier");
+    if(tier) window.__VELOUR_TIER = tier;
     if (res.status === 401) throw new Error("UNAUTHORIZED");
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -773,6 +852,40 @@ const bsServiceId    = bs => firstOf(bs, ["service_id", "serviceId"]);
 const bsBookingId    = bs => firstOf(bs, ["booking_id", "bookingId"]);
 const bsName         = bs => firstOf(bs, ["service_name", "name", "title"]) || "Service";
 const bsPrice        = bs => { const v = firstOf(bs, ["price","amount","cost"]); return v!=null?Number(v):0; };
+const bsTechName      = bs => firstOf(bs, ["technician_name"]) || null;
+
+// Shared by the Week detail popup and Customer visit history: shows each
+// service's own technician when checkout actually involved more than one
+// (the real fix), falls back to the original combined "services · with
+// tech" line otherwise (single technician, or no per-line data yet for a
+// booking that hasn't been checked out).
+function fmtServicesWithTech(a){
+  const lines = a.serviceLines || [];
+  if(lines.length > 0){
+    // booking_services is populated at creation and OVERWRITTEN at
+    // checkout — it's the single source of truth for who actually did the
+    // work, and must always win over bookings.technician_id (which only
+    // ever reflects who was originally scheduled/auto-assigned and never
+    // updates after checkout). Previously this only used per-line data
+    // when technicians genuinely differed across lines, so the far more
+    // common case — one line, reassigned to someone different at
+    // checkout — silently fell back to the stale original technician.
+    const distinctTechs = [...new Set(lines.map(l=>l.technicianName).filter(Boolean))];
+    if(distinctTechs.length <= 1){
+      const techName = distinctTechs[0] || a.tech;
+      const techLabel = techName ? esc(techName) : (a.source==="walk_in" ? "No preference" : "");
+      return `${esc(lines.map(l=>l.name).join(", ")||"Service")}${techLabel?` · ${techLabel}`:""}`;
+    }
+    return lines.map(l => `${esc(l.name)}${l.technicianName?` (${esc(l.technicianName)})`:""}`).join(", ");
+  }
+  // No per-line data yet — booking exists but hasn't been checked out, so
+  // the original booking-level technician is genuinely the only thing
+  // known so far. A walk-in with no preference genuinely has none yet
+  // (create_booking no longer guesses one) — say so rather than showing
+  // nothing, which reads like a bug rather than an accurate "not decided."
+  const techLabel = a.tech ? esc(a.tech) : (a.source==="walk_in" ? "No preference" : "");
+  return `${esc((a.services||[]).join(", ")||"Service")}${techLabel?` · ${techLabel}`:""}`;
+}
 
 /* ---------- Formatting ---------- */
 const usd = n => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n||0);
@@ -806,7 +919,7 @@ function endOfToday(){ const d=startOfToday(); d.setDate(d.getDate()+1); return 
 function startOfWeek(){ const d=startOfToday(); const dow=(d.getDay()+6)%7; /* Mon=0 */ d.setDate(d.getDate()-dow); return d; }
 
 /* ---------- State ---------- */
-const store = { customers:[], technicians:[], services:{}, bookings:[], assembled:[], timeoff:[], salonHours:[], techTokens:{}, loaded:false, salon:null };
+const store = { customers:[], technicians:[], services:{}, bookings:[], assembled:[], timeoff:[], salonHours:[], techTokens:{}, loaded:false, salon:null, websiteSettings:null, websiteGallery:[], categoryImages:{}, queue:[] };
 // Payroll PIN verification is session-scoped: re-prompted on login, refresh,
 // or Lock — not on every tab switch. See renderPayroll()'s gate below.
 let payrollPinVerified = false;
@@ -820,7 +933,7 @@ async function loadAll(){
   // Pull the datasets in parallel. Payroll tables are deliberately excluded
   // here — they only load after the Payroll PIN is verified, via
   // reloadPayrollLookups(), not at boot for every dashboard user.
-  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, techHours, payments, salonRows] = await Promise.all([
+  const [customers, technicians, servicesArr, bookings, timeoff, salonHours, techLinks, techServices, techHours, payments, salonRows, websiteSettingsRows, websiteGalleryRows, categoryImageRows, queueRows] = await Promise.all([
     api.get("customers",   `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("technicians", `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
     api.get("services",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`),
@@ -835,9 +948,20 @@ async function loadAll(){
     api.get("technician_hours", `limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("payments",    `${salon}=${eq(CONFIG.SALON_ID)}&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
     api.get("salons", `id=${eq(CONFIG.SALON_ID)}&limit=1`).catch(()=>[]),
+    // Website content — same non-fatal treatment as every other optional
+    // lookup here. A salon mid-onboarding has an empty website_settings
+    // row; that must never break the rest of the dashboard from loading.
+    api.get("website_settings", `${salon}=${eq(CONFIG.SALON_ID)}&limit=1`).catch(()=>[]),
+    api.get("website_gallery_images", `${salon}=${eq(CONFIG.SALON_ID)}&order=display_order.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+    api.get("service_category_images", `${salon}=${eq(CONFIG.SALON_ID)}&limit=100`).catch(()=>[]),
+    api.get("walkin_queue", `${salon}=${eq(CONFIG.SALON_ID)}&status=in.(waiting,called,in_service)&order=arrived_at.asc&limit=100`).catch(()=>[]),
   ]);
   store.salon = (Array.isArray(salonRows) && salonRows[0]) ? salonRows[0] : null;
   applyBrandSalonName();
+  store.websiteSettings = (Array.isArray(websiteSettingsRows) && websiteSettingsRows[0]) || null;
+  store.websiteGallery = Array.isArray(websiteGalleryRows) ? websiteGalleryRows : [];
+  store.categoryImages = Object.fromEntries((Array.isArray(categoryImageRows) ? categoryImageRows : []).map(c => [c.category, c.image_url]));
+  store.queue = Array.isArray(queueRows) ? queueRows : [];
   store.technicianComp = [];
   store.payrollPeriods = [];
   store.techServices = {};
@@ -912,9 +1036,18 @@ async function loadAll(){
       endMin: (function(){ const t=firstOf(b,["end_time"]); if(!t) return null; const p=t.split(":"); return (+p[0])*60+(+p[1]); })(),
       customer: cust ? customerName(cust) : (source==="walk_in" ? "Walk-in guest" : "Guest"),
       customerId: bookingCustId(b),
+      phone: cust ? (cust.phone || null) : null,
       techId: bookingTechId(b),
       tech: tech ? techName(tech) : null,
       services: svcRows.map(bsName),
+      // Per-service technician, now that checkout_booking records it —
+      // additive to `services` above (kept as plain name strings since 8
+      // other places already depend on that exact shape). Used only where
+      // per-technician detail actually matters: the Week detail popup and
+      // Customer visit history, both of which previously always showed the
+      // single booking-level technician for every listed service, wrong
+      // whenever checkout involved more than one technician.
+      serviceLines: svcRows.map(bs => ({ name: bsName(bs), price: bsPrice(bs), technicianName: bsTechName(bs) })),
       total,
       estimate,
       actual: paid ? paid.amount : null,
@@ -937,10 +1070,229 @@ function renderDate(){
     `<div class="mon">${new Intl.DateTimeFormat("en-US",{month:"long"}).format(d)} ${d.getFullYear()}</div>`;
 }
 
+async function reloadQueue(){
+  const rows = await api.get("walkin_queue", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&status=in.(waiting,called,in_service)&order=arrived_at.asc&limit=100`).catch(()=>[]);
+  store.queue = Array.isArray(rows) ? rows : [];
+}
+
+function renderWalkins(){
+  const wrap = document.getElementById("walkinsWrap");
+  if(!wrap) return;
+  const waiting = (store.queue||[]).filter(q => q.status === "waiting" || q.status === "called");
+  const inProgress = (store.queue||[]).filter(q => q.status === "in_service" && q.booking_id);
+
+  if(!waiting.length && !inProgress.length){
+    wrap.innerHTML = `<div class="sched-section-title">Walk-ins</div><div class="state" style="padding:20px 0"><p style="margin:0;color:var(--muted)">No one's waiting right now.</p></div>`;
+    return;
+  }
+
+  const waitingRows = waiting.map(q => {
+    const techName = q.preferred_technician_id ? (store.technicians.find(t=>t.id===q.preferred_technician_id)?.name || "Requested tech") : "No preference";
+    const waitMin = Math.max(0, Math.round((Date.now() - new Date(q.arrived_at).getTime())/60000));
+    const svcNames = (q.requested_service || "").split(",").map(s=>s.trim()).filter(Boolean);
+    const svcChips = svcNames.length ? svcNames.map(n=>`<span class="chip">${esc(n)}</span>`).join("") : `<span class="chip">Not specified</span>`;
+    const phoneFmt = q.phone && q.phone.length===10 ? `(${q.phone.slice(0,3)}) ${q.phone.slice(3,6)}-${q.phone.slice(6)}` : q.phone;
+    return `<div class="appt walkin-row" data-qid="${q.id}">
+      <div class="time tnum">${waitMin}m</div>
+      <div class="who">
+        <div class="name">${esc(q.name)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span></div>
+        <div class="svc">${svcChips}</div>
+        <div class="tech">${esc(techName)}</div>
+      </div>
+      ${q.phone?`<div class="right"><a href="tel:${esc(q.phone)}" class="tnum" style="color:var(--persimmon-deep);text-decoration:none;font-weight:600">${esc(phoneFmt)}</a></div>`:""}
+      <div class="appt-actions">
+        <button class="act done" onclick="doWalkinDone('${q.id}', this)">✓ Done</button>
+        <button class="act noshow" onclick="doWalkinRemove('${q.id}','no_show')">No-show</button>
+        <button class="act cancel" onclick="doWalkinRemove('${q.id}','cancelled')">Cancel</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Already assigned, being serviced right now — real booking data (actual
+  // services/technician/price), not the original sign-in request, since
+  // those may well have changed once the owner actually looked at them.
+  const inProgressRows = inProgress.map(q => {
+    const a = store.assembled.find(x=>x.id===q.booking_id);
+    if(!a) return "";
+    const chips = a.services.length ? a.services.map(s=>`<span class="chip">${esc(s)}</span>`).join("") : `<span class="chip">Service TBD</span>`;
+    return `<div class="appt walkin-row" data-qid="${q.id}">
+      <div class="time tnum">In chair</div>
+      <div class="who">
+        <div class="name">${esc(a.customer)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span></div>
+        <div class="svc">${chips}</div>
+        ${a.tech?`<div class="tech">with ${esc(a.tech)}</div>`:""}
+      </div>
+      <div class="right">
+        ${q.phone?`<a href="tel:${esc(q.phone)}" class="tnum" style="color:var(--persimmon-deep);text-decoration:none;font-weight:600;display:block;margin-bottom:4px">${esc(q.phone.length===10?`(${q.phone.slice(0,3)}) ${q.phone.slice(3,6)}-${q.phone.slice(6)}`:q.phone)}</a>`:""}
+        <span class="price tnum">${a.total?usd(a.total):"—"}</span>
+      </div>
+      <div class="appt-actions">
+        <button class="act done" onclick="openCheckout('${a.id}')">✓ Checkout</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  wrap.innerHTML = `<div class="sched-section-title">Walk-ins</div><div class="sched">${inProgressRows}${waitingRows}</div>`;
+}
+
+// Shared by Done, No-show, and Cancel — all three need the same "what
+// would this walk-in's booking look like" payload; they just differ in
+// what happens to its status right after.
+function buildWalkinBookingPayload(q){
+  const now = new Date();
+  const pad = n => String(n).padStart(2,"0");
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const startStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:00`;
+  // requested_service may hold several comma-separated names (kiosk lets a
+  // customer pick more than one) — match each against real active services
+  // and sum them. Unmatched/unknown names (renamed/deactivated since
+  // sign-in) are dropped silently rather than failing the whole walk-in.
+  const requestedNames = (q.requested_service || "").split(",").map(s=>s.trim()).filter(Boolean);
+  const matchedSvcs = requestedNames
+    .map(n => Object.values(store.services).find(s => s.active!==false && (s.name||"").toLowerCase() === n.toLowerCase()))
+    .filter(Boolean);
+  const dur = matchedSvcs.length ? matchedSvcs.reduce((s,x)=>s+(x.duration_minutes||0),0) : 30;
+  const price = matchedSvcs.reduce((s,x)=>s+(Number(x.price)||0),0);
+  const endMin = now.getHours()*60 + now.getMinutes() + dur;
+  const endStr = `${pad(Math.floor(endMin/60)%24)}:${pad(endMin%60)}:00`;
+  return {
+    p_salon: CONFIG.SALON_ID,
+    p_name: q.name, p_email: q.email || null, p_phone: q.phone,
+    p_tech: q.preferred_technician_id || null,
+    p_date: dateStr, p_start: startStr, p_end: endStr,
+    p_duration: dur, p_price: price,
+    p_notes: "Walk-in queue",
+    p_services: matchedSvcs.map(s=>({ name: s.name, price: s.price, duration_minutes: s.duration_minutes })),
+    p_source: "walk_in", p_created_by: "Kristy"
+  };
+}
+
+// No-show and Cancel on a still-waiting walk-in previously just dropped
+// the queue entry with p_status:'left' and nothing else — no booking, no
+// customer record, nothing. That meant anyone marked no-show or cancelled
+// before ever reaching "Done" silently vanished from Customers entirely,
+// with no trace they'd ever come in. Now this creates the same real
+// booking Done would have (same customer-creation path everything else
+// already relies on), immediately marks it with the right status, and
+// links it back to the queue entry — so it shows up correctly in
+// Customers/visit history/Insights, same as if it had been cancelled
+// after Done.
+async function doWalkinRemove(queueId, kind){
+  const q = (store.queue||[]).find(x=>x.id===queueId);
+  if(!q) return;
+  if(q.status !== "waiting" && q.status !== "called"){
+    alert("This walk-in was already processed — refreshing the list.");
+    await reloadQueue();
+    renderWalkins();
+    return;
+  }
+  const label = kind === "no_show" ? "no-show" : "cancel";
+  if(!confirm(`Mark ${q.name} as ${label} and remove from the walk-in list?`)) return;
+
+  try{
+    const newBookingId = await payrollWrite("create_booking", buildWalkinBookingPayload(q));
+    try{
+      await payrollWrite("mark_status", { p_booking: newBookingId, p_status: kind, p_reason: null });
+    }catch(e){ console.warn("Booking created, but couldn't set its status:", e.message); }
+    try{
+      await payrollWrite("set_queue_status", { p_queue_id: queueId, p_status: "left", p_booking_id: newBookingId });
+    }catch(e){ console.warn("Booking created, but couldn't update queue status:", e.message); }
+
+    await reloadQueue();
+    await reloadData();
+  }catch(e){
+    console.error(e);
+    alert("Couldn't record that — please try again.");
+    renderWalkins();
+  }
+}
+
+// "Done" on a walk-in creates the real booking behind the scenes (right
+// now, today, using their requested service and preferred technician if
+// given — both fully editable a moment later) and drops straight into the
+// exact same Checkout modal used everywhere else. This is deliberate:
+// checkout already lets the owner add/edit services, price, and
+// technician per line, so a separate "assign" step first would just be
+// asking the same question twice.
+async function doWalkinDone(queueId, btn){
+  const q = (store.queue||[]).find(x=>x.id===queueId);
+  if(!q) return;
+  // Guard against a stale button: if this entry was already converted
+  // (by an earlier click, another device, or the background poll not
+  // having caught up yet), stop here instead of creating a second,
+  // duplicate booking. The server enforces this too (defense in depth),
+  // but catching it here means the wasted booking never gets created
+  // at all in the normal case.
+  if(q.status !== "waiting" && q.status !== "called"){
+    alert("This walk-in was already processed — refreshing the list.");
+    await reloadQueue();
+    renderWalkins();
+    return;
+  }
+  if(btn){ btn.disabled = true; btn.textContent = "Starting…"; }
+
+  try{
+    const newBookingId = await payrollWrite("create_booking", buildWalkinBookingPayload(q));
+
+    try{
+      await payrollWrite("set_queue_status", { p_queue_id: queueId, p_status: "in_service", p_booking_id: newBookingId });
+    }catch(e){
+      console.warn("Booking created, but couldn't update queue status:", e.message);
+    }
+
+    await reloadQueue();
+    await reloadData();
+    openCheckout(newBookingId);
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("NO_TECH_AVAILABLE")) alert("No technician is currently free and qualified for that request. Use Add Booking instead to pick manually.");
+    else alert("Couldn't start checkout for this walk-in. Please try again.");
+    renderWalkins(); // rebuilds the row from scratch — button is clickable again, not stuck on "Starting…"
+  }
+}
+
+// Periodic check while Today is open, so a new walk-in sign-in shows up
+// without anyone needing to hit Refresh. Cheap enough at this scale to run
+// unconditionally; only actually re-renders when Today is the visible view.
+setInterval(async ()=>{
+  if(!store.loaded) return;
+  const todayView = document.getElementById("view-today");
+  if(!todayView || !todayView.classList.contains("on")) return;
+  try{
+    await reloadQueue();
+    renderWalkins();
+  }catch(e){ /* silent — this is a background convenience check, not a user action */ }
+}, 9000);
+
+// Separate, slower poll for the full bookings list — this is what catches
+// a new website/phone booking landing while Today or Week is open, without
+// anyone hitting Refresh. Kept apart from the walk-in poll above (and
+// slower: 20s vs 9s) because it re-fetches everything (bookings/customers/
+// services/technicians), not just one small table, so hitting it as often
+// as the queue poll would be needless load for no real benefit — a new
+// booking showing up 15s later instead of instantly is not something
+// anyone will notice. Covers Week too (not just Today) — a future
+// appointment booked on the website lands on some day in Week, not
+// necessarily today, and that tab was being silently skipped before.
+setInterval(async ()=>{
+  if(!store.loaded) return;
+  const todayOn = document.getElementById("view-today")?.classList.contains("on");
+  const weekOn  = document.getElementById("view-week")?.classList.contains("on");
+  if(!todayOn && !weekOn) return;
+  try{
+    await reloadData();
+  }catch(e){ /* silent — same reasoning as the queue poll above */ }
+}, 20000);
+
 function renderToday(){
+  renderWalkins();
   const t0=startOfToday(), t1=endOfToday(), w0=startOfWeek();
+  // Walk-ins (source='walk_in') never appear here, at any status — their
+  // entire lifecycle (waiting, being serviced, checked out) lives in the
+  // Walk-ins section instead, so the same visit never shows in two places.
   const todays = store.assembled
-    .filter(a => a.when && a.when>=t0 && a.when<t1 && matchTech(a))
+    .filter(a => a.when && a.when>=t0 && a.when<t1 && matchTech(a) && a.source!=="walk_in")
     .sort((a,b)=>a.when-b.when);
   const active = todays.filter(a => a.status!=="cancelled" && a.status!=="no_show");
   const offCount = todays.length - active.length;
@@ -958,7 +1310,7 @@ function renderToday(){
 
   const wrap = document.getElementById("schedWrap");
   if(!todays.length){
-    wrap.innerHTML = `<div class="state"><h3>No appointments today</h3><p>New bookings will appear here as they come in.</p></div>`;
+    wrap.innerHTML = `<div class="sched-section-title">Appointments</div><div class="state"><h3>No appointments today</h3><p>New bookings will appear here as they come in.</p></div>`;
     return;
   }
 
@@ -988,6 +1340,7 @@ function renderToday(){
           ${a.tech?`<div class="tech">with ${esc(a.tech)}</div>`:""}
         </div>
         <div class="right">
+          ${a.phone?`<a href="tel:${esc(a.phone)}" class="tnum" style="color:var(--persimmon-deep);text-decoration:none;font-weight:600;display:block;margin-bottom:4px">${esc(a.phone.length===10?`(${a.phone.slice(0,3)}) ${a.phone.slice(3,6)}-${a.phone.slice(6)}`:a.phone)}</a>`:""}
           <span class="price tnum">${a.total?usd(a.total):"—"}</span>
           ${statusPill(a.status)}
         </div>
@@ -998,7 +1351,7 @@ function renderToday(){
     html += `<div class="now-divider"><span class="lbl">Now · ${timeFmt(now)}</span><span class="rule"></span></div>`;
   }
   html += `</div>`;
-  wrap.innerHTML = html;
+  wrap.innerHTML = `<div class="sched-section-title">Appointments</div>` + html;
 }
 
 function statusPill(s){
@@ -1235,6 +1588,17 @@ async function submitCheckout(){
       return;
     }
     closeCheckout();
+    // If this booking came from the walk-in queue, close that loop too —
+    // otherwise it would sit in Walk-ins forever even after being paid.
+    const linkedQueueEntry = (store.queue||[]).find(q => q.booking_id === ck.bookingId);
+    if(linkedQueueEntry){
+      try{
+        await payrollWrite("set_queue_status", { p_queue_id: linkedQueueEntry.id, p_status: "done" });
+        await reloadQueue();
+      }catch(e){
+        console.warn("Checkout completed, but couldn't close the queue entry:", e.message);
+      }
+    }
     await reloadData();
   }catch(e){
     console.error(e);
@@ -1354,7 +1718,27 @@ function renderInsights(){
   const dHtml = d => d===0 ? `<span class="dl flat">–</span>` : (d>0?`<span class="dl up">▲ ${d}%</span>`:`<span class="dl down">▼ ${Math.abs(d)}%</span>`);
 
   const techMap={};
-  completed.forEach(a=>{ if(!a.tech) return; (techMap[a.tech] ||= {rev:0,n:0}); techMap[a.tech].rev+=a.total; techMap[a.tech].n++; });
+  completed.forEach(a=>{
+    // Same single-source-of-truth fix as Week/Customer views: attribute
+    // each service line's revenue to whoever booking_services actually
+    // says did it (correct as of checkout), not the booking's original
+    // technician_id — and per-line, not lumping a whole multi-technician
+    // booking's total onto one person.
+    const lines = a.serviceLines||[];
+    if(lines.length){
+      lines.forEach(l=>{
+        const techName = l.technicianName || a.tech;
+        if(!techName) return;
+        (techMap[techName] ||= {rev:0,n:0});
+        techMap[techName].rev += Number(l.price)||0;
+        techMap[techName].n++;
+      });
+    }else if(a.tech){
+      (techMap[a.tech] ||= {rev:0,n:0});
+      techMap[a.tech].rev+=a.total;
+      techMap[a.tech].n++;
+    }
+  });
   const topTechs = Object.entries(techMap).sort((x,y)=>y[1].rev-x[1].rev).slice(0,5);
 
   const svcMap={};
@@ -1486,7 +1870,7 @@ function renderWeek(){
       `<button class="wk-appt ${a.status}" onclick="openBookingDetail('${a.id}')">
         <span class="wk-time tnum">${timeFmt(a.when)}</span>
         <span class="wk-name">${esc(a.customer)}</span>
-        <span class="wk-tech">${a.tech?esc(a.tech):""}</span>
+        <span class="wk-tech">${a.tech?esc(a.tech):(a.source==="walk_in"?"No preference":"")}</span>
       </button>`}));
     gaps.forEach(g=>items.push({t:g.start, o:-1, html:
       `<div class="wk-gap">↳ ${gapLabel(g.end-g.start)} open</div>`}));
@@ -1510,9 +1894,10 @@ function openBookingDetail(id){
   document.getElementById("dmTitle").textContent = a.customer;
   document.getElementById("dmWhen").textContent =
     `${new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric"}).format(a.when)} · ${timeFmt(a.when)}`;
+
   document.getElementById("dmDetails").innerHTML =
-    `<div>💅 ${a.services.length?esc(a.services.join(", ")):"Service"}</div>`+
-    `${a.tech?`<div>👤 With ${esc(a.tech)}</div>`:""}`+
+    `<div>💅 ${fmtServicesWithTech(a)}</div>`+
+    (a.phone ? `<div>📞 <a href="tel:${esc(a.phone)}" style="color:var(--persimmon-deep);font-weight:600;text-decoration:none">${esc(a.phone.length===10?`(${a.phone.slice(0,3)}) ${a.phone.slice(3,6)}-${a.phone.slice(6)}`:a.phone)}</a></div>` : "") +
     `<div>💵 ${a.total?usd(a.total):"—"}</div>`+
     `<div style="margin-top:8px">${statusPill(a.status)}</div>`;
   const acts = a.status==="confirmed" ? `
@@ -1571,7 +1956,15 @@ function renderSalonClosuresCard(){
 function techLinkUrl(techId){
   const token = store.techTokens[techId];
   if(!token) return null;
-  return `${location.origin}/?tech=${token}`;
+  // FIX (see chat): this used to build off location.origin — wherever the
+  // dashboard itself happens to be opened from. That's fine for the
+  // dashboard's own use, but this specific link gets sent to a
+  // technician's phone, and needs to point at the real, live website
+  // (where the ?tech= schedule page actually lives), not wherever this
+  // dashboard file happens to be hosted or opened from. Always the real
+  // production URL here, regardless of WS_DEV_MODE — that flag is only
+  // for Sai's own local website preview inside the dashboard.
+  return `https://velour-platform.redpersimmon.workers.dev/?tech=${token}`;
 }
 async function copyTechLink(techId){
   const url = techLinkUrl(techId);
@@ -1580,6 +1973,24 @@ async function copyTechLink(techId){
   catch(e){ /* fallback below */ }
   // Show it regardless so Kristy can copy manually if clipboard is blocked.
   prompt("Share this private schedule link with the technician:", url);
+}
+async function createTechLink(techId){
+  try{
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ action:"reset_tech_link", args:{ p_tech:techId }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
+    });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.ok===false){ throw new Error((data&&data.error)||("HTTP "+res.status)); }
+    if(data.result) store.techTokens[techId] = data.result;
+    refreshTechnicianRelatedViews();
+    const url = techLinkUrl(techId);
+    prompt("Schedule link created. Share this with them:", url);
+  }catch(e){
+    console.error(e);
+    alert("Couldn't create a link — please try again.");
+  }
 }
 async function resetTechLink(techId){
   if(!confirm("Reset this technician's link? Their old link will stop working and you'll need to share the new one.")) return;
@@ -1897,7 +2308,7 @@ function openCustomerProfile(id){
   const histHtml = history.length ? history.map(a=>`
     <div class="cp-visit">
       <span class="cp-vdate tnum">${dateShort(a.when)}</span>
-      <span class="cp-vsvc">${esc((a.services||[]).join(", ")||"Service")}${a.tech?` · ${esc(a.tech)}`:""}</span>
+      <span class="cp-vsvc">${fmtServicesWithTech(a)}</span>
       <span class="cp-vamt tnum">${statusPill(a.status)} ${a.total?usd(a.total):""}</span>
     </div>`).join("") : `<div class="cp-none">No visits yet.</div>`;
   document.getElementById("cpHistory").innerHTML = histHtml;
@@ -1945,6 +2356,7 @@ async function boot(){
     populateTechFilters();
     renderToday();
     renderCustomers();
+    applyAccessTier();
     const t = new Date();
     document.getElementById("refreshInfo").textContent = `Updated ${timeFmt(t)}`;
   }catch(e){
@@ -1957,6 +2369,42 @@ async function boot(){
       return;
     }
     showErr(e.message || "Check the Supabase URL, key, and table names in CONFIG.");
+  }
+}
+
+// Refresh button: reloads live data and re-renders whatever tab is
+// currently open — without touching window.__VELOUR_PASS, so it never
+// requires re-entering the passcode. Handles the one real edge case (the
+// owner changed the passcode from another device mid-session) by sending
+// back to the gate instead of showing a confusing error.
+async function refreshDashboard(){
+  const btn = document.getElementById("refreshBtn");
+  if(btn){ btn.disabled = true; btn.textContent = "Refreshing…"; }
+  try{
+    await loadAll();
+    populateTechFilters();
+    applyAccessTier();
+    renderToday();
+    renderCustomers();
+    const activeBtn = document.querySelector(".navlink.active");
+    const activeView = activeBtn ? activeBtn.dataset.view : "today";
+    if(activeView === "week") renderWeek();
+    if(activeView === "insights") renderInsights();
+    if(activeView === "payroll") renderPayroll();
+    if(activeView === "settings") renderSettings();
+    document.getElementById("refreshInfo").textContent = `Updated ${timeFmt(new Date())}`;
+  }catch(e){
+    console.error(e);
+    if(String(e.message).includes("UNAUTHORIZED")){
+      document.getElementById("app").classList.remove("on");
+      document.getElementById("gate").style.display="flex";
+      document.getElementById("gateErr").textContent = "Your session needs you to log in again.";
+      const pi=document.getElementById("passInput"); pi.value=""; pi.focus();
+    }else{
+      alert("Couldn't refresh right now. Please try again.");
+    }
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = "↻ Refresh"; }
   }
 }
 
@@ -1986,9 +2434,9 @@ function buildBriefing(){
   const merged=[]; busy.forEach(b=>{const l=merged[merged.length-1]; if(l&&b.start<=l.end)l.end=Math.max(l.end,b.end); else merged.push({...b});});
   if(hrs){ let cur=hrs.openMin; merged.forEach(b=>{ if(b.start-cur>=30) gaps.push(briefTime(cur)+"–"+briefTime(b.start)); cur=Math.max(cur,b.end); }); if(hrs.closeMin-cur>=30) gaps.push(briefTime(cur)+"–"+briefTime(hrs.closeMin)); }
 
-  const tw={}; store.assembled.filter(a=>a.status==="completed"&&inR(a,w0,wEnd)).forEach(a=>{ if(!a.tech)return; tw[a.tech]=(tw[a.tech]||0)+a.total; });
-  const tt=Object.entries(tw).sort((x,y)=>y[1]-x[1])[0];
-  const topTech=tt?{name:tt[0],earned:Math.round(tt[1])}:null;
+  const tw={}, twCount={};
+  store.assembled.filter(a=>a.status==="completed"&&inR(a,w0,wEnd)).forEach(a=>{ if(!a.tech)return; tw[a.tech]=(tw[a.tech]||0)+a.total; twCount[a.tech]=(twCount[a.tech]||0)+1; });
+  const byTechWeek = Object.keys(tw).map(name=>({name, earned:Math.round(tw[name]), appointments:twCount[name]})).sort((a,b)=>b.earned-a.earned);
 
   const agg={};
   for(const a of store.assembled){ if(a.customerId==null)continue; const g=(agg[a.customerId] ||= {visits:0,spend:0,last:null}); if(a.status==="completed"){ g.visits++; g.spend+=a.total; if(a.when&&(!g.last||a.when>g.last)) g.last=a.when; } }
@@ -2003,6 +2451,29 @@ function buildBriefing(){
   const mon=store.assembled.filter(a=>inR(a,m0,m1));
   const miss=mon.filter(a=>a.status==="cancelled"||a.status==="no_show").length;
   const noShow=mon.length?Math.round(miss/mon.length*100):0;
+  const monthEarned=mon.filter(a=>a.status==="completed").reduce((s,a)=>s+a.total,0);
+  const monthExpected=mon.filter(a=>a.counts).reduce((s,a)=>s+a.total,0);
+  const monthCompleted=mon.filter(a=>a.status==="completed").length;
+  const pm0=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const lastMonthEarned=store.assembled.filter(a=>a.status==="completed"&&inR(a,pm0,m0)).reduce((s,a)=>s+a.total,0);
+  const vsLastMonth = lastMonthEarned>0 ? Math.round((monthEarned-lastMonthEarned)/lastMonthEarned*100) : null;
+
+  // Top services this month by frequency, with revenue split evenly across
+  // a booking's services when there's more than one on the same visit —
+  // one of the most common "what should I push" owner questions, and
+  // previously not answerable at all.
+  const svcAgg={};
+  mon.filter(a=>a.status==="completed").forEach(a=>{
+    (a.services||[]).forEach(name=>{ const g=(svcAgg[name] ||= {count:0,revenue:0}); g.count++; g.revenue += a.total/(a.services.length||1); });
+  });
+  const topServices = Object.entries(svcAgg).map(([name,g])=>({name, count:g.count, revenue:Math.round(g.revenue)})).sort((a,b)=>b.count-a.count).slice(0,5);
+
+  // Rolling next-7-days outlook (from right now, not the Mon-Sun box above)
+  // — answers "how's the week ahead looking" even mid-week, when the
+  // current-week number above is already mostly in the past.
+  const next7=new Date(now); next7.setDate(now.getDate()+7);
+  const upcoming=store.assembled.filter(a=>a.counts&&a.when&&a.when>=now&&a.when<next7);
+  const next7Days={ appointments_booked:upcoming.length, expected_revenue:Math.round(upcoming.reduce((s,a)=>s+a.total,0)) };
 
   const since=new Date(); since.setDate(since.getDate()-60);
   const recent=store.assembled.filter(a=>a.when&&a.when>=since&&a.status!=="cancelled");
@@ -2016,12 +2487,15 @@ function buildBriefing(){
   return {
     today:{ date:new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric"}).format(now), appointments_booked:todayActive.length, expected_revenue:Math.round(expectedToday), open_gaps:gaps },
     week:{ earned_revenue:Math.round(weekEarned), expected_revenue:Math.round(weekExpected), appointments_booked:weekAppts, earned_vs_last_week_pct:vsLast },
-    top_tech_this_week:topTech,
+    month:{ earned_revenue:Math.round(monthEarned), expected_revenue:Math.round(monthExpected), appointments_completed:monthCompleted, earned_vs_last_month_pct:vsLastMonth },
+    next_7_days:next7Days,
+    by_technician_this_week:byTechWeek,
+    top_services_this_month:topServices,
     lapsed_customers:lapsed.slice(0,6),
     totals:{ customers:store.customers.length, vips, lapsed:lapsed.length },
     no_show_rate_pct:noShow,
     busiest_day:busiestDay, busiest_time:busiestTime,
-    note:"lapsed = a returning customer not seen in 8+ weeks"
+    note:"lapsed = a returning customer not seen in 8+ weeks. month/week revenue follow the same earned-vs-expected split as the dashboard."
   };
 }
 
@@ -2093,9 +2567,13 @@ async function payrollWrite(action, args){
     headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
     body: JSON.stringify({ action, args, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID, payroll_pin: window.__VELOUR_PAYROLL_PIN || "" })
   });
+  const tier = res.headers.get("X-Velour-Tier");
+  if(tier) window.__VELOUR_TIER = tier;
   const data = await res.json().catch(()=>null);
   if(!res.ok || !data || data.ok===false){
-    throw new Error((data && data.error) || ("HTTP "+res.status));
+    const errCode = (data && data.error) || ("HTTP "+res.status);
+    if(errCode === "owner_only_action") throw new Error("OWNER_ONLY_ACTION");
+    throw new Error(errCode);
   }
   return data.result;
 }
@@ -2114,6 +2592,31 @@ function compLabel(c){
   return "—";
 }
 function money(n){ return "$"+Number(n||0).toFixed(2); }
+
+// Shared collapsible-card wrapper for Settings — every section starts
+// closed; the owner opens only what they need instead of the whole tab
+// unfolding at once. State persists for the session (an owner reopening
+// the same card repeatedly isn't asked to re-expand it every time they
+// navigate away and back within one visit).
+const settingsCardOpen = {};
+function toggleSettingsCard(id){
+  settingsCardOpen[id] = !settingsCardOpen[id];
+  const el = document.getElementById("sc-"+id);
+  if(el) el.classList.toggle("open", settingsCardOpen[id]);
+}
+function collapsibleCard(id, title, subtitle, innerHtml){
+  const open = !!settingsCardOpen[id];
+  return `<div class="settings-card settings-collapse ${open?"open":""}" id="sc-${id}">
+    <div class="settings-collapse-head" onclick="toggleSettingsCard('${id}')">
+      <div>
+        <div class="settings-section-title" style="font-size:16px">${esc(title)}</div>
+        ${subtitle?`<div class="settings-card-note">${esc(subtitle)}</div>`:""}
+      </div>
+      <span class="car">▾</span>
+    </div>
+    <div class="settings-collapse-body">${innerHtml}</div>
+  </div>`;
+}
 function fmtPayDate(d){
   if(!d) return "";
   const dt = new Date(String(d).length<=10 ? d+"T12:00:00" : d);
@@ -2138,7 +2641,7 @@ function renderPayrollPinGate(){
       <div class="settings-section-title">Payroll is protected</div>
       <div class="settings-section-sub">Enter the Payroll PIN to view compensation and payroll data.</div>
       <label for="payPinInput">Payroll PIN</label>
-      <input type="password" id="payPinInput" placeholder="••••" onkeydown="if(event.key==='Enter')submitPayrollPin()">
+      <div class="pw-wrap"><input type="password" id="payPinInput" placeholder="••••" onkeydown="if(event.key==='Enter')submitPayrollPin()"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('payPinInput', this)">👁</button></div>
       <div class="rmodal-err" id="payPinErr"></div>
       <button class="btn accent" id="payPinSave" onclick="submitPayrollPin()">Unlock Payroll</button>
     </div>`;
@@ -2372,19 +2875,37 @@ async function doClosePeriod(periodId){
   }catch(e){
     console.error(e);
     const msg = String(e.message||"");
-    if(msg.includes("UNRESOLVED_WARNINGS_BLOCK_CLOSE")) alert("Some technicians still have warnings — fix those first.");
+    if(msg.includes("PERIOD_NOT_ENDED_YET")) alert("This payroll period ends in the future — you can't close it until the end date has passed.");
+    else if(msg.includes("UNRESOLVED_WARNINGS_BLOCK_CLOSE")) alert("Some technicians still have warnings — fix those first.");
     else alert("Couldn't close this period. Please try again.");
   }
 }
 
 /* ---------- New period modal ---------- */
+let pGapPending = false; // set true after a gap warning, until dates change or the owner confirms
+
 function openNewPeriod(){
   document.getElementById("pLabel").value = "";
-  document.getElementById("pStart").value = "";
-  document.getElementById("pEnd").value = "";
   document.getElementById("pNotes").value = "";
   document.getElementById("pErr").textContent = "";
+  pGapPending = false;
   const save = document.getElementById("pSave"); save.disabled=false; save.textContent="Create period";
+
+  // Default start date to the day right after the latest existing period
+  // ends — editable, but removes the common accidental-gap mistake by
+  // default instead of leaving both dates blank.
+  const periods = store.payrollPeriods||[];
+  const latestEnd = periods.length
+    ? periods.reduce((max,p)=> (p.period_end > max ? p.period_end : max), periods[0].period_end)
+    : null;
+  if(latestEnd){
+    const next = new Date(latestEnd+"T12:00:00");
+    next.setDate(next.getDate()+1);
+    document.getElementById("pStart").value = next.toISOString().slice(0,10);
+  }else{
+    document.getElementById("pStart").value = "";
+  }
+  document.getElementById("pEnd").value = "";
   document.getElementById("pmodal").style.display = "flex";
 }
 function closeNewPeriod(){
@@ -2392,6 +2913,14 @@ function closeNewPeriod(){
   const save = document.getElementById("pSave"); save.disabled=false; save.textContent="Create period";
 }
 function pSuggestLabel(){
+  // Any date edit after a gap warning means the owner might be fixing it —
+  // don't let a stale "Create anyway" confirmation silently carry over to
+  // different dates they haven't actually confirmed.
+  if(pGapPending){
+    pGapPending = false;
+    document.getElementById("pErr").textContent = "";
+    const save = document.getElementById("pSave"); save.textContent = "Create period";
+  }
   const s = document.getElementById("pStart").value, e = document.getElementById("pEnd").value;
   const labelField = document.getElementById("pLabel");
   if(labelField.value.trim()) return;
@@ -2413,18 +2942,30 @@ async function submitNewPeriod(){
   try{
     await payrollWrite("create_payroll_period", {
       p_salon_id: CONFIG.SALON_ID, p_label: label, p_period_start: start, p_period_end: end,
-      p_notes: document.getElementById("pNotes").value.trim() || null, p_created_by: "Kristy"
+      p_notes: document.getElementById("pNotes").value.trim() || null, p_created_by: "Kristy",
+      p_confirm_gap: pGapPending
     });
+    pGapPending = false;
     closeNewPeriod();
     await reloadPayrollLookups();
     renderPayroll();
   }catch(e){
     console.error(e);
     const msg = String(e.message||"");
-    if(msg.includes("PERIOD_OVERLAPS_EXISTING")) err.textContent = "Those dates overlap an existing payroll period.";
-    else if(msg.includes("INVALID_PERIOD_RANGE")) err.textContent = "End date must be on or after the start date.";
-    else err.textContent = "Couldn't create this period. Please try again.";
-    save.disabled = false; save.textContent = "Create period";
+    if(msg.includes("PERIOD_GAP_REQUIRES_CONFIRMATION")){
+      pGapPending = true;
+      err.textContent = "There's a gap between this and your existing payroll periods — any bookings in that gap won't be counted in payroll. This can be intentional (a salon closure, a schedule change). Click \"Create anyway\" to continue, or adjust the dates.";
+      save.disabled = false; save.textContent = "Create anyway";
+    }else if(msg.includes("PERIOD_OVERLAPS_EXISTING")){
+      err.textContent = "Those dates overlap an existing payroll period.";
+      save.disabled = false; save.textContent = "Create period";
+    }else if(msg.includes("INVALID_PERIOD_RANGE")){
+      err.textContent = "End date must be on or after the start date.";
+      save.disabled = false; save.textContent = "Create period";
+    }else{
+      err.textContent = "Couldn't create this period. Please try again.";
+      save.disabled = false; save.textContent = "Create period";
+    }
   }
 }
 
@@ -2436,7 +2977,10 @@ function renderPayrollHistory(){
   wrap.innerHTML = `<h3 style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:10px">Payroll history</h3>` +
     closed.map(p=>`<div class="pay-history-row" onclick="viewClosedPeriod('${p.id}')">
       <div><div class="l">${esc(p.label)}</div><div class="d">${fmtPayDate(p.period_start)} – ${fmtPayDate(p.period_end)} · closed ${fmtPayDate(p.closed_at)}</div></div>
-      <div class="t" id="hist-total-${p.id}">…</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="t" id="hist-total-${p.id}">…</div>
+        <button class="btn" onclick="event.stopPropagation(); doReopenPeriod('${p.id}')">Reopen</button>
+      </div>
     </div>`).join("");
   closed.forEach(async p=>{
     try{
@@ -2446,6 +2990,22 @@ function renderPayrollHistory(){
       if(el) el.textContent = money(total);
     }catch(e){ /* silent — history total is informational only */ }
   });
+}
+
+// Owner-only in effect (protected by the Payroll PIN, same as every other
+// payroll action — payrollWrite() already attaches it automatically).
+// Deliberately no "Delete Payroll" — reopening preserves the audit trail
+// (created_at, original label, who reopened it) instead of erasing history.
+async function doReopenPeriod(periodId){
+  if(!confirm("Reopen this payroll period? Its frozen totals will be cleared, and you'll need to close it again once corrected.")) return;
+  try{
+    await payrollWrite("reopen_payroll_period", { p_payroll_period_id: periodId, p_reopened_by: "Kristy" });
+    await reloadPayrollLookups();
+    renderPayroll();
+  }catch(e){
+    console.error(e);
+    alert("Couldn't reopen this period. Please try again.");
+  }
 }
 async function viewClosedPeriod(periodId){
   try{
@@ -2535,9 +3095,12 @@ async function renderSettingsAccess(){
     <div class="settings-section-title">Access &amp; Security</div>
     <div class="settings-section-sub">Change your dashboard passcode and set up the Payroll PIN.</div>
     <div id="accPassCard"></div>
+    <div id="accStaffPassCard"></div>
     <div id="accPinCard"><div class="settings-placeholder">Loading…</div></div>
+    ${collapsibleCard("dataHealthCheck", "Data Health Check", "Checks that services, staff, and hours are all set up correctly for booking.", `<button class="btn" type="button" onclick="runWebsiteSyncCheck()">Run Check</button><div id="wsCheckResults"></div>`)}
   `;
   renderAccessPasswordCard();
+  renderStaffPasscodeCard();
 
   let status;
   try{
@@ -2552,10 +3115,7 @@ async function renderSettingsAccess(){
 }
 
 function renderAccessPasswordCard(){
-  document.getElementById("accPassCard").innerHTML = `
-    <div class="settings-card">
-      <div class="settings-section-title" style="font-size:16px">Dashboard Password</div>
-      <div class="settings-card-note">Used by anyone logging into this dashboard.</div>
+  const bodyHtml = `
       <label for="accCurPass">Current password</label>
       <div class="pw-wrap"><input type="password" id="accCurPass" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accCurPass', this)">👁</button></div>
       <label for="accNewPass">New password</label>
@@ -2563,9 +3123,64 @@ function renderAccessPasswordCard(){
       <label for="accNewPass2">Confirm new password</label>
       <div class="pw-wrap"><input type="password" id="accNewPass2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPass2', this)">👁</button></div>
       <div class="rmodal-err" id="accPassErr"></div>
-      <div class="settings-success" id="accPassOk" style="display:none">✓ Dashboard password updated successfully.</div>
-      <button class="btn accent" id="accPassSave" onclick="submitChangePasscode()">Update password</button>
-    </div>`;
+      <div class="settings-success" id="accPassOk" style="display:none">✓ Owner password updated successfully.</div>
+      <button class="btn accent" id="accPassSave" onclick="submitChangePasscode()">Update password</button>`;
+  document.getElementById("accPassCard").innerHTML = collapsibleCard(
+    "ownerPass", "Owner Password", "Full access — Today, Week, Insights, Customers, Payroll, and Settings.", bodyHtml
+  );
+}
+
+// Staff get their own password — Today, Week, and Aivy only. Every
+// Settings/Payroll/Insights/Customers action is rejected server-side for
+// this tier regardless of what the UI shows, so this isn't just a nav
+// convenience — it's the real boundary.
+function renderStaffPasscodeCard(){
+  const bodyHtml = `
+      <label for="accOwnerPassForStaff">Your owner password</label>
+      <div class="pw-wrap"><input type="password" id="accOwnerPassForStaff" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accOwnerPassForStaff', this)">👁</button></div>
+      <label for="accStaffPass">Staff password</label>
+      <div class="pw-wrap"><input type="password" id="accStaffPass" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accStaffPass', this)">👁</button></div>
+      <label for="accStaffPass2">Confirm staff password</label>
+      <div class="pw-wrap"><input type="password" id="accStaffPass2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accStaffPass2', this)">👁</button></div>
+      <div class="rmodal-err" id="accStaffPassErr"></div>
+      <div class="settings-success" id="accStaffPassOk" style="display:none">✓ Staff password updated successfully.</div>
+      <button class="btn accent" id="accStaffPassSave" onclick="submitSetStaffPasscode()">Save staff password</button>`;
+  document.getElementById("accStaffPassCard").innerHTML = collapsibleCard(
+    "staffPass", "Staff Password", "Give this to employees. It only unlocks Today, Week, and Aivy — Insights, Customers, Payroll, and Settings stay hidden and blocked.", bodyHtml
+  );
+}
+
+async function submitSetStaffPasscode(){
+  const ownerPass = document.getElementById("accOwnerPassForStaff").value;
+  const next = document.getElementById("accStaffPass").value;
+  const next2 = document.getElementById("accStaffPass2").value;
+  const err = document.getElementById("accStaffPassErr");
+  const ok = document.getElementById("accStaffPassOk");
+  const save = document.getElementById("accStaffPassSave");
+  err.textContent = ""; ok.style.display = "none";
+
+  if(!ownerPass){ err.textContent = "Enter your owner password to confirm."; return; }
+  if(next.length < 4){ err.textContent = "Staff password must be at least 4 characters."; return; }
+  if(next !== next2){ err.textContent = "Staff passwords don't match."; return; }
+  if(next === ownerPass){ err.textContent = "Staff password must be different from the owner password."; return; }
+
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("set_staff_passcode", { p_salon_id: CONFIG.SALON_ID, p_owner_passcode: ownerPass, p_new_staff_passcode: next });
+    ok.style.display = "block";
+    document.getElementById("accOwnerPassForStaff").value = "";
+    document.getElementById("accStaffPass").value = "";
+    document.getElementById("accStaffPass2").value = "";
+  }catch(e){
+    console.error(e);
+    const msg = String(e.message||"");
+    if(msg.includes("OWNER_PASSCODE_INCORRECT")) err.textContent = "That doesn't match your owner password.";
+    else if(msg.includes("NEW_PASSCODE_TOO_SHORT")) err.textContent = "Staff password must be at least 4 characters.";
+    else if(msg.includes("STAFF_PASSCODE_MUST_DIFFER")) err.textContent = "Staff password must be different from the owner password.";
+    else err.textContent = "Couldn't save the staff password. Please try again.";
+  }finally{
+    save.disabled = false; save.textContent = "Save staff password";
+  }
 }
 
 async function submitChangePasscode(){
@@ -2602,14 +3217,9 @@ async function submitChangePasscode(){
 
 function renderAccessPinCard(pinSet){
   const card = document.getElementById("accPinCard");
-  const statusHtml = pinSet
-    ? `<div class="pin-status on">Payroll PIN: Enabled ✓</div>`
-    : `<div class="pin-status off">Payroll PIN: Not configured</div>`;
+  const statusText = pinSet ? "Payroll PIN: Enabled ✓" : "Payroll PIN: Not configured";
   if(!pinSet){
-    card.innerHTML = `
-      <div class="settings-card">
-        <div class="settings-section-title" style="font-size:16px">Payroll PIN</div>
-        ${statusHtml}
+    const bodyHtml = `
         <div class="settings-card-note">Not set up yet — Payroll data is currently unprotected beyond the main dashboard password. We recommend setting a PIN to keep compensation and payroll numbers private from anyone else who has the dashboard password.</div>
         <label for="accNewPin">New PIN</label>
         <div class="pw-wrap"><input type="password" id="accNewPin" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin', this)">👁</button></div>
@@ -2617,13 +3227,10 @@ function renderAccessPinCard(pinSet){
         <div class="pw-wrap"><input type="password" id="accNewPin2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin2', this)">👁</button></div>
         <div class="rmodal-err" id="accPinErr"></div>
         <div class="settings-success" id="accPinOk" style="display:none">✓ Payroll PIN set successfully.</div>
-        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(false)">Set up PIN</button>
-      </div>`;
+        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(false)">Set up PIN</button>`;
+    card.innerHTML = collapsibleCard("payrollPin", "Payroll PIN", statusText, bodyHtml);
   }else{
-    card.innerHTML = `
-      <div class="settings-card">
-        <div class="settings-section-title" style="font-size:16px">Payroll PIN</div>
-        ${statusHtml}
+    const bodyHtml = `
         <div class="settings-card-note">Required to view or edit compensation and payroll data.</div>
         <label for="accCurPin">Current PIN</label>
         <div class="pw-wrap"><input type="password" id="accCurPin" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accCurPin', this)">👁</button></div>
@@ -2633,8 +3240,8 @@ function renderAccessPinCard(pinSet){
         <div class="pw-wrap"><input type="password" id="accNewPin2" autocomplete="off"><button type="button" class="pw-toggle" title="Show" onclick="togglePwVisibility('accNewPin2', this)">👁</button></div>
         <div class="rmodal-err" id="accPinErr"></div>
         <div class="settings-success" id="accPinOk" style="display:none">✓ Payroll PIN updated successfully.</div>
-        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(true)">Update PIN</button>
-      </div>`;
+        <button class="btn accent" id="accPinSave" onclick="submitPayrollPinChange(true)">Update PIN</button>`;
+    card.innerHTML = collapsibleCard("payrollPin", "Payroll PIN", statusText, bodyHtml);
   }
 }
 
@@ -2672,10 +3279,7 @@ async function submitPayrollPinChange(hasExisting){
 function renderSettingsBusinessInfo(){
   const s = store.salon || {};
   const wrap = document.getElementById("settingsWrap");
-  wrap.innerHTML = `
-    <div class="settings-section-title">Business Information</div>
-    <div class="settings-section-sub">Shown on your dashboard and public website.</div>
-    <div class="settings-card">
+  const formHtml = `
       <label for="biName">Salon name</label>
       <input type="text" id="biName" value="${esc(s.name)}">
       <label for="biPhone">Phone number</label>
@@ -2696,8 +3300,11 @@ function renderSettingsBusinessInfo(){
       <input type="url" id="biMapsUrl" value="${esc(s.maps_url)}" placeholder="https://maps.google.com/?q=...">
       <div class="rmodal-err" id="biErr"></div>
       <div class="settings-success" id="biOk" style="display:none">✓ Business information updated successfully.</div>
-      <button class="btn accent" id="biSave" onclick="submitBusinessInfo()">Save changes</button>
-    </div>`;
+      <button class="btn accent" id="biSave" onclick="submitBusinessInfo()">Save changes</button>`;
+  wrap.innerHTML = `
+    <div class="settings-section-title">Business Information</div>
+    <div class="settings-section-sub">Shown on your dashboard and public website.</div>
+    ${collapsibleCard("biCard", s.name || "Business details", "Name, phone, email, and address", formHtml)}`;
 }
 
 async function submitBusinessInfo(){
@@ -2778,16 +3385,16 @@ function renderSettingsBusinessHours(){
     </div>`;
   }).join("");
 
-  wrap.innerHTML = `
-    <div class="settings-section-title">Business Hours</div>
-    <div class="settings-section-sub">Weekly hours and salon closures.</div>
-    <div class="settings-card" style="max-width:520px">
+  const hoursFormHtml = `
       <div class="bh-rows">${rows}</div>
       <div id="bhConflictWarning"></div>
       <div class="rmodal-err" id="bhErr"></div>
       <div class="settings-success" id="bhOk" style="display:none">✓ Business hours updated successfully.</div>
-      <button class="btn accent" id="bhSave" onclick="submitBusinessHours()">Save hours</button>
-    </div>
+      <button class="btn accent" id="bhSave" onclick="submitBusinessHours()">Save hours</button>`;
+  wrap.innerHTML = `
+    <div class="settings-section-title">Business Hours</div>
+    <div class="settings-section-sub">Weekly hours and salon closures.</div>
+    ${collapsibleCard("bhCard", "Weekly hours", "Mon–Sun open and close times", hoursFormHtml)}
     <div id="bhClosuresWrap"></div>`;
   document.getElementById("bhClosuresWrap").innerHTML = renderSalonClosuresCard();
   onBusinessHoursChanged();
@@ -2899,12 +3506,14 @@ function renderSettingsServices(){
   const wrap = document.getElementById("settingsWrap");
   const all = Object.values(store.services || {});
   const liveCount = all.filter(s => !s.archived_at).length;
-  const catCount = new Set(all.filter(s => !s.archived_at).map(s => s.category || "uncategorized")).size;
+  const activeCategories = [...new Set(all.filter(s => !s.archived_at).map(s => s.category || "uncategorized"))].sort((a,b)=>svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+  const catCount = activeCategories.length;
 
   wrap.innerHTML = `
     <div class="settings-section-title">Services</div>
     <div class="settings-section-sub">Add, edit, deactivate, or archive services shown on your booking flow.</div>
     <div class="svc-summary">${liveCount} service${liveCount === 1 ? "" : "s"} across ${catCount} categor${catCount === 1 ? "y" : "ies"}</div>
+    ${collapsibleCard("categoryPhotos", "Category Photos", "One photo per section (Enhancements, Lashes, Nail Care, etc.) — shown on your website instead of a photo on every single service.", renderCategoryPhotosBody(activeCategories))}
     <div class="svc-toolbar">
       <input type="text" id="svcSearchInput" placeholder="Search services…" value="${esc(svcSearch)}" oninput="svcOnSearch(this.value)">
       <label class="tm-check"><input type="checkbox" id="svcShowArchivedToggle" ${svcShowArchived ? "checked" : ""} onchange="svcToggleArchived(this.checked)"> Show archived</label>
@@ -2913,6 +3522,37 @@ function renderSettingsServices(){
     <div id="svcCategoriesWrap"></div>
   `;
   renderServiceCategories();
+}
+
+function renderCategoryPhotosBody(categories){
+  if(!categories.length) return `<div class="settings-card-note">Add services first, then come back here to add a photo per category.</div>`;
+  const hint = `<div class="settings-card-note" style="margin-bottom:14px">💡 Wide, landscape photos work best here — they'll show your whole photo without cropping.</div>`;
+  return hint + categories.map(cat => wsPhotoPickerHtml({
+    fieldId: `catImg_${cat.replace(/[^a-zA-Z0-9]/g,"_")}`,
+    kind: "category",
+    currentUrl: (store.categoryImages||{})[cat] || "",
+    label: svcCategoryLabel(cat),
+  }) + `<button class="btn accent" style="margin-top:6px" onclick="submitCategoryImage('${cat.replace(/'/g,"\\'")}','catImg_${cat.replace(/[^a-zA-Z0-9]/g,"_")}')">Save ${esc(svcCategoryLabel(cat))} photo</button>
+  <div class="rmodal-err" id="catImgErr_${cat.replace(/[^a-zA-Z0-9]/g,"_")}"></div>
+  <div class="settings-success" id="catImgOk_${cat.replace(/[^a-zA-Z0-9]/g,"_")}" style="display:none">Saved!</div>
+  <hr style="margin:16px 0;border:none;border-top:1px solid var(--line)">`).join("");
+}
+
+async function submitCategoryImage(category, fieldId){
+  const safeId = fieldId.replace(/[^a-zA-Z0-9_]/g,"");
+  const err = document.getElementById(`catImgErr_${safeId.replace("catImg_","")}`);
+  const ok = document.getElementById(`catImgOk_${safeId.replace("catImg_","")}`);
+  const url = document.getElementById(fieldId).value.trim();
+  try{
+    await payrollWrite("set_service_category_image", { p_category: category, p_image_url: url || null });
+    store.categoryImages = store.categoryImages || {};
+    if(url) store.categoryImages[category] = url; else delete store.categoryImages[category];
+    if(ok) ok.style.display = "block";
+    if(err) err.textContent = "";
+  }catch(e){
+    console.error(e);
+    if(err) err.textContent = "Couldn't save this photo. Please try again.";
+  }
 }
 
 // Rendered separately from the toolbar/search input so typing in the search
@@ -2933,14 +3573,6 @@ function renderServiceCategories(){
   });
 
   const categories = Object.keys(byCategory).sort((a, b) => svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
-
-  // First-ever render this session: open the first category so the page
-  // doesn't look empty on arrival. Never re-applied after that, so it
-  // doesn't fight any collapsing the owner does later.
-  if(!svcDefaultOpenApplied && categories.length){
-    svcCategoryOpen[categories[0]] = true;
-    svcDefaultOpenApplied = true;
-  }
 
   // A live search auto-expands whatever matches; collapse state is otherwise
   // left exactly as the owner set it.
@@ -3015,6 +3647,8 @@ function svcOnSearch(val){
 async function reloadServices(){
   const rows = await api.get("services", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=${CONFIG.ROW_LIMIT}`);
   store.services = Object.fromEntries((Array.isArray(rows) ? rows : []).map(s => [s.id, s]));
+  const catRows = await api.get("service_category_images", `${CONFIG.SALON_FK}=eq.${CONFIG.SALON_ID}&limit=100`).catch(()=>[]);
+  store.categoryImages = Object.fromEntries((Array.isArray(catRows) ? catRows : []).map(c => [c.category, c.image_url]));
 }
 
 // Client-side preview only, using data already loaded at boot (store.assembled
@@ -3040,6 +3674,7 @@ function openServiceModal(id){
   document.getElementById("svcPrice").value = s && s.price != null ? Number(s.price) : "";
   document.getElementById("svcPriceFrom").checked = s ? !!s.price_from : false;
   document.getElementById("svcDuration").value = s && s.duration_minutes != null ? s.duration_minutes : "";
+  document.getElementById("svcDescription").value = s ? (s.description || "") : "";
   document.getElementById("svcErr").textContent = "";
   document.getElementById("svcNewNote").style.display = s ? "none" : "block";
 
@@ -3085,6 +3720,7 @@ async function submitService(){
       p_duration_minutes: duration,
       p_price_from: priceFrom,
       p_display_order: null,
+      p_description: document.getElementById("svcDescription").value.trim() || null,
     });
     await reloadServices();
     closeServiceModal();
@@ -3266,7 +3902,7 @@ function staffCardHtml(t){
       ${store.techTokens[t.id]
         ? `<button class="tl-btn" onclick="copyTechLink('${t.id}')">📋 Copy schedule link</button>
            <button class="tl-btn tl-reset" onclick="resetTechLink('${t.id}')">🔄 Reset link</button>`
-        : `<span class="none">No schedule link yet.</span>`}
+        : `<button class="tl-btn" onclick="createTechLink('${t.id}')">🔗 Create schedule link</button>`}
     </div>
   </div>`;
 }
@@ -3572,19 +4208,625 @@ async function runWebsiteSyncCheck(){
   `;
 }
 
+/* ---------- Website (Settings) ----------
+   Five sections (Identity, Homepage, Photos, Contact & Social, Search &
+   Discovery) plus a simple status overview. Written in plain, owner-facing
+   language throughout — no mention of databases, live reads, or deploys.
+   Every field maps to website_settings / website_gallery_images and shows
+   up on the real site right after saving. */
+
+let wsCurrentTab = "homepage";
+let wsGalleryEditId = null; // null = "add new photo" mode in the Photos panel
+let wsUploadBusy = {}; // per-field-id upload-in-progress flag, keyed by target input id
+
+const WEBSITE_SUBTABS = [
+  { id: "homepage",         label: "Homepage" },
+  { id: "photos",           label: "Photos" },
+  { id: "contact_social",   label: "Contact & Social" },
+  { id: "search_discovery", label: "Google & Sharing" },
+];
+
+// Fine-grained weights power the % (Homepage 40, Identity 20, Photos 20,
+// Contact & Social 10, Search & Discovery 10) — unchanged from the frozen
+// design. The checklist below groups these into a handful of plain,
+// human-sized todo items instead of showing all fourteen individually.
+function websiteChecks(){
+  const ws = store.websiteSettings || {};
+  const s = store.salon || {};
+  const workPhotos = wsGalleryImagesOfType("client_work");
+  const storyPhotos = wsGalleryImagesOfType("about");
+  return [
+    { weight: 20, pass: !!ws.hero_image_url },
+    { weight: 15, pass: !!ws.about_text },
+    { weight: 20, pass: workPhotos.length > 0 },
+    { weight: 15, pass: storyPhotos.length > 0 },
+    { weight: 15, pass: !!(ws.social_yelp || ws.google_review_url) },
+    { weight: 15, pass: !!(ws.seo_title || ws.seo_description) },
+    // Not weighted into the % (this is always true once the salon exists
+    // at all) — included only so the checklist can show it as done.
+    { weight: 0,  pass: !!(s.name && s.phone && s.address), _businessInfo: true },
+  ];
+}
+function websiteCompletionPct(){
+  const checks = websiteChecks().filter(c=>!c._businessInfo);
+  const total = checks.reduce((sum,c)=>sum+c.weight, 0);
+  const earned = checks.reduce((sum,c)=>sum+(c.pass?c.weight:0), 0);
+  return Math.round((earned/total)*100);
+}
+// Plain-language checklist for the overview — a handful of grouped items,
+// not all fourteen underlying fields.
+function websiteChecklist(){
+  const ws = store.websiteSettings || {};
+  const s = store.salon || {};
+  const workPhotos = wsGalleryImagesOfType("client_work");
+  const storyPhotos = wsGalleryImagesOfType("about");
+  return [
+    { pass: !!(s.name && s.phone && s.address), label: "Business information complete" },
+    { pass: !!ws.hero_image_url, label: "Homepage photo added" },
+    { pass: !!ws.about_text, label: "About your salon added" },
+    { pass: workPhotos.length > 0, label: "Our Work photo added" },
+    { pass: storyPhotos.length > 0, label: "Our Story photo added" },
+    { pass: !!(ws.social_yelp || ws.google_review_url), label: "Review link added" },
+    { pass: !!(ws.seo_title || ws.seo_description), label: "Search details added" },
+  ];
+}
+
+// TEMPORARY / DEV-ONLY: while iterating locally, point the website preview
+// at a local file instead of the deployed Workers site, for fast
+// edit-save-refresh feedback. Save each new website export using exactly
+// this filename, in the same folder as this dashboard file. Flip
+// WS_DEV_MODE back to false (or delete this block) to return to
+// production — that's the entire revert.
+const WS_DEV_MODE = true;
+const WS_DEV_LOCAL_FILENAME = "website_preview.html";
+
+function websiteLiveUrl(){
+  if(WS_DEV_MODE) return WS_DEV_LOCAL_FILENAME; // relative path — resolves next to this dashboard file
+  return "https://velour-platform.redpersimmon.workers.dev/";
+}
+
 function renderSettingsWebsite(){
   const wrap = document.getElementById("settingsWrap");
   wrap.innerHTML = `
     <div class="settings-section-title">Website</div>
-    <div class="settings-section-sub">The website reads live from this same database — there's nothing to "push." This checks whether the data it depends on is complete right now.</div>
-    <div class="svc-toolbar">
-      <button class="btn accent svc-add-btn" type="button" onclick="runWebsiteSyncCheck()">Test website sync</button>
+    <div class="settings-section-sub">Update your website here. Changes appear on your website right away.</div>
+    <div id="wsOverviewWrap"></div>
+    <div class="settings-tabs-sub">
+      ${WEBSITE_SUBTABS.map(t => `<button class="settings-tab-sub ${t.id===wsCurrentTab?'active':''}" data-tab-id="${t.id}" onclick="wsSwitchTab('${t.id}')">${esc(t.label)}</button>`).join("")}
     </div>
-    <div id="wsCheckResults"><div class="svc-empty">Click "Test website sync" to check.</div></div>
+    <div id="wsSubWrap"></div>
+  `;
+  wsRenderOverview();
+  wsRenderSubTab();
+}
+
+// Its own container so a save's "Saved!" message (in wsSubWrap) never gets
+// wiped out by refreshing the checklist/percent above it.
+function wsRenderOverview(){
+  const holder = document.getElementById("wsOverviewWrap");
+  if(!holder) return;
+  const url = websiteLiveUrl();
+  const items = websiteChecklist();
+  const doneCount = items.filter(c=>c.pass).length;
+  const checklistHtml = items.map(c =>
+    `<div class="ws-check-row ${c.pass?'done':''}">${c.pass ? "✓" : "☐"} ${esc(c.label)}</div>`
+  ).join("");
+
+  holder.innerHTML = `
+    <div class="settings-card ws-overview">
+      <div class="ws-overview-top">
+        <div>
+          <div class="ws-live-pill">● Website Status: Live</div>
+        </div>
+        <div class="ws-readiness">
+          <div class="ws-readiness-pct">${doneCount} of ${items.length}</div>
+          <div class="ws-readiness-label">Done</div>
+        </div>
+      </div>
+      <div class="ws-checklist">${checklistHtml}</div>
+      <div class="ws-overview-actions">
+        <button class="btn accent" type="button" onclick="window.open('${esc(url)}','_blank')">View Website</button>
+        <button class="btn" type="button" onclick="wsCopyLink()">Copy Website Link</button>
+      </div>
+    </div>`;
+}
+
+async function wsCopyLink(){
+  const url = websiteLiveUrl();
+  try{ await navigator.clipboard.writeText(url); }catch(e){ /* fall through to prompt below */ }
+  prompt("Your website link:", url);
+}
+
+function wsSwitchTab(id){
+  wsCurrentTab = id;
+  document.querySelectorAll(".settings-tab-sub").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tabId === id);
+  });
+  wsRenderSubTab();
+}
+
+function wsRenderSubTab(){
+  const holder = document.getElementById("wsSubWrap");
+  if(!holder) return;
+  if(wsCurrentTab === "homepage")         return wsRenderHomepage(holder);
+  if(wsCurrentTab === "photos")           return wsRenderPhotos(holder);
+  if(wsCurrentTab === "contact_social")   return wsRenderContactSocial(holder);
+  if(wsCurrentTab === "search_discovery") return wsRenderSeo(holder);
+}
+
+/* ---- Shared save helper: every section calls the same single save
+   action, sending only its own fields (blank fields never erase what
+   another section already saved). */
+async function wsSaveFields(saveBtnId, errId, okId, fields){
+  const err = document.getElementById(errId);
+  const ok = document.getElementById(okId);
+  const save = document.getElementById(saveBtnId);
+  err.textContent = ""; ok.style.display = "none";
+  const origText = save.textContent;
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    await payrollWrite("update_website_settings", fields);
+    await reloadWebsiteContent();
+    ok.style.display = "block";
+    wsRenderOverview(); // percent/checklist move immediately, form stays put
+  }catch(e){
+    console.error(e);
+    err.textContent = "Something went wrong — please try again.";
+  }finally{
+    save.disabled = false; save.textContent = origText;
+  }
+}
+
+async function reloadWebsiteContent(){
+  const salon = CONFIG.SALON_FK, eq = v => `eq.${v}`;
+  const [wsRows, galRows] = await Promise.all([
+    api.get("website_settings", `${salon}=${eq(CONFIG.SALON_ID)}&limit=1`).catch(()=>[]),
+    api.get("website_gallery_images", `${salon}=${eq(CONFIG.SALON_ID)}&order=display_order.asc&limit=${CONFIG.ROW_LIMIT}`).catch(()=>[]),
+  ]);
+  store.websiteSettings = (Array.isArray(wsRows) && wsRows[0]) || null;
+  store.websiteGallery = Array.isArray(galRows) ? galRows : [];
+}
+
+/* ---- Shared image upload helper ----
+   Turns a picked file into a real URL: reads it, sends it to the same
+   passcode-gated write endpoint everything else uses, and drops the
+   returned URL into the given hidden input + preview image. The owner
+   never sees or types a URL. */
+function wsFileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+const WS_MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // matches the server-side cap
+
+async function wsHandleImagePick(fileInputEl, kind, hiddenInputId, previewImgId, statusElId){
+  const file = fileInputEl.files && fileInputEl.files[0];
+  if(!file) return;
+  const statusEl = document.getElementById(statusElId);
+  if(!file.type.startsWith("image/")){
+    if(statusEl) statusEl.textContent = "Please choose an image file.";
+    return;
+  }
+  if(file.size > WS_MAX_UPLOAD_BYTES){
+    if(statusEl) statusEl.textContent = "That photo is too large — please choose one under 5MB.";
+    return;
+  }
+  if(statusEl) statusEl.textContent = "Uploading…";
+  try{
+    const base64 = await wsFileToBase64(file);
+    const result = await payrollWrite("upload_website_image", {
+      p_kind: kind,
+      p_file_name: file.name,
+      p_content_type: file.type,
+      p_file_base64: base64,
+    });
+    const url = result && result.url;
+    if(!url) throw new Error("NO_URL_RETURNED");
+    document.getElementById(hiddenInputId).value = url;
+    const img = document.getElementById(previewImgId);
+    if(img){ img.src = url; img.style.display = ""; }
+    const emptyIcon = document.getElementById(hiddenInputId + "_empty");
+    if(emptyIcon) emptyIcon.style.display = "none";
+    const removeBtn = document.getElementById(hiddenInputId + "_remove");
+    if(removeBtn){ removeBtn.style.display = ""; const chooseBtn = removeBtn.previousElementSibling; if(chooseBtn) chooseBtn.textContent = "Replace Photo"; }
+    if(statusEl) statusEl.textContent = "";
+  }catch(e){
+    console.error(e);
+    if(statusEl) statusEl.textContent = "Upload failed — please try again.";
+  }finally{
+    fileInputEl.value = "";
+  }
+}
+
+// Small reusable "photo picker" widget: a preview (or friendly empty
+// square), a button that opens the phone/computer's own picker, and a
+// hidden input holding the actual URL once uploaded — this is the only
+// place a URL exists, and the owner never sees it.
+function wsPhotoPickerHtml(opts){
+  const { fieldId, kind, currentUrl, label } = opts;
+  return `
+    <div class="ws-photo-picker">
+      ${label ? `<label>${esc(label)}</label>` : ""}
+      <div class="ws-photo-picker-row">
+        <div class="ws-photo-preview-wrap">
+          <img id="${fieldId}_preview" src="${esc(currentUrl)}" style="${currentUrl ? "" : "display:none"}" alt="">
+          <div class="ws-photo-preview-empty" id="${fieldId}_empty" style="${currentUrl ? "display:none" : ""}">📷</div>
+        </div>
+        <div>
+          <input type="file" accept="image/*" id="${fieldId}_file" style="display:none"
+            onchange="wsHandleImagePick(this,'${kind}','${fieldId}','${fieldId}_preview','${fieldId}_status')">
+          <button type="button" class="btn" onclick="document.getElementById('${fieldId}_file').click()">${currentUrl ? "Replace Photo" : "Choose Photo"}</button>
+          <button type="button" class="btn ws-photo-remove" id="${fieldId}_remove" onclick="wsClearPhoto('${fieldId}')" style="${currentUrl ? "" : "display:none"}">Remove</button>
+          <div class="ws-photo-status" id="${fieldId}_status"></div>
+        </div>
+      </div>
+      <input type="hidden" id="${fieldId}" value="${esc(currentUrl)}">
+    </div>`;
+}
+
+// Clears the picker back to its empty state and marks the hidden input
+// with an explicit empty string — distinct from never having touched the
+// field — so Save actually removes the photo instead of leaving it as-is.
+function wsClearPhoto(fieldId){
+  document.getElementById(fieldId).value = "";
+  const img = document.getElementById(fieldId + "_preview");
+  if(img){ img.style.display = "none"; img.src = ""; }
+  const empty = document.getElementById(fieldId + "_empty");
+  if(empty) empty.style.display = "";
+  const removeBtn = document.getElementById(fieldId + "_remove");
+  if(removeBtn) removeBtn.style.display = "none";
+  const chooseBtn = removeBtn ? removeBtn.previousElementSibling : null;
+  if(chooseBtn) chooseBtn.textContent = "Choose Photo";
+}
+
+/* ---- Homepage (Hero photo + About text) — side by side on desktop ----
+   Headline/supporting-line inputs and the old single About Photo slot were
+   removed by deliberate decision: the headline/subline have a hardcoded
+   fallback on the site itself (never goes blank), and About photos are now
+   managed as a proper multi-photo pool under the Photos tab ("Our Story"),
+   not a single slot here. */
+function wsRenderHomepage(holder){
+  const ws = store.websiteSettings || {};
+  holder.innerHTML = `
+    <div class="ws-homepage-grid">
+      <div class="settings-card">
+        <div class="settings-section-sub" style="margin-bottom:16px">The first thing customers see</div>
+        ${wsPhotoPickerHtml({ fieldId: "wsHeroImg", kind: "hero", currentUrl: ws.hero_image_url, label: "Homepage Photo" })}
+        <div class="rmodal-err" id="wsHeroErr"></div>
+        <div class="settings-success" id="wsHeroOk" style="display:none">Saved!</div>
+        <button class="btn accent" id="wsHeroSave" onclick="wsSaveHero()">Save</button>
+      </div>
+      <div class="settings-card">
+        <div class="settings-section-sub" style="margin-bottom:16px">Tell customers about your salon</div>
+        <label for="wsAboutText">About Your Salon</label>
+        <textarea id="wsAboutText" rows="5" placeholder="What makes your salon special? A little history, your style, what customers can expect.">${esc(ws.about_text)}</textarea>
+        <div class="settings-section-sub" style="margin-top:6px">Add your story photos under the Photos tab.</div>
+        <div class="rmodal-err" id="wsAboutErr"></div>
+        <div class="settings-success" id="wsAboutOk" style="display:none">Saved!</div>
+        <button class="btn accent" id="wsAboutSave" onclick="wsSaveAbout()">Save</button>
+      </div>
+    </div>`;
+}
+async function wsSaveHero(){
+  await wsSaveFields("wsHeroSave", "wsHeroErr", "wsHeroOk", {
+    p_hero_image_url: document.getElementById("wsHeroImg").value.trim(),
+  });
+}
+async function wsSaveAbout(){
+  await wsSaveFields("wsAboutSave", "wsAboutErr", "wsAboutOk", {
+    p_about_text: document.getElementById("wsAboutText").value.trim(),
+  });
+}
+
+/* ---- Photos (Gallery) ----
+   One tab, two owner-curated pools, split by `photo_type`:
+     - "Our Work" (client_work) — real client nail/lash/spa photos, the
+       main gallery visitors browse.
+     - "Our Story" (about) — the salon's own about-section photos, shown
+       as the 3 tiles next to the About text on the homepage. Previously
+       this section reused the hero's decorative accent photos as a
+       shortcut; it now has its own real pool so the owner controls what
+       represents the salon here, independent of the hero. */
+const WS_PHOTO_GROUPS = [
+  { type: "client_work", heading: "Our Work",  hint: "Real client nail art, lash work, and spa photos — your main gallery." },
+  { type: "about",       heading: "Our Story",  hint: "3 photos shown next to your About text on the homepage. A short caption on each is optional." },
+];
+
+function wsGalleryImagesOfType(type){
+  return (store.websiteGallery||[])
+    .filter(g => g.active!==false && (g.photo_type||"client_work")===type)
+    .sort((a,b)=>(a.display_order||0)-(b.display_order||0));
+}
+
+function wsRenderPhotos(holder){
+  holder.innerHTML = WS_PHOTO_GROUPS.map(g => `<div class="settings-card" style="max-width:640px" id="wsPhotoGroup_${g.type}"></div>`).join("")
+    + `<div id="wsGalleryModalWrap"></div>`;
+  WS_PHOTO_GROUPS.forEach(g => wsRenderPhotoGroup(g.type));
+}
+
+function wsRenderPhotoGroup(type){
+  const group = WS_PHOTO_GROUPS.find(g => g.type === type);
+  const card = document.getElementById(`wsPhotoGroup_${type}`);
+  if(!card || !group) return;
+  const images = wsGalleryImagesOfType(type);
+  const fileInputId = `wsGalMultiFile_${type}`;
+  const statusId = `wsGalUploadStatus_${type}`;
+  const pickerHtml = `
+    <input type="file" accept="image/*" multiple id="${fileInputId}" style="display:none" onchange="wsHandleGalleryFilesPick(this,'${type}')">
+    <button class="btn accent svc-add-btn" type="button" onclick="document.getElementById('${fileInputId}').click()">+ Add Photos</button>
+    <div class="ws-photo-status" id="${statusId}"></div>`;
+
+  const rows = images.map((img, idx) => `<div class="ws-photo-tile">
+      <img src="${esc(img.image_url)}" alt="${esc(img.alt_text||img.caption||'')}" onerror="this.style.visibility='hidden'">
+      <div class="ws-photo-tile-caption">${img.caption ? esc(img.caption) : `<em>No caption</em>`}</div>
+      <div class="ws-photo-tile-actions">
+        <button title="Move earlier" ${idx===0?"disabled":""} onclick="wsMoveGalleryImage('${img.id}','${type}',-1)">↑</button>
+        <button title="Move later" ${idx===images.length-1?"disabled":""} onclick="wsMoveGalleryImage('${img.id}','${type}',1)">↓</button>
+        <button onclick="wsOpenGalleryModal('${img.id}')">Edit</button>
+        <button onclick="wsArchiveGalleryImage('${img.id}','${type}')">Delete</button>
+      </div>
+    </div>`).join("");
+
+  card.innerHTML = `
+    <div class="settings-section-title" style="font-size:16px;margin-bottom:2px">${esc(group.heading)}</div>
+    <div class="settings-section-sub">${esc(group.hint)}</div>
+    ${images.length ? `<div class="svc-toolbar">${pickerHtml}</div><div class="ws-photo-grid">${rows}</div>` : `
+      <div class="ws-photos-empty" style="margin-top:10px">
+        <div class="ws-photos-empty-icon">📸</div>
+        ${pickerHtml}
+      </div>`}
   `;
 }
 
+// Picking photos IS the save — no separate confirm step. Each file uploads
+// and becomes a real gallery entry, tagged with the group it was added
+// from, immediately; the owner just watches their photos appear.
+async function wsHandleGalleryFilesPick(fileInputEl, photoType){
+  const files = Array.from(fileInputEl.files || []);
+  if(!files.length) return;
+  const statusEl = document.getElementById(`wsGalUploadStatus_${photoType}`);
+  let nextOrder = wsGalleryImagesOfType(photoType).length;
+  let ok = 0, failed = 0;
+
+  for(const file of files){
+    const n = ok + failed + 1;
+    if(statusEl) statusEl.textContent = `Adding photo ${n} of ${files.length}…`;
+    if(!file.type.startsWith("image/") || file.size > WS_MAX_UPLOAD_BYTES){ failed++; continue; }
+    try{
+      const base64 = await wsFileToBase64(file);
+      const result = await payrollWrite("upload_website_image", {
+        p_kind: "gallery", p_file_name: file.name, p_content_type: file.type, p_file_base64: base64,
+      });
+      const url = result && result.url;
+      if(!url) throw new Error("NO_URL_RETURNED");
+      await payrollWrite("add_website_gallery_image", { p_image_url: url, p_display_order: nextOrder++, p_photo_type: photoType });
+      ok++;
+    }catch(e){
+      console.error(e);
+      failed++;
+    }
+  }
+
+  fileInputEl.value = "";
+  await reloadWebsiteContent();
+  wsRenderPhotoGroup(photoType); // the new tiles appearing ARE the confirmation
+  wsRenderOverview();
+  if(failed){
+    const el = document.getElementById(`wsGalUploadStatus_${photoType}`);
+    if(el) el.textContent = `${ok} photo${ok===1?"":"s"} added, ${failed} couldn't be added.`;
+  }
+}
+
+// Editing an existing photo — caption and/or replacing the image itself.
+// Its photo_type (which group it belongs to) never changes here.
+function wsOpenGalleryModal(id){
+  wsGalleryEditId = id;
+  const img = (store.websiteGallery||[]).find(g=>g.id===id);
+  if(!img) return;
+  document.getElementById("wsGalleryModalWrap").innerHTML = `
+    <div class="settings-card" style="max-width:420px">
+      ${wsPhotoPickerHtml({ fieldId: "wsGalImgUrl", kind: "gallery", currentUrl: img.image_url, label: "Photo" })}
+      <label for="wsGalCaption">Caption <span class="ws-optional-hint">(optional)</span></label>
+      <input type="text" id="wsGalCaption" value="${esc(img.caption)}">
+      <div class="rmodal-err" id="wsGalErr"></div>
+      <button class="btn accent" id="wsGalSave" onclick="wsSaveGalleryImage('${img.photo_type||'client_work'}')">Save</button>
+      <button class="btn" type="button" onclick="document.getElementById('wsGalleryModalWrap').innerHTML=''">Cancel</button>
+    </div>`;
+}
+
+async function wsSaveGalleryImage(photoType){
+  const err = document.getElementById("wsGalErr");
+  const save = document.getElementById("wsGalSave");
+  err.textContent = "";
+  const url = document.getElementById("wsGalImgUrl").value.trim();
+  if(!url){ err.textContent = "Please choose a photo."; return; }
+
+  const origText = save.textContent;
+  save.disabled = true; save.textContent = "Saving…";
+  try{
+    const caption = document.getElementById("wsGalCaption").value.trim();
+    await payrollWrite("update_website_gallery_image", { p_image_id: wsGalleryEditId, p_caption: caption, p_image_url: url });
+    await reloadWebsiteContent();
+    wsGalleryEditId = null;
+    document.getElementById("wsGalleryModalWrap").innerHTML = "";
+    wsRenderPhotoGroup(photoType);
+    wsRenderOverview();
+  }catch(e){
+    console.error(e);
+    err.textContent = "Something went wrong — please try again.";
+    save.disabled = false; save.textContent = origText;
+  }
+}
+
+async function wsArchiveGalleryImage(id, photoType){
+  if(!confirm("Remove this photo from your website?")) return;
+  try{
+    await payrollWrite("archive_website_gallery_image", { p_image_id: id });
+    await reloadWebsiteContent();
+    wsRenderPhotoGroup(photoType);
+    wsRenderOverview();
+  }catch(e){
+    console.error(e);
+    alert("Couldn't remove that photo. Please try again.");
+  }
+}
+
+// Reordering swaps display_order with the adjacent photo within the same
+// group and saves both — simple, no drag-and-drop plumbing needed for a
+// handful of photos.
+async function wsMoveGalleryImage(id, photoType, direction){
+  const images = wsGalleryImagesOfType(photoType);
+  const idx = images.findIndex(g=>g.id===id);
+  const swapIdx = idx + direction;
+  if(idx < 0 || swapIdx < 0 || swapIdx >= images.length) return;
+
+  const a = images[idx], b = images[swapIdx];
+  try{
+    await Promise.all([
+      payrollWrite("update_website_gallery_image", { p_image_id: a.id, p_display_order: b.display_order ?? swapIdx }),
+      payrollWrite("update_website_gallery_image", { p_image_id: b.id, p_display_order: a.display_order ?? idx }),
+    ]);
+    await reloadWebsiteContent();
+    wsRenderPhotoGroup(photoType);
+  }catch(e){
+    console.error(e);
+    alert("Couldn't reorder photos. Please try again.");
+  }
+}
+
+/* ---- Contact & Social ---- */
+// Groups consecutive days sharing identical hours into one readable line,
+// e.g. "Mon–Sat 10am–8pm, Sun 11am–6pm" — the actual thing an owner is
+// checking for when they look at this card.
+function wsFormatHoursSummary(){
+  const DOW = ["mon","tue","wed","thu","fri","sat","sun"];
+  const DOW_ABBR = {mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
+  const byDay = {};
+  (store.salonHours||[]).forEach(h => { byDay[h.day_of_week] = h; });
+  if(!Object.keys(byDay).length) return "Not set yet";
+
+  const fmtTime = t => {
+    if(!t) return "";
+    const [h,m] = String(t).slice(0,5).split(":").map(Number);
+    const ampm = h>=12 ? "pm" : "am";
+    const h12 = ((h+11)%12)+1;
+    return m ? `${h12}:${String(m).padStart(2,"0")}${ampm}` : `${h12}${ampm}`;
+  };
+
+  const groups = [];
+  let cur = null;
+  DOW.forEach(d => {
+    const h = byDay[d];
+    if(!h || h.is_open === false){ cur = null; return; }
+    const key = `${h.open_time}-${h.close_time}`;
+    if(cur && cur.key === key){ cur.days.push(d); }
+    else{ cur = { key, days: [d], open: h.open_time, close: h.close_time }; groups.push(cur); }
+  });
+
+  if(!groups.length) return "Closed every day";
+  return groups.map(g => {
+    const label = g.days.length > 1 ? `${DOW_ABBR[g.days[0]]}–${DOW_ABBR[g.days[g.days.length-1]]}` : DOW_ABBR[g.days[0]];
+    return `${label} ${fmtTime(g.open)}–${fmtTime(g.close)}`;
+  }).join(", ");
+}
+
+function wsRenderContactSocial(holder){
+  const ws = store.websiteSettings || {};
+  const s = store.salon || {};
+  holder.innerHTML = `
+    <div class="settings-card">
+      <div class="settings-section-sub" style="margin-bottom:10px">Business Information</div>
+      <div class="ws-bizinfo-row"><strong>Address:</strong> ${esc([s.address,s.city,s.state].filter(Boolean).join(", ")||"Not set")}</div>
+      <div class="ws-bizinfo-row"><strong>Phone:</strong> ${esc(fmtPhoneDisplay(s.phone)||"Not set")}</div>
+      <div class="ws-bizinfo-row"><strong>Hours:</strong> ${esc(wsFormatHoursSummary())}</div>
+      <button class="btn" type="button" onclick="switchSettingsTab('business_info')">Edit Business Information</button>
+    </div>
+    <div class="settings-card">
+      <div class="settings-section-sub" style="margin-bottom:10px">Reviews</div>
+      <label for="wsSocialYelp">Yelp</label>
+      <input type="url" id="wsSocialYelp" value="${esc(ws.social_yelp)}" placeholder="Paste your Yelp link">
+      <label for="wsGoogleReview">Google Reviews</label>
+      <input type="url" id="wsGoogleReview" value="${esc(ws.google_review_url)}" placeholder="Paste your Google Reviews link">
+      <div class="rmodal-err" id="wsSocialErr"></div>
+      <div class="settings-success" id="wsSocialOk" style="display:none">Saved!</div>
+      <button class="btn accent" id="wsSocialSave" onclick="wsSaveSocial()">Save</button>
+    </div>`;
+}
+async function wsSaveSocial(){
+  const fieldIds = ["wsSocialYelp","wsGoogleReview"];
+  for(const id of fieldIds){
+    const v = document.getElementById(id).value.trim();
+    if(v && !/^https?:\/\//i.test(v)){
+      document.getElementById("wsSocialErr").textContent = "Please paste a full link (starting with http:// or https://).";
+      return;
+    }
+  }
+  await wsSaveFields("wsSocialSave", "wsSocialErr", "wsSocialOk", {
+    p_social_yelp: document.getElementById("wsSocialYelp").value.trim(),
+    p_google_review_url: document.getElementById("wsGoogleReview").value.trim(),
+  });
+}
+
+/* ---- Search & Discovery (SEO) ---- */
+function wsRenderSeo(holder){
+  const ws = store.websiteSettings || {};
+  const salonName = (store.salon && store.salon.name) || "Your Salon";
+  holder.innerHTML = `
+    <div class="settings-card">
+      <div class="settings-section-sub" style="margin-bottom:10px">Helps customers find you on Google</div>
+      <label for="wsSeoTitle">Website Title</label>
+      <input type="text" id="wsSeoTitle" value="${esc(ws.seo_title)}" placeholder="${esc(salonName)} | City, State Nail Salon">
+      <label for="wsSeoDesc">Description</label>
+      <textarea id="wsSeoDesc" rows="3" placeholder="A short, friendly description shown in search results.">${esc(ws.seo_description)}</textarea>
+      ${wsPhotoPickerHtml({ fieldId: "wsSeoOg", kind: "seo", currentUrl: ws.seo_og_image_url, label: "Share Photo (optional)" })}
+      <div class="rmodal-err" id="wsSeoErr"></div>
+      <div class="settings-success" id="wsSeoOk" style="display:none">Saved!</div>
+      <button class="btn accent" id="wsSeoSave" onclick="wsSaveSeo()">Save</button>
+    </div>`;
+}
+async function wsSaveSeo(){
+  await wsSaveFields("wsSeoSave", "wsSeoErr", "wsSeoOk", {
+    p_seo_title: document.getElementById("wsSeoTitle").value.trim(),
+    p_seo_description: document.getElementById("wsSeoDesc").value.trim(),
+    p_seo_og_image_url: document.getElementById("wsSeoOg").value.trim(),
+  });
+}
+
+// Owner-only nav items for the Staff tier — hidden entirely, not just
+// styled differently. The real enforcement is server-side (both Edge
+// Functions reject owner-only tables/actions regardless of what the UI
+// shows); this hides the option so staff never see something they'd be
+// blocked from anyway.
+// Aivy is owner-only too: it's Owner Aivy, which answers from the full
+// business snapshot (revenue, customer history, top technicians, lapsed
+// customers) — giving Staff that chat would let them just ask for exactly
+// the numbers everything else here is built to keep hidden. A properly
+// scoped "staff-safe" assistant would need its own limited context, not
+// just a nav change — tracked as future work, not solved here.
+const OWNER_ONLY_VIEWS = ["aivy","insights","customers","payroll","settings"];
+
+function applyAccessTier(){
+  const isStaff = window.__VELOUR_TIER === "staff";
+  document.querySelectorAll(".navlink").forEach(b=>{
+    if(OWNER_ONLY_VIEWS.includes(b.dataset.view)) b.style.display = isStaff ? "none" : "";
+  });
+  // If a staff session somehow lands on an owner-only view (e.g. it was
+  // left open from a prior owner session), bounce back to Today rather
+  // than show a broken/empty panel.
+  if(isStaff){
+    const activeBtn = document.querySelector(".navlink.active");
+    if(activeBtn && OWNER_ONLY_VIEWS.includes(activeBtn.dataset.view)) switchView("today");
+  }
+}
+
 function switchView(name){
+  if(window.__VELOUR_TIER === "staff" && OWNER_ONLY_VIEWS.includes(name)){
+    name = "today"; // defensive only — server-side owner-only checks are the real boundary
+  }
   document.querySelectorAll(".navlink").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
   document.getElementById("view-today").classList.toggle("on", name==="today");
   document.getElementById("view-aivy").classList.toggle("on", name==="aivy");
@@ -3605,10 +4847,18 @@ function unlock(){
   const val = document.getElementById("passInput").value;
   window.__VELOUR_PASS = val;                 // the Edge Function verifies this
   window.__VELOUR_PAYROLL_PIN = "";
+  window.__VELOUR_TIER = null;                // set from the response header on first successful load
   payrollPinVerified = false;
   document.getElementById("gate").style.display="none";
   document.getElementById("app").classList.add("on");
+  if(localStorage.getItem("velour_sidebar_collapsed")==="1") document.getElementById("app").classList.add("sidebar-collapsed");
   boot();
+}
+function toggleSidebar(){
+  const app = document.getElementById("app");
+  const collapsed = app.classList.toggle("sidebar-collapsed");
+  localStorage.setItem("velour_sidebar_collapsed", collapsed ? "1" : "0");
+  document.getElementById("sidebarToggle").title = collapsed ? "Expand sidebar" : "Collapse sidebar";
 }
 document.getElementById("unlockBtn").addEventListener("click", unlock);
 document.getElementById("passInput").addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
@@ -3618,7 +4868,9 @@ document.getElementById("lockBtn").addEventListener("click", ()=>{
   document.getElementById("passInput").value=""; document.getElementById("passInput").focus();
   document.getElementById("gateErr").textContent="";
   window.__VELOUR_PAYROLL_PIN = "";
+  window.__VELOUR_TIER = null;
   payrollPinVerified = false;
+  document.querySelectorAll(".navlink").forEach(b=> b.style.display = ""); // reset nav visibility for the next login
 });
 document.querySelectorAll(".navlink").forEach(b=> b.addEventListener("click", ()=>switchView(b.dataset.view)));
 document.getElementById("custSearch").addEventListener("input", e=>renderCustomers(e.target.value));
@@ -3626,10 +4878,10 @@ window.addEventListener("load", ()=>document.getElementById("passInput").focus()
 window.addEventListener("load", ()=>document.getElementById("passInput").focus());
 
 /* ---------- Admin Booking (walk-in / phone / manual — one generic flow) ---------- */
-let nb = { source:"walk_in", custMode:"existing", customerId:null, services:[] };
+let nb = { source:"walk_in", custMode:"existing", customerId:null, services:[], fromQueueId:null };
 
 function openNewBooking(defaultSource){
-  nb = { source: defaultSource || "walk_in", custMode:"existing", customerId:null, services:[] };
+  nb = { source: defaultSource || "walk_in", custMode:"existing", customerId:null, services:[], fromQueueId:null };
   document.getElementById("nbTitle").textContent = "New booking";
   nbSetSource(nb.source);
   nbSetCustMode("existing");
@@ -3942,6 +5194,17 @@ async function submitNewBooking(){
       return;
     }
     closeNewBooking();
+    if(nb.fromQueueId){
+      try{
+        await payrollWrite("set_queue_status", { p_queue_id: nb.fromQueueId, p_status: "in_service", p_booking_id: data.result });
+      }catch(e){
+        // The booking itself already succeeded — a failure here just means
+        // the queue entry didn't get marked; not worth blocking on or
+        // confusing the owner with, but worth knowing about if it recurs.
+        console.warn("Booking created, but couldn't update queue status:", e.message);
+      }
+      await reloadQueue();
+    }
     await reloadData();
   }catch(e){
     console.error(e);
@@ -4128,6 +5391,8 @@ async function submitNewBooking(){
     <label class="tm-check"><input type="checkbox" id="svcPriceFrom"> Show as "From $X" (starting price, not fixed)</label>
     <label for="svcDuration">Duration (minutes)</label>
     <input type="number" id="svcDuration" min="1" step="1" placeholder="45">
+    <label for="svcDescription">Description <span class="ws-optional-hint">(optional, shown on your website)</span></label>
+    <textarea id="svcDescription" rows="3" placeholder="What's included, what to expect..."></textarea>
     <div class="svc-note" id="svcNewNote" style="display:none">New services aren't assigned to any technician yet — you'll set who performs this service once the Staff section is live.</div>
     <div class="rmodal-err" id="svcErr"></div>
     <div class="rmodal-actions">
