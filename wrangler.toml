@@ -2,4 +2,4 @@ name = "velour-website"
 compatibility_date = "2025-01-01"
 
 [assets]
-directory = "./public"
+directory = "./website"
