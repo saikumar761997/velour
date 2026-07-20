@@ -1964,7 +1964,7 @@ function techLinkUrl(techId){
   // dashboard file happens to be hosted or opened from. Always the real
   // production URL here, regardless of WS_DEV_MODE — that flag is only
   // for Sai's own local website preview inside the dashboard.
-  return `https://velour-platform.redpersimmon.workers.dev/?tech=${token}`;
+  return `https://velour-website.redpersimmon.workers.dev/?tech=${token}`;
 }
 async function copyTechLink(techId){
   const url = techLinkUrl(techId);
@@ -4282,7 +4282,7 @@ const WS_DEV_LOCAL_FILENAME = "website_preview.html";
 
 function websiteLiveUrl(){
   if(WS_DEV_MODE) return WS_DEV_LOCAL_FILENAME; // relative path — resolves next to this dashboard file
-  return "https://velour-platform.redpersimmon.workers.dev/";
+  return "https://velour-website.redpersimmon.workers.dev/";
 }
 
 function renderSettingsWebsite(){
