@@ -19,13 +19,34 @@
     --bg: #FBF3EE;
   }
   *{box-sizing:border-box}
-  html{height:100%;overflow:hidden}
+
+  /* ===== PAGE SCROLLS NORMALLY — THIS IS DELIBERATE =====
+     The kiosk used to lock the screen (html/body overflow:hidden) and
+     force the card to exactly the screen height, vertically centered.
+     When the service list expanded, the card needed more room than the
+     locked screen allowed; because it was centred, the extra height
+     spilled off BOTH the top and the bottom, and with scrolling locked
+     there was no way to reach it — you'd get a sliver of list and a large
+     dead area, stuck.
+
+     So: no height lock, no forced card height. The page is an ordinary
+     scrolling document. `margin:auto` on the card centres it when the
+     content is short, and degrades to normal top-aligned scrolling when
+     the content is tall — unlike align-items:center, which clips the top
+     of anything taller than the viewport. This makes the whole class of
+     bug structurally impossible rather than tuned around. */
+  html{height:auto;overflow-x:hidden}
   body{
     margin:0;font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);
-    height:100vh;height:100dvh;height:var(--real-vh, 100dvh);overflow:hidden;
-    display:flex;align-items:center;justify-content:center;padding:24px
+    min-height:100vh;
+    display:flex;padding:24px;
   }
-  .kiosk-card{width:100%;max-width:560px;max-height:calc(var(--real-vh, 100dvh) - 48px);overflow-y:auto;background:var(--surface);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,0.08);padding:40px 36px;}
+  .kiosk-card{
+    width:100%;max-width:560px;margin:auto;
+    background:var(--surface);border-radius:20px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.08);padding:40px 36px;
+  }
+
   .wordmark{font-size:14px;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;font-weight:600;text-align:center;margin-bottom:6px}
   h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--ink);text-align:center;margin:0 0 6px}
   .sub{text-align:center;color:var(--muted);font-size:15px;margin:0 0 32px}
@@ -60,13 +81,9 @@
   #formWrap.hide{display:none}
 
   /* ===== SERVICE PICKER — INLINE, NOT AN OVERLAY =====
-     Deliberately NOT position:absolute or position:fixed. It expands in
-     normal document flow, like any accordion, and pushes the fields below
-     it down the page. That's ordinary, expected behavior on a scrolling
-     card — the earlier floating-overlay approach is what caused the
-     blank-space/scroll-growth bug, so this sidesteps that entire class of
-     problem rather than patching around it. */
-  .k-svc-wrap{ }
+     Expands in normal document flow and pushes the fields below it down,
+     like any accordion. No absolute/fixed positioning and no coordinate
+     maths, so there is nothing to get out of sync. */
   .k-svc-trigger{
     width:100%;padding:16px;font-size:17px;font-family:inherit;color:var(--ink);text-align:left;
     border:1.5px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;
@@ -81,10 +98,13 @@
     padding:8px;
   }
   .k-svc-panel.open{display:block}
-  .k-svc-list{max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  /* overscroll-behavior:contain stops a scroll gesture that reaches the end
+     of this list from "chaining" outward and yanking the whole page. */
+  .k-svc-list{max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .k-svc-loading{color:var(--muted);font-size:14px;padding:10px}
   .k-svc-row{
-    margin:0;display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:8px;cursor:pointer;font-size:14px;
+    position:relative;
+    margin:0;display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:8px;cursor:pointer;font-size:14px;
   }
   .k-svc-row:active{background:var(--surface)}
   .k-svc-row input{position:absolute;opacity:0;width:0;height:0}
@@ -179,12 +199,11 @@ async function dbRpc(fn, args){
   return txt ? JSON.parse(txt) : null;
 }
 
-function kioskSetRealHeight(){
-  document.documentElement.style.setProperty('--real-vh', window.innerHeight + 'px');
-}
-kioskSetRealHeight();
-window.addEventListener('resize', kioskSetRealHeight);
-window.addEventListener('orientationchange', kioskSetRealHeight);
+// NOTE: the old kioskSetRealHeight() / --real-vh machinery is deliberately
+// gone. It existed to pin the card to the exact screen height on tablets,
+// which is precisely what made an expanding list unreachable — and it
+// misfired whenever the on-screen keyboard resized the viewport. A normally
+// scrolling page needs none of it.
 
 // Formats the phone field live as digits are typed — (603) 555-1234 —
 // instead of only telling the customer it's wrong after they submit.
@@ -197,11 +216,10 @@ function kioskFormatPhone(input){
   input.value = formatted;
 }
 
-// Small HTML-escape helper — service names get inserted into attributes
-// (data-name) and text content below. Escaping here means any service
-// name (apostrophes, ampersands, quotes) renders safely no matter what's
-// typed into the dashboard, instead of relying on names never containing
-// a special character.
+// Service names are inserted into attributes and text below. Escaping here
+// means any name (apostrophes, ampersands, quotes) renders safely no matter
+// what gets typed into the dashboard, instead of relying on names never
+// containing a special character.
 function escHtml(s){
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -219,9 +237,9 @@ function kioskToggleSvcPanel(){
     const search = document.getElementById('kSvcSearch');
     search.value = '';
     kioskFilterServices('');
-    // No auto-focus here on purpose — on a touchscreen kiosk, focusing
-    // this input pops the on-screen keyboard immediately. Tapping the
-    // search box directly still works fine.
+    // No auto-focus on purpose — on a touchscreen kiosk, focusing this
+    // input pops the on-screen keyboard immediately. Tapping the search
+    // box directly still works fine.
   }
 }
 
@@ -254,14 +272,14 @@ function kioskToggleService(name, checkbox){
   kioskUpdateSvcLabel();
 }
 
-// Populate services as a checkbox list inside the panel (multi-select)
-// and technicians as a plain dropdown, from real, live data — same source
-// the website and dashboard already use. Non-fatal: if this fails, the
-// kiosk still works fine with both left unset.
+// Populate services as a checkbox list (multi-select) and technicians as a
+// plain dropdown, from real, live data — same source the website and
+// dashboard already use. Non-fatal: if this fails, the kiosk still works
+// fine with both left unset.
 //
-// Rows read the service name from data-svc-name (set via escHtml) rather
-// than building an inline onchange="..." string per row — a service name
-// containing a quote or ampersand can't break the row after it this way.
+// Rows read their service name from data-svc-name rather than building an
+// inline onchange="..." string per row, so a name containing a quote or
+// ampersand can't break the rows after it.
 async function kioskLoadOptions(){
   try{
     const services = await dbGet('services', `salon_id=eq.${SALON_ID}&active=eq.true&order=name.asc&limit=200`);
@@ -275,7 +293,7 @@ async function kioskLoadOptions(){
         </label>`).join('')
       : '<div class="k-svc-loading">No services listed</div>';
 
-    // One delegated listener instead of one inline onchange per row.
+    // One delegated listener instead of one inline handler per row.
     list.addEventListener('change', function(e){
       const cb = e.target;
       if(cb && cb.matches('input[type="checkbox"][data-svc-name]')){
@@ -302,7 +320,10 @@ kioskLoadOptions();
 
 document.addEventListener('click', function(e){
   const wrap = document.querySelector('.k-svc-wrap');
-  if(wrap && !wrap.contains(e.target)) document.getElementById('kSvcPanel').classList.remove('open');
+  if(wrap && !wrap.contains(e.target)){
+    document.getElementById('kSvcPanel').classList.remove('open');
+    document.getElementById('kSvcTrigger').classList.remove('open');
+  }
 });
 
 let kioskBusy = false;
@@ -337,6 +358,7 @@ async function kioskSubmit(){
     document.getElementById('kConfirmName').textContent = `Thanks, ${name}!`;
     document.getElementById('formWrap').classList.add('hide');
     document.getElementById('kConfirm').classList.add('show');
+    window.scrollTo(0, 0);
 
     // Shared tablet — reset itself for the next person after a bit, so
     // nobody has to remember to hand it back to a blank screen.
@@ -363,6 +385,7 @@ function kioskReset(){
   kSelectedServices = [];
   document.getElementById('kSvcSearch').value = '';
   document.querySelectorAll('#kSvcList input:checked').forEach(cb => cb.checked = false);
+  kioskFilterServices('');
   document.getElementById('kSvcPanel').classList.remove('open');
   document.getElementById('kSvcTrigger').classList.remove('open');
   kioskUpdateSvcLabel();
@@ -373,6 +396,7 @@ function kioskReset(){
   kioskBusy = false;
   document.getElementById('kConfirm').classList.remove('show');
   document.getElementById('formWrap').classList.remove('hide');
+  window.scrollTo(0, 0);
 }
 </script>
 
