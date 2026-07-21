@@ -2788,7 +2788,7 @@ function renderServicesSection(){
 
   const byCategory = {};
   (LIVE.services||[]).forEach(s => { (byCategory[s.category||'other'] ||= []).push(s); });
-  const categories = Object.keys(byCategory).sort((a,b) => wizardCategoryLabel(a).localeCompare(wizardCategoryLabel(b)));
+  const categories = Object.keys(byCategory).sort((a,b) => wizardCategoryOrder(a) - wizardCategoryOrder(b));
 
   if(!categories.length){
     tabsEl.innerHTML = '';
@@ -2902,18 +2902,25 @@ function bookingBarClear() {
 // being qualified for the same service, so the wizard now shows all of
 // them instead of guessing one.
 const WIZARD_CATEGORY_META = {
-  nail_care:    { label: 'Nail Care' },
-  enhancements: { label: 'Enhancements' },
-  polish:       { label: 'Polish & Art' },
-  lashes:       { label: 'Lashes & Brows' },
-  waxing:       { label: 'Waxing' },
+  nail_care:    { label: 'Nail Care',            order: 1 },
+  enhancements: { label: 'Enhancements',         order: 2 },
+  polish:       { label: 'Polish & Art',         order: 3 },
+  waxing:       { label: 'Waxing',               order: 4 },
+  lashes:       { label: 'Lashes & Brows',       order: 5 },
+  additional:   { label: 'Additional Services',  order: 6 },
+  childrens:    { label: "Children's Services",  order: 7 },
+  microblading: { label: 'Microblading',         order: 8 },
+  henna:        { label: 'Henna',                order: 9 },
 };
 function wizardCategoryLabel(catId){
   return (WIZARD_CATEGORY_META[catId] && WIZARD_CATEGORY_META[catId].label) || ('💫 ' + catId);
 }
+function wizardCategoryOrder(catId){
+  return (WIZARD_CATEGORY_META[catId] && WIZARD_CATEGORY_META[catId].order) || 999;
+}
 function wizardCategories(){
   const cats = [...new Set(LIVE.services.map(s => s.category || 'other'))];
-  return cats.sort((a,b) => wizardCategoryLabel(a).localeCompare(wizardCategoryLabel(b)));
+  return cats.sort((a,b) => wizardCategoryOrder(a) - wizardCategoryOrder(b));
 }
 function wizardQualifiedTechsFor(serviceId){
   return LIVE.technicians.filter(t => t.active !== false && (LIVE.techQuals[t.id] || new Set()).has(serviceId));
