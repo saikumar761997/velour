@@ -2433,6 +2433,23 @@ async function bmLoadSlots(){
     slotsWrap.innerHTML=bmState('⚠️',"Couldn't load times","Please check your connection and try again.",'Retry','bmLoadSlots()');
     return;
   }
+  // For "Best available", build the pool of technicians who could actually
+  // perform the selected services and are working that day. A technician
+  // with no hours row at all is treated as working the salon's own hours,
+  // matching how the server treats a technician with no day restrictions.
+  const needIds = (bm.services||[]).map(sv => sv.id).filter(Boolean);
+  const pool = bm.techId ? [] : (LIVE.technicians||[]).filter(t => t.active !== false).map(t => {
+    const quals = LIVE.techQuals[t.id] || new Set();
+    if(!needIds.every(id => quals.has(id))) return null;
+    const th = LIVE.techHours[t.id]?.[dk];
+    if(th && !th.is_available) return null;
+    return {
+      id: t.id,
+      open:  th ? t2m(th.start_time.slice(0,5)) : open,
+      close: th ? t2m(th.end_time.slice(0,5))   : close,
+    };
+  }).filter(Boolean);
+
   const now=new Date();
   const minTime=new Date(now.getTime()+MIN_HRS*3600000);
   const slots=[];
@@ -2442,10 +2459,32 @@ async function bmLoadSlots(){
     if(slotDT<minTime) continue;
     const sEnd=s+need;
     let clash=false;
-    for(const b of existing){
-      const bs=t2m(b.start_time.slice(0,5)), be=t2m(b.end_time.slice(0,5));
-      if(s<be&&sEnd>bs){ clash=true; break; }
+
+    if(bm.techId){
+      // A named technician: any overlap on their own calendar blocks it.
+      for(const b of existing){
+        const bs=t2m(b.start_time.slice(0,5)), be=t2m(b.end_time.slice(0,5));
+        if(s<be&&sEnd>bs){ clash=true; break; }
+      }
+    } else {
+      // FIX (see chat): this used to treat ANY overlapping booking in the
+      // salon as blocking the slot for everyone — so one technician being
+      // busy at 10am hid 10am entirely, even with four others free. That
+      // hid times the server would happily have accepted. Now it counts
+      // how many qualified technicians are actually left, exactly like
+      // create_booking's capacity rule, so the two can't disagree.
+      const busy = new Set();
+      let unassigned = 0;
+      for(const b of existing){
+        const bs=t2m(b.start_time.slice(0,5)), be=t2m(b.end_time.slice(0,5));
+        if(s<be&&sEnd>bs){
+          if(b.technician_id) busy.add(b.technician_id); else unassigned++;
+        }
+      }
+      const free = pool.filter(t => !busy.has(t.id) && s >= t.open && sEnd <= t.close).length - unassigned;
+      if(free <= 0) clash = true;
     }
+
     if(!clash) slots.push(s);
   }
   if(slots.length===0){
