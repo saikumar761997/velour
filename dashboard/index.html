@@ -1034,7 +1034,7 @@ async function loadAll(){
       id: b.id,
       when: bookingWhen(b),
       endMin: (function(){ const t=firstOf(b,["end_time"]); if(!t) return null; const p=t.split(":"); return (+p[0])*60+(+p[1]); })(),
-      customer: cust ? customerName(cust) : (source==="walk_in" ? "Walk-in guest" : "Guest"),
+      customer: firstOf(b,["customer_name"]) || (cust ? customerName(cust) : (source==="walk_in" ? "Walk-in guest" : "Guest")),
       customerId: bookingCustId(b),
       phone: cust ? (cust.phone || null) : null,
       techId: bookingTechId(b),
@@ -3438,7 +3438,7 @@ function onBusinessHoursChanged(){
   const rows = conflicts.map(b=>{
     const cust = (store.customers||[]).find(c=>c.id===b.customer_id);
     const tech = (store.technicians||[]).find(t=>t.id===b.technician_id);
-    return `<div class="tooff"><span>${dateShort(new Date(b.booking_date+"T12:00:00"))} ${timeFmt(new Date(b.booking_date+"T"+b.start_time))} · ${esc(cust?cust.name:"Guest")} with ${esc(tech?tech.name:"Staff")}</span></div>`;
+    return `<div class="tooff"><span>${dateShort(new Date(b.booking_date+"T12:00:00"))} ${timeFmt(new Date(b.booking_date+"T"+b.start_time))} · ${esc(b.customer_name || (cust?cust.name:"Guest"))} with ${esc(tech?tech.name:"Staff")}</span></div>`;
   }).join("");
 
   banner.innerHTML = `
