@@ -859,10 +859,11 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 .bm-btn-next:disabled { background: #ddd; cursor: not-allowed; }
 /* Success */
 .bm-success { text-align: center; padding: 28px 20px; }
-.bm-suc-icon { font-size: 52px; margin-bottom: 12px; }
 .bm-suc-h { font-family: 'Cormorant Garamond',serif; font-size: 26px; color: var(--charcoal); margin-bottom: 6px; }
 .bm-suc-p { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 18px; }
 .bm-suc-det { background: var(--crimson-xs); border-radius: 8px; padding: 12px 14px; text-align: left; margin-bottom: 20px; font-size: 13px; color: var(--charcoal); line-height: 1.9; }
+.bm-suc-spam { font-size: 12px; color: #999; line-height: 1.6; margin: 0 0 20px 0; font-style: italic; }
+.bm-confirm-hint { font-size: 13px; color: #777; line-height: 1.5; margin: -8px 0 16px 0; }
 .bm-done-btn { background: var(--crimson); color: #fff; border: none; border-radius: 6px; padding: 12px 32px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
 @media (max-width: 480px) {
   #bm-overlay { align-items: flex-end; padding: 0; }
@@ -3343,6 +3344,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
     <!-- PANE 4: CONFIRM -->
     <div class="bm-pane" id="bm-pane-4">
       <h3>Confirm booking</h3>
+      <p class="bm-confirm-hint">Please review the details below carefully — especially your email address, so you don't miss your confirmation.</p>
       <div class="bm-sum-card">
         <div class="bm-sum-row"><span class="bm-sum-lbl">Date</span><span class="bm-sum-val" id="bm-s-date"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Time</span><span class="bm-sum-val" id="bm-s-time"></span></div>
@@ -3363,10 +3365,10 @@ document.addEventListener('DOMContentLoaded', initDrag);
     <!-- PANE 5: SUCCESS -->
     <div class="bm-pane" id="bm-pane-5">
       <div class="bm-success">
-        <div class="bm-suc-icon" style="font-family:'Cormorant Garamond',serif;font-style:italic;">A</div>
         <div class="bm-suc-h">Booking Confirmed!</div>
-        <p class="bm-suc-p">We can't wait to see you! Check your email for the confirmation.</p>
+        <p class="bm-suc-p">We can't wait to see you!</p>
         <div class="bm-suc-det" id="bm-suc-det"></div>
+        <p class="bm-suc-spam">A confirmation email is on its way. If you don't see it in a few minutes, please check your spam folder and mark us as safe — we'd hate to lose touch.</p>
         <button class="bm-done-btn" onclick="closeBookingModal()">Done</button>
       </div>
     </div>
