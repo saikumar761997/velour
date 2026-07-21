@@ -58,7 +58,15 @@
     background:transparent;border:1.5px solid var(--crimson);border-radius:12px;cursor:pointer;
   }
   #formWrap.hide{display:none}
-  .k-svc-wrap{position:relative}
+
+  /* ===== SERVICE PICKER — INLINE, NOT AN OVERLAY =====
+     Deliberately NOT position:absolute or position:fixed. It expands in
+     normal document flow, like any accordion, and pushes the fields below
+     it down the page. That's ordinary, expected behavior on a scrolling
+     card — the earlier floating-overlay approach is what caused the
+     blank-space/scroll-growth bug, so this sidesteps that entire class of
+     problem rather than patching around it. */
+  .k-svc-wrap{ }
   .k-svc-trigger{
     width:100%;padding:16px;font-size:17px;font-family:inherit;color:var(--ink);text-align:left;
     border:1.5px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;
@@ -66,21 +74,19 @@
   }
   .k-svc-trigger.filled{color:var(--ink);font-weight:600}
   .k-svc-chevron{color:var(--muted);transition:transform .15s}
+  .k-svc-trigger.open .k-svc-chevron{transform:rotate(180deg)}
   .k-svc-panel{
-    display:none;position:fixed;z-index:9999;
-    background:var(--surface);border:1.5px solid var(--gold);border-radius:12px;
-    box-shadow:0 8px 30px rgba(0,0,0,0.12);padding:8px;
-    height:300px;overflow:hidden;flex-direction:column;
+    display:none;margin-top:6px;
+    background:var(--gold-xs);border:1.5px solid var(--gold);border-radius:12px;
+    padding:8px;
   }
-  .k-svc-panel.open{display:flex}
-  .k-svc-search{flex:0 0 auto}
-  .k-svc-list{flex:1 1 0;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .k-svc-donebtn{flex:0 0 auto}
+  .k-svc-panel.open{display:block}
+  .k-svc-list{max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .k-svc-loading{color:var(--muted);font-size:14px;padding:10px}
   .k-svc-row{
     margin:0;display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:8px;cursor:pointer;font-size:14px;
   }
-  .k-svc-row:active{background:var(--gold-xs)}
+  .k-svc-row:active{background:var(--surface)}
   .k-svc-row input{position:absolute;opacity:0;width:0;height:0}
   .k-svc-box{
     width:20px;height:20px;flex-shrink:0;border:1.5px solid var(--line);border-radius:5px;
@@ -92,13 +98,12 @@
     border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
   }
   .k-svc-search{
-    flex:0 0 auto;
     width:100%;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--ink);
     border:1.5px solid var(--line);border-radius:8px;margin-bottom:6px;outline:none;-webkit-appearance:none;
+    background:var(--surface);
   }
   .k-svc-search:focus{border-color:var(--gold)}
   .k-svc-donebtn{
-    flex:0 0 auto;
     width:100%;margin-top:6px;padding:12px;font-size:15px;font-weight:700;color:#fff;
     background:var(--crimson);border:none;border-radius:10px;cursor:pointer;
   }
@@ -192,36 +197,33 @@ function kioskFormatPhone(input){
   input.value = formatted;
 }
 
+// Small HTML-escape helper — service names get inserted into attributes
+// (data-name) and text content below. Escaping here means any service
+// name (apostrophes, ampersands, quotes) renders safely no matter what's
+// typed into the dashboard, instead of relying on names never containing
+// a special character.
+function escHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 let kSelectedServices = [];
 
 function kioskToggleSvcPanel(){
-const panel = document.getElementById('kSvcPanel');
-const trigger = document.getElementById('kSvcTrigger');
-panel.classList.toggle('open');
-if(panel.classList.contains('open')){
-const rect = trigger.getBoundingClientRect();
-panel.style.left = rect.left + 'px';
-panel.style.width = rect.width + 'px';
-panel.style.top = (rect.bottom + 6) + 'px';
-const search = document.getElementById('kSvcSearch');
-search.value = '';
-kioskFilterServices('');
-// No auto-focus here on purpose — on a touchscreen kiosk, focusing
-// this input pops the on-screen keyboard immediately, which is what
-// was causing the page to grow with a huge blank area. Tapping the
-// search box directly still works fine.
+  const panel = document.getElementById('kSvcPanel');
+  const trigger = document.getElementById('kSvcTrigger');
+  const isOpen = panel.classList.toggle('open');
+  trigger.classList.toggle('open', isOpen);
+  if(isOpen){
+    const search = document.getElementById('kSvcSearch');
+    search.value = '';
+    kioskFilterServices('');
+    // No auto-focus here on purpose — on a touchscreen kiosk, focusing
+    // this input pops the on-screen keyboard immediately. Tapping the
+    // search box directly still works fine.
+  }
 }
-}
-
-// If the card scrolls while the dropdown is open, its floating position
-// would go stale — simplest safe behavior is to just close it, same as
-// tapping outside.
-document.addEventListener('DOMContentLoaded', function(){
-const card = document.querySelector('.kiosk-card');
-if(card) card.addEventListener('scroll', function(){
-document.getElementById('kSvcPanel').classList.remove('open');
-});
-});
 
 function kioskFilterServices(q){
   q = q.trim().toLowerCase();
@@ -252,22 +254,34 @@ function kioskToggleService(name, checkbox){
   kioskUpdateSvcLabel();
 }
 
-// Populate services as a checkbox list inside the dropdown panel (multi-
-// select) and technicians as a plain dropdown, from real, live data — same
-// source the website and dashboard already use. Non-fatal: if this fails,
-// the kiosk still works fine with both left unset.
+// Populate services as a checkbox list inside the panel (multi-select)
+// and technicians as a plain dropdown, from real, live data — same source
+// the website and dashboard already use. Non-fatal: if this fails, the
+// kiosk still works fine with both left unset.
+//
+// Rows read the service name from data-svc-name (set via escHtml) rather
+// than building an inline onchange="..." string per row — a service name
+// containing a quote or ampersand can't break the row after it this way.
 async function kioskLoadOptions(){
   try{
     const services = await dbGet('services', `salon_id=eq.${SALON_ID}&active=eq.true&order=name.asc&limit=200`);
     const list = document.getElementById('kSvcList');
     list.innerHTML = (services||[]).length
       ? services.map((s,i) => `
-        <label class="k-svc-row" data-name="${s.name.toLowerCase()}">
-          <input type="checkbox" id="kSvc${i}" onchange="kioskToggleService('${s.name.replace(/'/g,"\\'")}', this)">
+        <label class="k-svc-row" data-name="${escHtml(s.name.toLowerCase())}">
+          <input type="checkbox" id="kSvc${i}" data-svc-name="${escHtml(s.name)}">
           <span class="k-svc-box"></span>
-          <span>${s.name}</span>
+          <span>${escHtml(s.name)}</span>
         </label>`).join('')
       : '<div class="k-svc-loading">No services listed</div>';
+
+    // One delegated listener instead of one inline onchange per row.
+    list.addEventListener('change', function(e){
+      const cb = e.target;
+      if(cb && cb.matches('input[type="checkbox"][data-svc-name]')){
+        kioskToggleService(cb.dataset.svcName, cb);
+      }
+    });
   }catch(e){
     console.warn('Could not load services (non-fatal):', e.message);
     document.getElementById('kSvcList').innerHTML = '';
@@ -350,6 +364,7 @@ function kioskReset(){
   document.getElementById('kSvcSearch').value = '';
   document.querySelectorAll('#kSvcList input:checked').forEach(cb => cb.checked = false);
   document.getElementById('kSvcPanel').classList.remove('open');
+  document.getElementById('kSvcTrigger').classList.remove('open');
   kioskUpdateSvcLabel();
   document.getElementById('kErr').textContent = '';
   const btn = document.getElementById('kSubmit');
