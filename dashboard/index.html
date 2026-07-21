@@ -3483,13 +3483,23 @@ async function submitBusinessHours(){
   }
 }
 /* ---------- Services (Settings) ---------- */
-const SERVICE_CATEGORY_LABELS = {
-  enhancements: "Enhancements", lashes: "Lashes", nail_care: "Nail Care",
-  polish: "Polish", waxing: "Waxing",
+const SERVICE_CATEGORY_META = {
+  nail_care:    { label: "Nail Care",            order: 1 },
+  enhancements: { label: "Enhancements",         order: 2 },
+  polish:       { label: "Polish",               order: 3 },
+  waxing:       { label: "Waxing",               order: 4 },
+  lashes:       { label: "Lashes",               order: 5 },
+  additional:   { label: "Additional Services",  order: 6 },
+  childrens:    { label: "Children's Services",  order: 7 },
+  microblading: { label: "Microblading",         order: 8 },
+  henna:        { label: "Henna",                order: 9 },
 };
 function svcCategoryLabel(cat){
-  if(SERVICE_CATEGORY_LABELS[cat]) return SERVICE_CATEGORY_LABELS[cat];
+  if(SERVICE_CATEGORY_META[cat]) return SERVICE_CATEGORY_META[cat].label;
   return (cat || "Uncategorized").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+function svcCategoryOrder(cat){
+  return (SERVICE_CATEGORY_META[cat] && SERVICE_CATEGORY_META[cat].order) || 999;
 }
 function svcCatSlug(cat){ return (cat || "uncategorized").replace(/[^a-z0-9]+/gi, "-"); }
 
@@ -3506,7 +3516,7 @@ function renderSettingsServices(){
   const wrap = document.getElementById("settingsWrap");
   const all = Object.values(store.services || {});
   const liveCount = all.filter(s => !s.archived_at).length;
-  const activeCategories = [...new Set(all.filter(s => !s.archived_at).map(s => s.category || "uncategorized"))].sort((a,b)=>svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+  const activeCategories = [...new Set(all.filter(s => !s.archived_at).map(s => s.category || "uncategorized"))].sort((a,b)=>svcCategoryOrder(a)-svcCategoryOrder(b));
   const catCount = activeCategories.length;
 
   wrap.innerHTML = `
@@ -3572,7 +3582,7 @@ function renderServiceCategories(){
     (byCategory[s.category || "uncategorized"] ||= []).push(s);
   });
 
-  const categories = Object.keys(byCategory).sort((a, b) => svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+  const categories = Object.keys(byCategory).sort((a, b) => svcCategoryOrder(a) - svcCategoryOrder(b));
 
   // A live search auto-expands whatever matches; collapse state is otherwise
   // left exactly as the owner set it.
@@ -3987,7 +3997,7 @@ function openStaffModal(id){
   Object.values(store.services || {}).filter(s => !s.archived_at).forEach(s => {
     (byCat[s.category || "Other"] ||= []).push(s);
   });
-  const cats = Object.keys(byCat).sort((a, b) => svcCategoryLabel(a).localeCompare(svcCategoryLabel(b)));
+  const cats = Object.keys(byCat).sort((a, b) => svcCategoryOrder(a) - svcCategoryOrder(b));
   document.getElementById("stfQualWrap").innerHTML = cats.map(cat => `
     <div class="stf-qual-cat">${esc(svcCategoryLabel(cat))}</div>
     <div class="stf-qual-grid">
@@ -4900,9 +4910,9 @@ function openNewBooking(defaultSource){
   Object.values(store.services).filter(s=>s.active!==false).forEach(s=>{
     (svcByCat[s.category||"Other"] ||= []).push(s);
   });
-  const cats = Object.keys(svcByCat).sort();
+  const cats = Object.keys(svcByCat).sort((a,b)=>svcCategoryOrder(a)-svcCategoryOrder(b));
   document.getElementById("nbServices").innerHTML = cats.map(cat => `
-    <div class="nb-svc-cat">${esc(cat)}</div>
+    <div class="nb-svc-cat">${esc(svcCategoryLabel(cat))}</div>
     <div class="nb-svc-grid">
       ${svcByCat[cat].sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map(s=>`
         <button type="button" class="nb-svc-chip" id="nbsvc-${s.id}" onclick="nbToggleService('${s.id}')">
