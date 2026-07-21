@@ -274,6 +274,7 @@ document.addEventListener('click', function(e){
   if(wrap && !wrap.contains(e.target)) document.getElementById('kSvcPanel').classList.remove('open');
 });
 
+let kioskBusy = false;
 async function kioskSubmit(){
   if(kioskBusy) return;
   const err = document.getElementById('kErr');
