@@ -67,7 +67,7 @@
   .k-svc-trigger.filled{color:var(--ink);font-weight:600}
   .k-svc-chevron{color:var(--muted);transition:transform .15s}
   .k-svc-panel{
-    display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;
+    display:none;position:fixed;z-index:9999;
     background:var(--surface);border:1.5px solid var(--gold);border-radius:12px;
     box-shadow:0 8px 30px rgba(0,0,0,0.12);padding:8px;
     height:300px;overflow:hidden;flex-direction:column;
@@ -195,18 +195,33 @@ function kioskFormatPhone(input){
 let kSelectedServices = [];
 
 function kioskToggleSvcPanel(){
-  const panel = document.getElementById('kSvcPanel');
-  panel.classList.toggle('open');
-  if(panel.classList.contains('open')){
-    const search = document.getElementById('kSvcSearch');
-    search.value = '';
-    kioskFilterServices('');
-    // No auto-focus here on purpose — on a touchscreen kiosk, focusing
-    // this input pops the on-screen keyboard immediately, which is what
-    // was causing the page to grow with a huge blank area. Tapping the
-    // search box directly still works fine.
-  }
+const panel = document.getElementById('kSvcPanel');
+const trigger = document.getElementById('kSvcTrigger');
+panel.classList.toggle('open');
+if(panel.classList.contains('open')){
+const rect = trigger.getBoundingClientRect();
+panel.style.left = rect.left + 'px';
+panel.style.width = rect.width + 'px';
+panel.style.top = (rect.bottom + 6) + 'px';
+const search = document.getElementById('kSvcSearch');
+search.value = '';
+kioskFilterServices('');
+// No auto-focus here on purpose — on a touchscreen kiosk, focusing
+// this input pops the on-screen keyboard immediately, which is what
+// was causing the page to grow with a huge blank area. Tapping the
+// search box directly still works fine.
 }
+}
+
+// If the card scrolls while the dropdown is open, its floating position
+// would go stale — simplest safe behavior is to just close it, same as
+// tapping outside.
+document.addEventListener('DOMContentLoaded', function(){
+const card = document.querySelector('.kiosk-card');
+if(card) card.addEventListener('scroll', function(){
+document.getElementById('kSvcPanel').classList.remove('open');
+});
+});
 
 function kioskFilterServices(q){
   q = q.trim().toLowerCase();
