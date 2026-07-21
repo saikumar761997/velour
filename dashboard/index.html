@@ -3523,10 +3523,10 @@ function renderSettingsServices(){
     <div class="settings-section-title">Services</div>
     <div class="settings-section-sub">Add, edit, deactivate, or archive services shown on your booking flow.</div>
     <div class="svc-summary">${liveCount} service${liveCount === 1 ? "" : "s"} across ${catCount} categor${catCount === 1 ? "y" : "ies"}</div>
-    ${collapsibleCard("categoryPhotos", "Category Photos", "One photo per section (Enhancements, Lashes, Nail Care, etc.) — shown on your website instead of a photo on every single service.", renderCategoryPhotosBody(activeCategories))}
     <div class="svc-toolbar">
       <input type="text" id="svcSearchInput" placeholder="Search services…" value="${esc(svcSearch)}" oninput="svcOnSearch(this.value)">
       <label class="tm-check"><input type="checkbox" id="svcShowArchivedToggle" ${svcShowArchived ? "checked" : ""} onchange="svcToggleArchived(this.checked)"> Show archived</label>
+      <button class="btn ghost" type="button" onclick="promptNewCategory()">+ Add category</button>
       <button class="btn accent svc-add-btn" type="button" onclick="openServiceModal()">+ Add service</button>
     </div>
     <div id="svcCategoriesWrap"></div>
@@ -3674,13 +3674,19 @@ function svcFutureBookingCount(serviceName){
   ).length;
 }
 
-function openServiceModal(id){
+function promptNewCategory(){
+  const name = prompt("Name your new category. You'll add the first service in it next.");
+  if(!name || !name.trim()) return;
+  openServiceModal(null, name.trim());
+}
+
+function openServiceModal(id, presetCategory){
   svcModalId = id || null;
   const s = id ? store.services[id] : null;
 
   document.getElementById("svcModalTitle").textContent = s ? "Edit service" : "Add service";
   document.getElementById("svcName").value = s ? (s.name || "") : "";
-  document.getElementById("svcCategory").value = s ? (s.category || "") : "";
+  document.getElementById("svcCategory").value = s ? (s.category || "") : (presetCategory || "");
   document.getElementById("svcPrice").value = s && s.price != null ? Number(s.price) : "";
   document.getElementById("svcPriceFrom").checked = s ? !!s.price_from : false;
   document.getElementById("svcDuration").value = s && s.duration_minutes != null ? s.duration_minutes : "";
