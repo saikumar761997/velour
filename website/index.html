@@ -2801,8 +2801,6 @@ function renderServicesSection(){
   ).join('');
 
   contentEl.innerHTML = categories.map((cat, i) => {
-    const catImg = (LIVE.categoryImages||{})[cat];
-    const catImgHtml = catImg ? `<img src="${wsEsc(catImg)}" alt="${wsEsc(wizardCategoryLabel(cat).replace(/^[^\w]*\s*/,''))} at Red Persimmon" class="category-photo" loading="lazy">` : '';
     const rows = byCategory[cat].slice().sort((a,b)=>(a.display_order||0)-(b.display_order||0)).map(svc => {
       const price = fmtWebsitePrice(svc);
       const hasDesc = !!svc.description;
@@ -2817,7 +2815,7 @@ function renderServicesSection(){
       </div>`;
     }).join('');
     return `<div class="tab-content ${i===0?'active':''}" id="tab-${cat}">
-      ${catImgHtml}
+    
       <div class="services-list">${rows}</div>
     </div>`;
   }).join('');
