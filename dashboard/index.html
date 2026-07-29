@@ -1075,6 +1075,16 @@ async function reloadQueue(){
   store.queue = Array.isArray(rows) ? rows : [];
 }
 
+// Shown only when more than one person arrived together — a solo walk-in
+// looks exactly as it did before. Number() guards against an older row or a
+// null slipping through; anything that isn't a real count above 1 renders
+// nothing rather than "party of undefined".
+function partyChip(q){
+  const n = Number(q && q.party_size);
+  if(!Number.isFinite(n) || n <= 1) return "";
+  return ` <span class="chip" style="background:var(--persimmon-deep);color:#fff;font-weight:700">party of ${n}</span>`;
+}
+
 function renderWalkins(){
   const wrap = document.getElementById("walkinsWrap");
   if(!wrap) return;
@@ -1095,7 +1105,7 @@ function renderWalkins(){
     return `<div class="appt walkin-row" data-qid="${q.id}">
       <div class="time tnum">${waitMin}m</div>
       <div class="who">
-        <div class="name">${esc(q.name)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span></div>
+        <div class="name">${esc(q.name)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span>${partyChip(q)}</div>
         <div class="svc">${svcChips}</div>
         <div class="tech">${esc(techName)}</div>
       </div>
@@ -1118,7 +1128,7 @@ function renderWalkins(){
     return `<div class="appt walkin-row" data-qid="${q.id}">
       <div class="time tnum">In chair</div>
       <div class="who">
-        <div class="name">${esc(a.customer)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span></div>
+        <div class="name">${esc(a.customer)} <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span>${partyChip(q)}</div>
         <div class="svc">${chips}</div>
         ${a.tech?`<div class="tech">with ${esc(a.tech)}</div>`:""}
       </div>
@@ -4293,7 +4303,7 @@ function websiteChecklist(){
 // this filename, in the same folder as this dashboard file. Flip
 // WS_DEV_MODE back to false (or delete this block) to return to
 // production — that's the entire revert.
-const WS_DEV_MODE = false;
+const WS_DEV_MODE = true;
 const WS_DEV_LOCAL_FILENAME = "website_preview.html";
 
 function websiteLiveUrl(){
