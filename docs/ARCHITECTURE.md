@@ -384,3 +384,121 @@ Non-technical, step-by-step, one thing at a time; backend before UI; test in pie
 Co-founder stance: challenge weak ideas, protect against feature bloat and building-instead-of-selling, push back on scope creep even mid-project. One chat = one task where practical. Update this doc after milestones — as a patch against the actual current file when only fragments are available, never as a guessed full rewrite.
 
 Every session should end with an updated `ARCHITECTURE.md`, an implementation handoff, and a new-chat starter prompt — see the companion documents delivered alongside this one.
+# ARCHITECTURE.md — Correction Patch
+
+**Date:** July 28, 2026
+**Method:** every item below was verified against the live Supabase project (`hydhezpeuhqhcugnpupu`), the live deployed Edge Functions, or the current deployed dashboard file — not inferred from the document itself.
+
+Apply these as targeted edits. Do **not** rewrite the whole document.
+
+---
+
+## §2 — Stack & key IDs
+
+### Edge function versions (all three wrong)
+
+| Function | Doc says | Actually live |
+|---|---|---|
+| `dashboard-read` | v17 | **v21** |
+| `dashboard-write` | v25 | *unverified — check before trusting* |
+| `owner-aivy` | v3 | **v4** |
+| `aivy-chat` | v7 | **v10** |
+
+Recommend replacing the hardcoded version numbers with a note: *"versions change on every deploy; check `list_edge_functions` rather than trusting this line."* Version numbers in a hand-maintained doc will always drift.
+
+### Deployment topology (wrong)
+
+**Doc says:** one Cloudflare Worker named `velour-platform` serving both website and dashboard, live at `https://velour-platform.redpersimmon.workers.dev/`, with the dashboard at `/dashboard.html`.
+
+**Reality:** two separate Workers.
+
+- Website: `https://velour-website.redpersimmon.workers.dev/`
+- Dashboard: `https://velour-dashboard.redpersimmon.workers.dev/`
+
+The `velour-platform` name no longer exists. This rename previously caused a real production outage — `aivy-chat`'s `SALON_ORIGINS` still pointed at the old domain, and because the origin check is a hard string match, **every customer chat message was silently 403'd on the live site** until it was found and fixed. That incident is worth recording in §18 as a process note: *renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it.*
+
+---
+
+## §4 — Database (key tables)
+
+Five tables exist in production that the document does not mention at all:
+
+- `website_settings` (salon-scoped, RLS on, 1 policy)
+- `website_gallery_images` (salon-scoped, RLS on, 1 policy)
+- `service_category_images` (salon-scoped, RLS on, 1 policy)
+- `walkin_queue` (salon-scoped, RLS on, 0 policies)
+- `products` (salon-scoped, RLS on, 1 policy)
+
+Total is now **25 tables** in `public`.
+
+---
+
+## §14 — Website CMS ("VISION, NOT YET BUILT")
+
+**This section is now materially false and is the most misleading part of the document.**
+
+It states: *"Everything in this section is planned, not implemented. No schema, RPCs, or dashboard UI exist for any of this yet."*
+
+All three exist. The deployed dashboard has a full Website CMS under Settings → Website, with four sub-tabs (Homepage, Photos, Contact & Social, Google & Sharing), a weighted completion percentage (Homepage 40, Identity 20, Photos 20, Contact & Social 10, Search & Discovery 10), a plain-English checklist, and save handlers. It is backed by the `website_settings`, `website_gallery_images`, and `service_category_images` tables listed above.
+
+**Action:** rewrite §14 from a vision section into a description of what was actually built. Until that's done, treat §14 as unreliable.
+
+---
+
+## §15 — Multi-Tenant Strategy
+
+Under "Not yet multi-tenant-ready," this line is now stale:
+
+> The website's non-booking content (§12, §14) — hardcoded per deployment, the single largest blocker to onboarding salon #2.
+
+The CMS shipped, so this blocker is at least partly resolved. Needs re-assessment against the real implementation rather than a simple deletion — confirm how much of the website now reads from `website_settings` versus how much is still hardcoded markup in `website/index.html`.
+
+---
+
+## §16 — Technical Debt
+
+### Item 1 — Owner-Aivy authentication: **CLOSE THIS**
+
+Doc says `owner-aivy` checks a single global `DASHBOARD_PASSCODE` env var with no `salon_id`, and hardcodes "Kristy at Red Persimmon Nails & Spa" in its system prompt.
+
+Live v4 does neither. It verifies per-salon via the `verify_dashboard_passcode` RPC with an owner-role check, pulls the salon name from the database, and restricts CORS to the dashboard origin. The origin value was verified correct on July 28.
+
+One genuine limitation remains and should be recorded in its place: **the briefing data is still supplied by the caller**, not independently computed server-side from the database the way `aivy-chat` now builds its own facts.
+
+### Item 5 — `payments`/`payment_line_items` RLS disabled: **CLOSE THIS**
+
+Verified live: both tables now have `relrowsecurity = true`. Every table in `public` now has RLS enabled. Zero public policies on these two, which is correct for service-role-only access.
+
+### New item — hardcoded origin allowlists are duplicated and fragile
+
+`aivy-chat` (`SALON_ORIGINS`) and `owner-aivy` (`ALLOWED_ORIGIN`) each carry their own hardcoded copy of the deployment's origins. This pattern has already caused one silent production outage. Every new salon means editing every function that holds a copy, and a mistake fails closed with no visible error to the owner.
+
+### New item — `WS_DEV_MODE` dev flag shipped to production
+
+The dashboard's "View website" button pointed at a local dev file (`website_preview.html`) because `WS_DEV_MODE` was left `true` in a production deploy. Fixed July 28 by flipping it to `false`. Worth a pre-deploy checklist entry: *no dev-mode flags left enabled.*
+
+---
+
+## §3 — Canonical models
+
+Add an enforcement note under the `technicians.available_days` entry.
+
+The doc already says: *"inert legacy data — never read or written by any code path. If you find a code path reading it, that's a bug."*
+
+A code path **was** reading it. `aivy-chat`'s `buildSystemPrompt` used it to tell customers which days each technician works. Because nothing writes to the column, it was frozen at months-old values, and two technicians (Alex, Ammu) had `NULL`, triggering an `"Every day"` fallback — so Aivy told customers Ammu was available Monday–Thursday when she works Friday–Sunday only.
+
+Fixed in `aivy-chat` v10 (July 28), now reading `technician_hours`, with a fallback that admits uncertainty instead of inventing availability. Verified live on the production site for both technicians.
+
+**Recommended addition:** the column should eventually be dropped, not just documented as inert. A dead column that still returns plausible-looking data is a trap that documentation alone did not prevent.
+
+---
+
+## Not verified in this pass
+
+State honestly rather than guessing:
+
+- `dashboard-write`'s live version number
+- Whether `_shared/authz.ts` is still duplicated across both dashboard functions (§16 item 3)
+- Whether the kiosk exists as a deployed surface — it is **absent from ARCHITECTURE.md entirely** and should be documented
+- How much of `website/index.html` still holds hardcoded content now that the CMS exists
+- Debt items 2, 4, 6, 7 and the remaining roadmap items
