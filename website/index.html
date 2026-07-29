@@ -274,27 +274,41 @@ h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 4vw, 52px)
 }
 .staff-grid::-webkit-scrollbar { display: none; }
 .staff-card {
-  flex: 0 0 150px; scroll-snap-align: start;
-  background: var(--warm-white); border: 1px solid var(--border); border-radius: 4px;
+  flex: 0 0 172px; scroll-snap-align: start;
+  background: var(--warm-white); border: 1px solid var(--border); border-radius: 8px;
   overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
 }
 .staff-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(92,15,15,0.14); }
-.staff-body { padding: 9px 10px 10px; }
-.staff-name { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--crimson-dk); margin-bottom: 2px; line-height: 1.1; }
-.staff-spec { font-size: 9.5px; color: var(--text-mid); letter-spacing: 0.01em; line-height: 1.35; margin-bottom: 1px; }
-.staff-avail { font-size: 9px; color: var(--text-muted); letter-spacing: 0.01em; margin-bottom: 6px; }
+/* Per-technician accent, assigned deterministically from the technician id
+   so the same person keeps the same tone everywhere and two people never
+   collide by accident. This replaces the old monogram block: an initial is
+   a recognised "no photo yet" signal, and it told the customer nothing the
+   name beside it didn't already say. */
+.staff-edge { flex: 0 0 4px; }
+.staff-main { flex: 1; min-width: 0; }
+.staff-body { padding: 11px 11px 11px; }
+.staff-rule { width: 24px; height: 2px; border-radius: 2px; margin-bottom: 8px; }
+.staff-name { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--crimson-dk); margin-bottom: 2px; line-height: 1.1; }
+.staff-avail { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.01em; margin-bottom: 8px; }
+.staff-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.staff-chip {
+  font-size: 9px; padding: 3px 7px; border-radius: 20px; line-height: 1.3;
+  background: var(--crimson-xs); color: var(--crimson); border: 1px solid var(--border);
+}
+.staff-chip.more { background: transparent; border-color: transparent; color: var(--text-muted); }
 .staff-book {
-  display: block; background: none; border: 1px solid var(--border-gold); border-radius: 2px;
-  padding: 5px 8px; font-size: 8.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  display: block; background: none; border: 1px solid var(--border-gold); border-radius: 4px;
+  padding: 6px 8px; font-size: 8.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
   color: var(--crimson); cursor: pointer; transition: background 0.15s, border-color 0.15s;
   width: 100%; text-align: center;
 }
 .staff-card:hover .staff-book { background: var(--crimson-xs); border-color: var(--crimson); }
-.staff-portrait { aspect-ratio: 4 / 3; position: relative; display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(150deg, var(--crimson) 0%, var(--crimson-dk) 100%); overflow: hidden;
-}
+/* Only rendered once a technician actually has a photo_url. Until then no
+   placeholder image of any kind is shown — see ARCHITECTURE.md on why a face
+   under a named technician must be a real photograph. */
+.staff-portrait { aspect-ratio: 4 / 3; position: relative; overflow: hidden; background: var(--crimson-xs); }
 .staff-portrait img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.staff-portrait-initial { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 28px; color: rgba(255,255,255,0.9); position: relative; z-index: 1; }
 
 /* GALLERY — featured left, stacked thumbs right, per reference. Real photos
    only (client_work pool). Clicking any image opens the existing lightbox
@@ -1754,6 +1768,33 @@ function hscroll(rowId, dir){
   row.scrollBy({ left: dir * step * 2, behavior: 'smooth' });
 }
 
+// Accent tones, all drawn from the existing brand palette.
+//
+// Derived from the technician's NAME, not their id. Red Persimmon's ids are
+// sequential and differ only in their last characters, so hashing them
+// clustered badly — Ammu/Kevin and Kristy/Lori came out identical while
+// sitting next to each other, which defeats the entire point of the accent.
+// Names are genuinely distinct, so they spread properly.
+//
+// staffAccentFor() additionally nudges a tone forward if it would match the
+// card immediately before it, so two neighbours can never share a colour no
+// matter who is added or archived. Same name always gives the same starting
+// tone; only a genuine adjacent collision shifts it.
+const STAFF_ACCENTS = [
+  ['#7A1F2B','#5C1620'],
+  ['#B07C3A','#8A5C24'],
+  ['#6E4655','#4C2C3B'],
+  ['#A4453C','#7E2E28'],
+  ['#93604A','#6E4432'],
+  ['#5C3A4A','#3F2432'],
+];
+function staffAccentIndex(name){
+  const s = String(name || '');
+  let h = 0;
+  for(let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h % STAFF_ACCENTS.length;
+}
+
 function renderTeamGrid(){
   const grid = document.getElementById('teamGrid');
   if(!grid) return;
@@ -1762,23 +1803,42 @@ function renderTeamGrid(){
   const countEl = document.getElementById('wsTechCount');
   if(countEl) countEl.textContent = techs.length;
 
+  let prevAccent = -1;
   grid.innerHTML = techs.map(t => {
     const svcs = techServicesFor(t.id);
     const categories = [...new Set(svcs.map(s => s.category || 'other'))].map(wizardCategoryLabel);
-    const specialty = categories.length ? categories.join(' · ') : 'General services';
-    const initial = (t.name||'?').trim().charAt(0).toUpperCase();
-    // Forward-compatible: the moment t.photo_url exists, this swaps in
-    // automatically — no card redesign needed when real photos arrive.
+    // Three chips, then a quiet "+N". Showing every category on a narrow card
+    // wrapped to five lines and buried the name, which is the thing a customer
+    // is actually choosing between.
+    const shown = categories.slice(0, 3);
+    const extra = categories.length - shown.length;
+    const chips = shown.length
+      ? shown.map(c => `<span class="staff-chip">${wsEsc(c)}</span>`).join('')
+        + (extra > 0 ? `<span class="staff-chip more">+${extra}</span>` : '')
+      : `<span class="staff-chip">General services</span>`;
+
+    let ai = staffAccentIndex(t.name);
+    if(ai === prevAccent) ai = (ai + 1) % STAFF_ACCENTS.length;
+    prevAccent = ai;
+    const [c1, c2] = STAFF_ACCENTS[ai];
+
+    // No placeholder portrait. The block only appears once a real photograph
+    // exists — the accent edge carries the visual identity until then.
     const portrait = t.photo_url
-      ? `<img src="${wsEsc(t.photo_url)}" alt="${wsEsc(t.name)}" loading="lazy">`
-      : `<span class="staff-portrait-initial">${wsEsc(initial)}</span>`;
+      ? `<div class="staff-portrait"><img src="${wsEsc(t.photo_url)}" alt="${wsEsc(t.name)}" loading="lazy"></div>`
+      : '';
+
     return `<div class="staff-card">
-      <div class="staff-portrait">${portrait}</div>
-      <div class="staff-body">
-        <div class="staff-name">${wsEsc(t.name)}</div>
-        <div class="staff-spec">${wsEsc(specialty)}</div>
-        <div class="staff-avail">${fmtAvailabilityLine(t.id)}</div>
-        <button class="staff-book" onclick="openStaffModal('${t.id}')">Book with ${wsEsc(t.name)}</button>
+      <div class="staff-edge" style="background:linear-gradient(180deg,${c1},${c2})"></div>
+      <div class="staff-main">
+        ${portrait}
+        <div class="staff-body">
+          <div class="staff-rule" style="background:${c1}"></div>
+          <div class="staff-name">${wsEsc(t.name)}</div>
+          <div class="staff-avail">${fmtAvailabilityLine(t.id)}</div>
+          <div class="staff-chips">${chips}</div>
+          <button class="staff-book" onclick="openStaffModal('${t.id}')">Book with ${wsEsc(t.name)}</button>
+        </div>
       </div>
     </div>`;
   }).join('');
