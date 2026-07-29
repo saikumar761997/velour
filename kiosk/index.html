@@ -127,6 +127,17 @@
     width:100%;margin-top:6px;padding:12px;font-size:15px;font-weight:700;color:#fff;
     background:var(--crimson);border:none;border-radius:10px;cursor:pointer;
   }
+  /* Party size — tap-to-pick, no keyboard. Deliberately not a number input:
+     a numeric keypad on a shared tablet is slower and invites typos. */
+  .k-party-row{display:flex;gap:8px;margin-top:6px}
+  .k-party-btn{
+    flex:1;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:14px 0;text-align:center;font-family:inherit;font-size:17px;
+    font-weight:600;color:var(--muted);cursor:pointer;transition:all .12s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .k-party-btn:active{transform:scale(.96)}
+  .k-party-btn.on{background:var(--crimson);border-color:var(--crimson);color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -142,6 +153,15 @@
 
     <label for="kPhone">Phone number</label>
     <input type="tel" id="kPhone" autocomplete="off" placeholder="(603) 555-1234" oninput="kioskFormatPhone(this)">
+
+    <label>How many of you today?</label>
+    <div class="k-party-row" id="kPartyRow">
+      <button type="button" class="k-party-btn on" data-n="1" onclick="kioskSetParty(1)">1</button>
+      <button type="button" class="k-party-btn" data-n="2" onclick="kioskSetParty(2)">2</button>
+      <button type="button" class="k-party-btn" data-n="3" onclick="kioskSetParty(3)">3</button>
+      <button type="button" class="k-party-btn" data-n="4" onclick="kioskSetParty(4)">4</button>
+      <button type="button" class="k-party-btn" data-n="5" onclick="kioskSetParty(5)">5+</button>
+    </div>
 
     <label for="kEmail">Email <span class="opt">(optional, for your confirmation)</span></label>
     <input type="email" id="kEmail" autocomplete="off" placeholder="you@example.com">
@@ -326,6 +346,17 @@ document.addEventListener('click', function(e){
   }
 });
 
+// Party size. Starts at 1 so a solo walk-in never has to touch it.
+// "5+" sends 5 — anything genuinely larger is a front-desk conversation,
+// and the server caps at 10 regardless.
+let kPartySize = 1;
+function kioskSetParty(n){
+  kPartySize = n;
+  document.querySelectorAll('#kPartyRow .k-party-btn').forEach(b => {
+    b.classList.toggle('on', Number(b.dataset.n) === n);
+  });
+}
+
 let kioskBusy = false;
 async function kioskSubmit(){
   if(kioskBusy) return;
@@ -353,6 +384,7 @@ async function kioskSubmit(){
       p_email: email || null,
       p_requested_services: kSelectedServices.length ? kSelectedServices : null,
       p_preferred_technician_id: techId || null,
+      p_party_size: kPartySize,
     });
 
     document.getElementById('kConfirmName').textContent = `Thanks, ${name}!`;
@@ -370,6 +402,8 @@ async function kioskSubmit(){
     else if(msg.includes('INVALID_EMAIL')) err.textContent = 'Please enter your email like you@example.com, or leave it blank.';
     else if(msg.includes('NAME_REQUIRED')) err.textContent = 'Please enter your name.';
     else if(msg.includes('PHONE_REQUIRED')) err.textContent = 'Please enter your phone number.';
+    else if(msg.includes('RATE_LIMITED')) err.textContent = "Looks like you're already on the list — please check with the front desk.";
+    else if(msg.includes('INVALID_PARTY_SIZE')) err.textContent = 'For a group that size, please see the front desk.';
     else err.textContent = 'Something went wrong — please try again, or let the front desk know.';
     btn.disabled = false;
     btn.textContent = "I'm here!";
@@ -382,6 +416,7 @@ function kioskReset(){
   document.getElementById('kPhone').value = '';
   document.getElementById('kEmail').value = '';
   document.getElementById('kTech').value = '';
+  kioskSetParty(1);
   kSelectedServices = [];
   document.getElementById('kSvcSearch').value = '';
   document.querySelectorAll('#kSvcList input:checked').forEach(cb => cb.checked = false);
