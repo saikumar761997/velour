@@ -20,10 +20,12 @@ This doc is the product + engineering + business source of truth. **Update it af
 
 ## 2. Stack & key IDs
 
-- **Website** — static `index.html` (deliverable file name: `website.html`). Deployed via **Cloudflare Workers, static assets, GitHub-integrated auto-deploy** (repo: `saikumar761997/velour-platform`, branch `main`; build command assembles `website/index.html` → `public/index.html` and `dashboard/velour-dashboard.html` → `public/dashboard.html`; every push to `main` redeploys automatically). Live at `https://velour-platform.redpersimmon.workers.dev/`. Calls Supabase **directly** with the anon key via a generic `dbGet()`/`dbRpc()` helper — no Edge Function proxy on this side, protected by permissive public RLS policies on `salons`, `services`, `technicians`, `salon_hours`, `technician_hours`, `technician_services`. `dbGet()` throws on any failure instead of silently returning `[]` (honest all-or-nothing load gate). Also embeds the Aivy chat widget (§13).
-- **Dashboard** — static `velour-dashboard.html` (deliverable file name: `dashboard.html`), served at `/dashboard.html` on the same Worker as above. Per-salon passcode-gated. `CONFIG.SALON_ID` is a hardcoded per-deployment constant (this deployment: Red Persimmon) — the frontend is single-tenant per build; multi-tenancy lives entirely in the backend authorization layer (§7).
+- **Website** — static `index.html` (deliverable file name: `website.html`). Deployed via **Cloudflare Workers, static assets, GitHub-integrated auto-deploy** (repo: `saikumar761997/velour-platform`, branch `main`; every push to `main` redeploys automatically). Live at `https://velour-website.redpersimmon.workers.dev/`. Calls Supabase **directly** with the anon key via a generic `dbGet()`/`dbRpc()` helper — no Edge Function proxy on this side, protected by permissive public RLS policies on `salons`, `services`, `technicians`, `salon_hours`, `technician_hours`, `technician_services`. `dbGet()` throws on any failure instead of silently returning `[]` (honest all-or-nothing load gate). Also embeds the Aivy chat widget (§13).
+- **Dashboard** — static `velour-dashboard.html`, served from its **own separate Worker** at `https://velour-dashboard.redpersimmon.workers.dev/`. Per-salon passcode-gated. `CONFIG.SALON_ID` is a hardcoded per-deployment constant (this deployment: Red Persimmon) — the frontend is single-tenant per build; multi-tenancy lives entirely in the backend authorization layer (§7).
+- **Kiosk** — static `kiosk/index.html`, the in-store walk-in sign-in surface. Writes through one RPC, `join_walkin_queue` (see §8.1).
+- **⚠️ Two Workers, not one.** The website and dashboard are separate Cloudflare Workers on separate hostnames. An earlier `velour-platform` project name no longer exists. **Renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it** — this has already caused one real production outage (§18).
 - **Supabase project:** `hydhezpeuhqhcugnpupu`. Red Persimmon salon id `a0000000-0000-0000-0000-000000000001`. Demo salon id `d0000000-0000-0000-0000-000000000001` (permanent sandbox, safe to wipe/reseed anytime).
-- **Edge Functions (current deployed versions as of this update):** `dashboard-read` (v17), `dashboard-write` (v25) — both rewritten in the dashboard authorization project, see §7. `owner-aivy` (v3) — unchanged, separate legacy auth, see §16 Technical Debt. `aivy-chat` (v7) — customer-facing website assistant, rate limiting + Turnstile added this update, see §13.
+- **Edge Functions:** `dashboard-read`, `dashboard-write` — both rewritten in the dashboard authorization project, see §7. `owner-aivy` — per-salon auth as of v4, see §16. `aivy-chat` — customer-facing website assistant, see §13. **Version numbers are deliberately not recorded here**: they change on every deploy and a hand-maintained list always drifts. Run `list_edge_functions` to see what is actually live.
 - **Email:** Make.com. **Deployment:** Cloudflare Workers (GitHub-integrated). **Version control:** GitHub, `saikumar761997/velour-platform`, private.
 
 ---
@@ -34,6 +36,8 @@ This doc is the product + engineering + business source of truth. **Update it af
 - **Payroll — Live vs. Frozen:** effective-dated compensation history, never overwritten (close-and-open only); live preview vs. frozen close.
 - **Business Hours — Weekly Default vs. Enforcement:** `salon_hours` is the weekly default; `salon_settings.enforce_business_hours` gates whether bookings outside those hours are rejected server-side.
 - **Technician Hours — Weekly Default, per-technician:** `technician_hours` is the single source of truth for a technician's working days *and* hours (one row per technician per day of week, `is_available`/`start_time`/`end_time`, `day_of_week` stored as `'sun'..'sat'` text, not integers). `technicians.available_days` (old text-array column) is **inert legacy data** — never read or written by any code path. If you find a code path reading it, that's a bug.
+
+  **This has actually happened.** `aivy-chat`'s `buildSystemPrompt` read `available_days` to tell customers which days each technician works. Because nothing writes to the column, it was frozen at months-old values, and two technicians (Alex, Ammu) held `NULL` — triggering an `"Every day"` fallback, so Aivy told customers Ammu was available Monday–Thursday when she works Friday–Sunday only. Fixed July 28, 2026: now reads `technician_hours`, and the fallback admits uncertainty ("schedule varies — ask the customer to call to confirm") instead of inventing availability. Verified live on the production site for both technicians. **The column should eventually be dropped, not just documented as inert** — a dead column that still returns plausible-looking data is a trap that documentation alone did not prevent.
 - **Dates:** `localDateStr()` is the only correct way to get "today" in the dashboard; never reintroduce `toISOString().slice(0,10)`-style computation (UTC-unsafe).
 - **Customer tags:** VIP = spend ≥ $300 or ≥6 visits; Lapsed = ≥1 visit and >8 weeks; Regular = ≥2 active; New = 0–1.
 - **UUIDs:** all id/token defaults use `gen_random_uuid()`.
@@ -45,7 +49,19 @@ This doc is the product + engineering + business source of truth. **Update it af
 
 ## 4. Database (key tables)
 
-`salons` · `salon_settings` (per-salon `dashboard_passcode_hash`, `payroll_passcode_hash`, `enforce_business_hours`, `enforce_technician_hours`) · `salon_hours` · `technicians` (`available_days[]` legacy/inert; `active`; `archived_at`) · `technician_services` (qualifications join table, no `salon_id` column) · `technician_hours` (day/hour availability, no `salon_id` column, `day_of_week` is text) · `technician_links` (locked read-only tokens) · `services` (`archived_at`, `display_order`) · `customers` (`source` constrained to `website`/`walk_in`/`phone`/`manual`/`referral`) · `bookings` (`booking_date`+`start_time`/`end_time`, `status`, `total_price`, `manage_token`, `created_by`), `booking_services` (no `salon_id` column) · `payments` (no RLS — see §16) · `payment_line_items` (no RLS — see §16) · `technician_time_off` (has its own `salon_id` column directly) · `email_logs`. **Payroll tables:** `technician_compensation`, `payroll_periods` (has own `salon_id`), `payroll_period_hours` (no `salon_id`, joins via `payroll_period_id`), `payroll_period_totals` (no `salon_id`, joins via `payroll_period_id`). **Rate limiting:** `rate_limit_counters` (generic, reusable — see §13).
+`salons` · `salon_settings` (per-salon `dashboard_passcode_hash`, `payroll_passcode_hash`, `enforce_business_hours`, `enforce_technician_hours`) · `salon_hours` · `technicians` (`available_days[]` legacy/inert; `active`; `archived_at`) · `technician_services` (qualifications join table, no `salon_id` column) · `technician_hours` (day/hour availability, no `salon_id` column, `day_of_week` is text) · `technician_links` (locked read-only tokens) · `services` (`archived_at`, `display_order`) · `customers` (`source` constrained to `website`/`walk_in`/`phone`/`manual`/`referral`) · `bookings` (`booking_date`+`start_time`/`end_time`, `status`, `total_price`, `manage_token`, `created_by`), `booking_services` (no `salon_id` column) · `payments` · `payment_line_items` · `technician_time_off` (has its own `salon_id` column directly) · `email_logs` · `walkin_queue` (kiosk sign-ins; `party_size smallint NOT NULL DEFAULT 1`, CHECK 1–10; references `bookings` once converted) · `products`. **Website CMS tables:** `website_settings`, `website_gallery_images`, `service_category_images` (all salon-scoped, all with RLS policies) — see §14. **Payroll tables:** `technician_compensation`, `payroll_periods` (has own `salon_id`), `payroll_period_hours` (no `salon_id`, joins via `payroll_period_id`), `payroll_period_totals` (no `salon_id`, joins via `payroll_period_id`). **Rate limiting:** `rate_limit_counters` (generic, reusable — see §13).
+
+**25 tables in `public`. Every one has RLS enabled** (verified July 28, 2026).
+
+### 4.1 Wiping a salon's transactional data — correct delete order
+
+Foreign keys make the order mandatory. `walkin_queue` references `bookings`, so it must be deleted **before** bookings:
+
+```
+payment_line_items → payments → booking_services → walkin_queue → bookings → customers
+```
+
+An earlier version of this doc listed `bookings` before `walkin_queue`. That order **fails** with a foreign key violation — confirmed in practice.
 
 ---
 
@@ -160,13 +176,25 @@ For each action, `ACTION_REGISTRY` determines binding: `salonArg` → argument o
 
 `reschedule_booking(p_booking, p_date, p_start, p_tech default null)`, `mark_booking_status(p_booking, p_status, p_reason default null, p_by default 'salon')` (covers cancel/no-show/completed), `checkout_booking(p_booking, p_lines, p_payment_method, p_discount default 0, p_notes default null, p_created_by default null)` — `p_lines` requires `charged_price`, `tip_amount`, and a valid `technician_id` per line (not `price`/`quantity`). Internally calls `mark_booking_status(..., 'completed', ...)` on success.
 
+### 8.1 Walk-in queue (kiosk)
+
+`join_walkin_queue(p_salon_id, p_name, p_phone, p_email default null, p_requested_services default null, p_preferred_technician_id default null, p_party_size default 1)` — SECURITY DEFINER, `search_path` pinned, **granted to `anon`**. This is the kiosk's only write path, and because it is granted to `anon` it is reachable from the public internet with the publishable key, not just from the in-store tablet.
+
+Validates: phone normalised to 10 digits (leading `1` stripped); email format if supplied; the preferred technician must belong to this salon and be active; every requested service must be real, active, unarchived, and belong to this salon. `party_size` defaults to 1 and is capped at 10 (`INVALID_PARTY_SIZE`), matching the table CHECK.
+
+**Rate limited** via the generic `check_and_increment_rate_limit` RPC (§13) — no new tables. Two counters: per-person, keyed on the normalised phone (3 per 30 min), and per-salon as a circuit breaker (60 per hour). Since the limiter's `key_type` is constrained to session/ip/salon and a database function cannot see the caller's IP, the per-person budget uses `key_type = 'session'` with a `phone:` prefixed value. Over-limit raises `RATE_LIMITED`.
+
+Note the per-person limit interacts with families sharing one phone number — `party_size` is the intended answer to that, not a higher limit.
+
+`set_queue_status(p_salon_id, p_queue_id, p_status, p_booking_id)` — SECURITY DEFINER, granted to `service_role` only (dashboard path, never public).
+
 **Website Manage Appointment (`?manage=<token>`):** `get_booking_by_token(p_token)` (read), `cancel_booking_by_token(p_token)` (the only mutation available from this surface). **"Reschedule" on the website calls the same `cancel_booking_by_token` RPC as "Cancel"**, then redirects to the booking flow — cancel-then-rebook by design, not atomic. Intentional, but see §16 item on product decision.
 
 ---
 
 ## 9. Checkout & Payments Architecture
 
-**Core model:** Expected Revenue = `bookings.total_price` (never overwritten at checkout); Actual Revenue = `payments.amount`; payroll/commission source of truth = `payment_line_items`. **Schema:** `payments` (header row per transaction) and `payment_line_items` (one row per service performed, `technician_id` NOT NULL, supports future correction via `voided_at`/`corrected_from_id`). **Explicitly deferred:** split/multi-tender payments, deposits, refunds/voids UI, gift cards, packages/memberships. **Known gap:** RLS disabled on both tables (§16).
+**Core model:** Expected Revenue = `bookings.total_price` (never overwritten at checkout); Actual Revenue = `payments.amount`; payroll/commission source of truth = `payment_line_items`. **Schema:** `payments` (header row per transaction) and `payment_line_items` (one row per service performed, `technician_id` NOT NULL, supports future correction via `voided_at`/`corrected_from_id`). **Explicitly deferred:** split/multi-tender payments, deposits, refunds/voids UI, gift cards, packages/memberships. RLS is enabled on both tables (no public policies — service-role access only).
 
 ---
 
@@ -264,37 +292,34 @@ Turnstile is rendered lazily (on first message send, not on page load). Cloudfla
 
 ---
 
-## 14. Version 2 Architecture — Website CMS (VISION, NOT YET BUILT)
+## 14. Website CMS (BUILT — dashboard-managed website content)
 
-**Everything in this section is planned, not implemented.** No schema, RPCs, or dashboard UI exist for any of this yet. It's documented here so the eventual design work starts from a clear picture of the problem, not from scratch — but nothing below should be treated as a current capability.
+**Status: built and live.** Schema, dashboard UI, and save handlers all exist. This section previously described the CMS as a vision; that was wrong and is corrected here.
 
-### 14.1 Why this is needed
+### 14.1 The problem it solved
 
-Today, all website content beyond live booking data (§12) is hardcoded directly in `website/index.html`. Every content change — a new promotion, an updated hero photo, a new testimonial — requires an engineering change and a redeploy. This has two costs: it makes Velour (the team) a permanent bottleneck for Kristy's day-to-day marketing, and it structurally blocks onboarding a second salon, since "configuration, not custom code" (§1) doesn't hold for the website at all today.
+Website content beyond live booking data was hardcoded directly in `website/index.html`. Every content change — a new promotion, an updated hero photo, a new testimonial — required an engineering change and a redeploy. That made Velour a permanent bottleneck for Kristy's day-to-day marketing, and structurally blocked onboarding a second salon.
 
-### 14.2 Planned scope (per `NEXT_PROJECT_ROADMAP.md` item 8)
+### 14.2 What exists
 
-A new dashboard surface, likely under Owner Settings, managing:
+A **Settings → Website** surface in the dashboard, with four sub-tabs:
 
-- Hero image
-- About section
-- Homepage content (general copy blocks)
-- Gallery management
-- Testimonials
-- Promotions
-- Social links
-- SEO metadata
+- **Homepage**
+- **Photos**
+- **Contact & Social**
+- **Google & Sharing** (SEO/share metadata)
 
-### 14.3 Design questions to resolve before any implementation (not yet answered)
+Above the tabs sits a completion percentage and a plain-English checklist. The percentage is weighted: Homepage 40, Identity 20, Photos 20, Contact & Social 10, Search & Discovery 10.
 
-- **Storage model:** likely a new `salon_website_content` table (or similar), salon-scoped like every other dashboard-managed table — following the same `ENTITY_REGISTRY` pattern from §7 rather than inventing a new authorization approach.
-- **Rendering model:** does the website fetch this content live (same pattern as `LIVE` object in §12), or does publishing trigger a rebuild/redeploy? Live-fetch is more consistent with the current architecture and avoids a build-pipeline dependency, but needs a decision on caching/staleness.
-- **Media storage:** hero images, gallery photos, and any uploaded media need a storage strategy (Supabase Storage is the natural default given the rest of the stack, but unconfirmed/undecided).
-- **Multi-tenant path:** this is the component that actually determines whether "prepare Velour for onboarding additional salons" (roadmap item 12) is achievable — the CMS should be designed salon-scoped from day one, not retrofitted later, given how costly that retrofit was for the dashboard authorization layer (§6).
+**Backing tables:** `website_settings`, `website_gallery_images`, `service_category_images` — all salon-scoped with RLS policies, following the same discipline as every other dashboard-managed table.
 
-### 14.4 Explicit non-goals for the first version of this work
+### 14.3 Still to verify
 
-Following this project's own feature-filter discipline: no page-builder/drag-and-drop editor, no theming system, no multi-page CMS (the website is a single page today) — just structured, dashboard-editable fields for the specific content blocks listed in §14.2. Expand scope only if a real need arises, not speculatively.
+How much of `website/index.html` now reads from these tables versus how much remains hardcoded markup. §12 has not been re-audited since the CMS shipped and should not be trusted on this point.
+
+### 14.4 Non-goals, still holding
+
+No page-builder/drag-and-drop editor, no theming system, no multi-page CMS. Structured fields only. Expand on real need, not speculatively.
 
 ---
 
@@ -308,8 +333,8 @@ Velour's stated long-term goal is "each salon is configuration, not custom code"
 - Core booking/payments/payroll schema — every relevant table is either directly salon-scoped or scoped via a salon-scoped parent (§7.2's registry documents exactly which).
 
 **Not yet multi-tenant-ready:**
-- The website's non-booking content (§12, §14) — hardcoded per deployment, the single largest blocker to onboarding salon #2 without a bespoke engineering pass.
-- Owner-Aivy (§16) — global passcode, no salon parameter at all, structurally single-tenant.
+- The website's non-booking content (§12, §14) — **partly resolved**: the Website CMS is built (§14), so content is now dashboard-managed rather than code-managed. How much of `website/index.html` still holds hardcoded markup has not been re-audited and must be confirmed before claiming this is fully closed.
+- ~~Owner-Aivy — global passcode, no salon parameter~~ — **resolved** (§16 item 1); it is now per-salon scoped.
 - The website and dashboard build itself — `SALON_ID`/`CONFIG.SALON_ID` are per-deployment constants baked in at build time, not runtime configuration. Onboarding a new salon today means a new build/deployment, not a new database row.
 
 **The practical path to salon #2** (per `NEXT_PROJECT_ROADMAP.md` item 12) runs through §14 — the Website CMS is what turns "new salon = new deployment" into "new salon = new configuration."
@@ -318,14 +343,16 @@ Velour's stated long-term goal is "each salon is configuration, not custom code"
 
 ## 16. Current Technical Debt (consolidated)
 
-1. **Owner-Aivy authentication is separate, legacy, and single-tenant.** `owner-aivy` Edge Function checks `passcode !== DASHBOARD_PASSCODE` (a single global env var) with no `salon_id` parameter at all. Its system prompt is also hardcoded to `"Kristy at Red Persimmon Nails & Spa"`. Needs its own design project, same rigor as the dashboard authorization and Aivy-chat security work.
+1. **Owner-Aivy briefing data is caller-supplied, not server-computed.** ~~Global passcode, no salon scoping~~ — **CLOSED July 28, 2026.** `owner-aivy` v4 verifies per-salon via the `verify_dashboard_passcode` RPC with an owner-role check, pulls the salon name from the database instead of hardcoding it, and locks CORS to the dashboard origin (verified correct). The remaining limitation: the briefing JSON is still supplied by the caller rather than independently computed server-side the way `aivy-chat` now builds its own facts. Lower exposure than the public chat since it is passcode-gated; worth doing when there is more than one dashboard-access person.
 2. **Double-`unlock()` freezes the dashboard tab.** Calling `unlock()` a second time without a page reload stacks overlapping `boot()`/`loadAll()` cycles with no in-flight guard. No known normal user path triggers this. Low priority.
 3. **`_shared/authz.ts` duplicated, not truly shared** (§6.5) — both dashboard Edge Functions carry an identical inline copy.
 4. **Website "Reschedule" is cancel-then-rebook, not atomic** (§8) — product decision needed on whether this should become a true reschedule-by-token RPC.
-5. **`payments`/`payment_line_items` RLS disabled** — every other sensitive table has RLS with no public policies; these two are the exception (mitigated by both only ever being touched via service-role Edge Functions, but not a substitute for RLS).
+5. ~~**`payments`/`payment_line_items` RLS disabled**~~ — **CLOSED.** Verified July 28, 2026: both tables have RLS enabled, with no public policies, which is correct for service-role-only access. Every table in `public` now has RLS enabled.
 6. **`mark_booking_status`'s cancellation-notify call not exception-guarded.**
 7. **Business Hours conflict banner reads from `store.bookings` (always empty)** instead of `store.assembled` — root cause confirmed, fix proposed, not applied.
-8. **One Demo sandbox booking has a cross-salon technician mismatch** (Kevin, a Red Persimmon technician, linked to a Demo booking) — sandbox-only, deliberately left alone.
+8. **Hardcoded origin allowlists are duplicated and fragile.** `aivy-chat` (`SALON_ORIGINS`) and `owner-aivy` (`ALLOWED_ORIGIN`) each carry their own hardcoded copy of the deployment's origins. This has already caused one silent production outage (§18). Every new salon means editing every function holding a copy, and a mistake fails closed with no visible error to the owner.
+9. **Dev-mode flags can ship to production.** The dashboard's "View website" button pointed at a local dev file (`website_preview.html`) because `WS_DEV_MODE` was left `true` in a production deploy. Fixed July 28, 2026. Add "no dev-mode flags left enabled" to the pre-deploy checklist.
+10. **One Demo sandbox booking has a cross-salon technician mismatch** (Kevin, a Red Persimmon technician, linked to a Demo booking) — sandbox-only, deliberately left alone.
 9. **`close_salon_day` doesn't backfill time-off rows** for technicians added/reactivated after a closure.
 10. **`booking_services.service_id` still not populated** by `create_booking` (name-matching used throughout instead).
 11. **Website inline email/phone validation not built** (server already validates; UX polish item).
@@ -374,6 +401,8 @@ These decisions were reached through explicit design review and should not be re
 - Two real deployment mistakes occurred during the dashboard authorization project and were caught before harm: a first `dashboard-read` deploy that accidentally sent placeholder content for the shared module (caught immediately, fixed by inlining), and a build-command filename mismatch during the Cloudflare Pages/Workers setup (caught via the build log, fixed by correcting the filename).
 - During the Aivy chat security deployment, a real sequencing risk was caught before it caused a customer-facing outage: deploying the new `aivy-chat` before the frontend sent the new required fields would have silently degraded live chat to the fallback message for every customer. This was caught, and the two deploys were explicitly sequenced (frontend first, confirmed live, then the Edge Function) to close the gap to zero.
 - Full regression matrices were executed against the **live deployed system** with a real connected browser in both major projects — not simulated.
+- **Renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it.** After the Worker was renamed away from `velour-platform`, `aivy-chat`'s `SALON_ORIGINS` still pointed at the old domain. Because the origin check is a hard string match, **every customer chat message on the live site was rejected with a 403** — with no error visible to the owner — until it was found and corrected. Any future rename must be treated as a change to every function holding an origin constant.
+- **A stale source-of-truth document actively causes wrong decisions.** On July 28, 2026 this file wrongly listed Owner-Aivy's authentication as broken (fixed months earlier) and the Website CMS as unbuilt (shipped). Both led to real misdiagnosis in a working session before the live system was checked directly. Prefer checking the live system over trusting this document, and update it the same day a milestone lands.
 
 ---
 
@@ -384,121 +413,3 @@ Non-technical, step-by-step, one thing at a time; backend before UI; test in pie
 Co-founder stance: challenge weak ideas, protect against feature bloat and building-instead-of-selling, push back on scope creep even mid-project. One chat = one task where practical. Update this doc after milestones — as a patch against the actual current file when only fragments are available, never as a guessed full rewrite.
 
 Every session should end with an updated `ARCHITECTURE.md`, an implementation handoff, and a new-chat starter prompt — see the companion documents delivered alongside this one.
-# ARCHITECTURE.md — Correction Patch
-
-**Date:** July 28, 2026
-**Method:** every item below was verified against the live Supabase project (`hydhezpeuhqhcugnpupu`), the live deployed Edge Functions, or the current deployed dashboard file — not inferred from the document itself.
-
-Apply these as targeted edits. Do **not** rewrite the whole document.
-
----
-
-## §2 — Stack & key IDs
-
-### Edge function versions (all three wrong)
-
-| Function | Doc says | Actually live |
-|---|---|---|
-| `dashboard-read` | v17 | **v21** |
-| `dashboard-write` | v25 | *unverified — check before trusting* |
-| `owner-aivy` | v3 | **v4** |
-| `aivy-chat` | v7 | **v10** |
-
-Recommend replacing the hardcoded version numbers with a note: *"versions change on every deploy; check `list_edge_functions` rather than trusting this line."* Version numbers in a hand-maintained doc will always drift.
-
-### Deployment topology (wrong)
-
-**Doc says:** one Cloudflare Worker named `velour-platform` serving both website and dashboard, live at `https://velour-platform.redpersimmon.workers.dev/`, with the dashboard at `/dashboard.html`.
-
-**Reality:** two separate Workers.
-
-- Website: `https://velour-website.redpersimmon.workers.dev/`
-- Dashboard: `https://velour-dashboard.redpersimmon.workers.dev/`
-
-The `velour-platform` name no longer exists. This rename previously caused a real production outage — `aivy-chat`'s `SALON_ORIGINS` still pointed at the old domain, and because the origin check is a hard string match, **every customer chat message was silently 403'd on the live site** until it was found and fixed. That incident is worth recording in §18 as a process note: *renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it.*
-
----
-
-## §4 — Database (key tables)
-
-Five tables exist in production that the document does not mention at all:
-
-- `website_settings` (salon-scoped, RLS on, 1 policy)
-- `website_gallery_images` (salon-scoped, RLS on, 1 policy)
-- `service_category_images` (salon-scoped, RLS on, 1 policy)
-- `walkin_queue` (salon-scoped, RLS on, 0 policies)
-- `products` (salon-scoped, RLS on, 1 policy)
-
-Total is now **25 tables** in `public`.
-
----
-
-## §14 — Website CMS ("VISION, NOT YET BUILT")
-
-**This section is now materially false and is the most misleading part of the document.**
-
-It states: *"Everything in this section is planned, not implemented. No schema, RPCs, or dashboard UI exist for any of this yet."*
-
-All three exist. The deployed dashboard has a full Website CMS under Settings → Website, with four sub-tabs (Homepage, Photos, Contact & Social, Google & Sharing), a weighted completion percentage (Homepage 40, Identity 20, Photos 20, Contact & Social 10, Search & Discovery 10), a plain-English checklist, and save handlers. It is backed by the `website_settings`, `website_gallery_images`, and `service_category_images` tables listed above.
-
-**Action:** rewrite §14 from a vision section into a description of what was actually built. Until that's done, treat §14 as unreliable.
-
----
-
-## §15 — Multi-Tenant Strategy
-
-Under "Not yet multi-tenant-ready," this line is now stale:
-
-> The website's non-booking content (§12, §14) — hardcoded per deployment, the single largest blocker to onboarding salon #2.
-
-The CMS shipped, so this blocker is at least partly resolved. Needs re-assessment against the real implementation rather than a simple deletion — confirm how much of the website now reads from `website_settings` versus how much is still hardcoded markup in `website/index.html`.
-
----
-
-## §16 — Technical Debt
-
-### Item 1 — Owner-Aivy authentication: **CLOSE THIS**
-
-Doc says `owner-aivy` checks a single global `DASHBOARD_PASSCODE` env var with no `salon_id`, and hardcodes "Kristy at Red Persimmon Nails & Spa" in its system prompt.
-
-Live v4 does neither. It verifies per-salon via the `verify_dashboard_passcode` RPC with an owner-role check, pulls the salon name from the database, and restricts CORS to the dashboard origin. The origin value was verified correct on July 28.
-
-One genuine limitation remains and should be recorded in its place: **the briefing data is still supplied by the caller**, not independently computed server-side from the database the way `aivy-chat` now builds its own facts.
-
-### Item 5 — `payments`/`payment_line_items` RLS disabled: **CLOSE THIS**
-
-Verified live: both tables now have `relrowsecurity = true`. Every table in `public` now has RLS enabled. Zero public policies on these two, which is correct for service-role-only access.
-
-### New item — hardcoded origin allowlists are duplicated and fragile
-
-`aivy-chat` (`SALON_ORIGINS`) and `owner-aivy` (`ALLOWED_ORIGIN`) each carry their own hardcoded copy of the deployment's origins. This pattern has already caused one silent production outage. Every new salon means editing every function that holds a copy, and a mistake fails closed with no visible error to the owner.
-
-### New item — `WS_DEV_MODE` dev flag shipped to production
-
-The dashboard's "View website" button pointed at a local dev file (`website_preview.html`) because `WS_DEV_MODE` was left `true` in a production deploy. Fixed July 28 by flipping it to `false`. Worth a pre-deploy checklist entry: *no dev-mode flags left enabled.*
-
----
-
-## §3 — Canonical models
-
-Add an enforcement note under the `technicians.available_days` entry.
-
-The doc already says: *"inert legacy data — never read or written by any code path. If you find a code path reading it, that's a bug."*
-
-A code path **was** reading it. `aivy-chat`'s `buildSystemPrompt` used it to tell customers which days each technician works. Because nothing writes to the column, it was frozen at months-old values, and two technicians (Alex, Ammu) had `NULL`, triggering an `"Every day"` fallback — so Aivy told customers Ammu was available Monday–Thursday when she works Friday–Sunday only.
-
-Fixed in `aivy-chat` v10 (July 28), now reading `technician_hours`, with a fallback that admits uncertainty instead of inventing availability. Verified live on the production site for both technicians.
-
-**Recommended addition:** the column should eventually be dropped, not just documented as inert. A dead column that still returns plausible-looking data is a trap that documentation alone did not prevent.
-
----
-
-## Not verified in this pass
-
-State honestly rather than guessing:
-
-- `dashboard-write`'s live version number
-- Whether `_shared/authz.ts` is still duplicated across both dashboard functions (§16 item 3)
-- Whether the kiosk exists as a deployed surface — it is **absent from ARCHITECTURE.md entirely** and should be documented
-- How much of `website/index.html` still holds hardcoded content now that the CMS exists
-- Debt items 2, 4, 6, 7 and the remaining roadmap items
