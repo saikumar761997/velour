@@ -1585,6 +1585,28 @@ function getIvyTurnstileToken() {
     });
   });
 }
+  // Same invisible-Turnstile pattern as Aivy, but its own widget instance for
+// the booking modal. A booking is one-shot, so we always mint a fresh token
+// -- no trust token is reused here.
+let bmTurnstileWidgetId = null;
+function getBookingTurnstileToken() {
+  return new Promise((resolve) => {
+    if (typeof turnstile === 'undefined') { resolve(null); return; }
+    const container = document.getElementById('bm-turnstile');
+    if (!container) { resolve(null); return; }
+    if (bmTurnstileWidgetId !== null) {
+      try { turnstile.remove(bmTurnstileWidgetId); } catch (e) {}
+      bmTurnstileWidgetId = null;
+    }
+    bmTurnstileWidgetId = turnstile.render(container, {
+      sitekey: TURNSTILE_SITE_KEY,
+      size: 'invisible',
+      callback: (token) => resolve(token),
+      'error-callback': () => resolve(null),
+      'timeout-callback': () => resolve(null),
+    });
+  });
+}
 const MAX_DAYS  = 28;
 const MIN_HRS   = 2;
 const DAY_KEYS  = ['sun','mon','tue','wed','thu','fri','sat'];
@@ -2677,14 +2699,31 @@ async function bmConfirm(){
         duration_minutes: real ? real.duration_minutes : 30,
       };
     });
-    const bookId = await dbRpc('create_booking', {
-      p_salon: SALON_ID, p_name: name, p_email: email, p_phone: phone,
-      p_tech: bm.techId || null, p_date: ds,
-      p_start: m2t24(startM)+':00', p_end: m2t24(endM)+':00',
-      p_duration: bm.dur, p_price: bm.price, p_notes: notes,
-      p_services: services
+    // Prove a real browser before booking. booking-create verifies this
+    // token server-side; without it, no booking is created.
+    const tsToken = await getBookingTurnstileToken();
+    if(!tsToken) throw new Error('VERIFICATION_REQUIRED');
+
+    const res = await fetch(SUPA_URL+'/functions/v1/booking-create', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', apikey:SUPA_KEY, Authorization:'Bearer '+SUPA_KEY },
+      body: JSON.stringify({
+        salon_id: SALON_ID,
+        turnstile_token: tsToken,
+        booking: {
+          p_name: name, p_email: email, p_phone: phone,
+          p_tech: bm.techId || null, p_date: ds,
+          p_start: m2t24(startM)+':00', p_end: m2t24(endM)+':00',
+          p_duration: bm.dur, p_price: bm.price, p_notes: notes,
+          p_services: services
+        }
+      })
     });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.error) throw new Error(String((data && data.error) || ('HTTP '+res.status)));
+    const bookId = data.booking_id;
     if(!bookId) throw new Error('Booking failed');
+
 
     // Show success
     const dd=bm.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
@@ -2697,7 +2736,9 @@ async function bmConfirm(){
     btn.disabled=false; btn.textContent='Confirm Booking';
     const err=document.getElementById('bm-confirm-err');
     const msg=String(e.message||'');
-    if(msg.includes('SLOT_TAKEN')){
+    if(msg.includes('VERIFICATION')){
+      err.innerHTML='⚠️ We couldn\'t verify your browser. Please refresh and try again, or call (603) 621-7469 to book.';
+    } else if(msg.includes('SLOT_TAKEN')){
       err.innerHTML='⚠️ That time was just booked by someone else. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Pick another time →</a>';
     } else if(msg.includes('NO_TECH_AVAILABLE')){
       err.innerHTML='⚠️ No technician is free for that exact time. <a href="#" onclick="bmShowPane(2);bmLoadSlots();return false;">Choose another time →</a> or call (603) 621-7469.';
@@ -3459,6 +3500,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
         <div class="bm-sum-row"><span class="bm-sum-lbl">Email</span><span class="bm-sum-val" id="bm-s-email"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Est. price</span><span class="bm-sum-val bm-sum-price" id="bm-s-price"></span></div>
       </div>
+      <div id="bm-turnstile"></div>
       <div class="bm-cerr" id="bm-confirm-err"></div>
       <div class="bm-nav">
         <button class="bm-btn-back" onclick="bmShowPane(3)">← Back</button>
