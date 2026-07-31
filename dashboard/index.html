@@ -1811,9 +1811,16 @@ function weekMove(n){ if(n==='today') weekOffset=0; else weekOffset+=n; renderWe
 let filterTech = "";  // "" = all
 const matchTech = a => !filterTech || a.techId===filterTech;
 function populateTechFilters(){
+  // Archived technicians can't appear on a current or future schedule, so
+  // they'd only ever be dead entries here. Deactivated-but-not-archived
+  // staff are kept — they can still have upcoming bookings to filter by.
+  const list = [...store.technicians].filter(t => !t.archived_at);
   const opts = `<option value="">All technicians</option>` +
-    [...store.technicians].sort((a,b)=>(a.name||"").localeCompare(b.name||""))
+    list.sort((a,b)=>(a.name||"").localeCompare(b.name||""))
       .map(t=>`<option value="${t.id}">${esc(t.name||"Staff")}</option>`).join("");
+  // If the selected technician just vanished from the list (archived while
+  // selected), fall back to "All" instead of showing a blank dropdown.
+  if(filterTech && !list.some(t => t.id === filterTech)) filterTech = "";
   ["techFilterToday","techFilterWeek"].forEach(id=>{ const el=document.getElementById(id); if(el){ el.innerHTML=opts; el.value=filterTech; } });
 }
 function setTechFilter(v){
