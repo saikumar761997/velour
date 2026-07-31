@@ -20,12 +20,12 @@ This doc is the product + engineering + business source of truth. **Update it af
 
 ## 2. Stack & key IDs
 
-- **Website** — static `index.html` (deliverable file name: `website.html`). Deployed via **Cloudflare Workers, static assets, GitHub-integrated auto-deploy** (repo: `saikumar761997/velour-platform`, branch `main`; every push to `main` redeploys automatically). Live at `https://velour-website.redpersimmon.workers.dev/`. Calls Supabase **directly** with the anon key via a generic `dbGet()`/`dbRpc()` helper — no Edge Function proxy on this side, protected by permissive public RLS policies on `salons`, `services`, `technicians`, `salon_hours`, `technician_hours`, `technician_services`. `dbGet()` throws on any failure instead of silently returning `[]` (honest all-or-nothing load gate). Also embeds the Aivy chat widget (§13).
+- **Website** — static `index.html` (deliverable file name: `website.html`). Deployed via **Cloudflare Workers, static assets, GitHub-integrated auto-deploy** (repo: `saikumar761997/velour-platform`, branch `main`; every push to `main` redeploys automatically). Live at `https://velour-website.redpersimmon.workers.dev/`. Calls Supabase **directly** with the anon key via a generic `dbGet()`/`dbRpc()` helper for *reads*, protected by permissive public RLS policies on `salons`, `services`, `technicians`, `salon_hours`, `technician_hours`, `technician_services`. `dbGet()` throws on any failure instead of silently returning `[]` (honest all-or-nothing load gate). **Booking is the exception to the direct-call model:** as of July 31, 2026 the booking flow posts to the `booking-create` Edge Function rather than calling `create_booking` with the anon key — see §8.2. Also embeds the Aivy chat widget (§13).
 - **Dashboard** — static `velour-dashboard.html`, served from its **own separate Worker** at `https://velour-dashboard.redpersimmon.workers.dev/`. Per-salon passcode-gated. `CONFIG.SALON_ID` is a hardcoded per-deployment constant (this deployment: Red Persimmon) — the frontend is single-tenant per build; multi-tenancy lives entirely in the backend authorization layer (§7).
 - **Kiosk** — static `kiosk/index.html`, the in-store walk-in sign-in surface. Writes through one RPC, `join_walkin_queue` (see §8.1).
 - **⚠️ Two Workers, not one.** The website and dashboard are separate Cloudflare Workers on separate hostnames. An earlier `velour-platform` project name no longer exists. **Renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it** — this has already caused one real production outage (§18).
 - **Supabase project:** `hydhezpeuhqhcugnpupu`. Red Persimmon salon id `a0000000-0000-0000-0000-000000000001`. Demo salon id `d0000000-0000-0000-0000-000000000001` (permanent sandbox, safe to wipe/reseed anytime).
-- **Edge Functions:** `dashboard-read`, `dashboard-write` — both rewritten in the dashboard authorization project, see §7. `owner-aivy` — per-salon auth as of v4, see §16. `aivy-chat` — customer-facing website assistant, see §13. **Version numbers are deliberately not recorded here**: they change on every deploy and a hand-maintained list always drifts. Run `list_edge_functions` to see what is actually live.
+- **Edge Functions:** `dashboard-read`, `dashboard-write` — both rewritten in the dashboard authorization project, see §7. `owner-aivy` — per-salon auth as of v4, see §16. `aivy-chat` — customer-facing website assistant, see §13. `booking-create` — Turnstile gate in front of `create_booking`, the website's only booking write path, see §8.2. **Version numbers are deliberately not recorded here**: they change on every deploy and a hand-maintained list always drifts. Run `list_edge_functions` to see what is actually live.
 - **Email:** Make.com. **Deployment:** Cloudflare Workers (GitHub-integrated). **Version control:** GitHub, `saikumar761997/velour-platform`, private.
 
 ---
@@ -43,6 +43,8 @@ This doc is the product + engineering + business source of truth. **Update it af
 - **UUIDs:** all id/token defaults use `gen_random_uuid()`.
 - **Multi-tenant discipline:** salon-scoped everywhere; never hardcode one salon's values in new work. Enforced architecturally in the dashboard authz layer (§7) and in `aivy-chat`'s `SALON_ORIGINS` map (§13); **not yet true of the website's content**, which is still hardcoded per deployment — see §14.
 - **Lifecycle model:** `active` boolean = reversible; `archived_at` = permanent, requires already-inactive; never delete; archive blocked by future confirmed bookings. Used identically by Services and Staff (technicians).
+
+  **Archived rows must be filtered out of every picker and filter UI, and that is easy to miss.** The dashboard's Today/Week technician filter (`populateTechFilters`) listed *every* technician row that had ever existed, archived ones included — while the checkout modal, on the same page, filtered correctly. Fixed July 31, 2026: the filter now excludes `archived_at`-set technicians and falls back to "All technicians" if the currently-selected one disappears from the list. Deactivated-but-not-archived staff are deliberately kept in the list — they can still have upcoming bookings worth filtering by. Anywhere a new dropdown is built over a lifecycle-managed table, this filter is required, not optional.
 - **Rate-limiter counting model:** fixed-window counters, keyed by `(salon_id, action, key_type, key_value, window_start)` — correctness comes from the window being part of the key, never from a cleanup job having run. See §13.
 
 ---
@@ -61,7 +63,9 @@ Foreign keys make the order mandatory. `walkin_queue` references `bookings`, so 
 payment_line_items → payments → booking_services → walkin_queue → bookings → customers
 ```
 
-An earlier version of this doc listed `bookings` before `walkin_queue`. That order **fails** with a foreign key violation — confirmed in practice.
+An earlier version of this doc listed `bookings` before `walkin_queue`. That order **fails** with a foreign key violation — confirmed in practice, and confirmed again on July 31, 2026 when a `walkin_queue` row (a cancelled walk-in-converted booking) blocked a `bookings` delete with `23503 ... violates foreign key constraint "walkin_queue_booking_id_fkey"`. The error is the safety net working: Postgres refuses the unsafe order rather than half-deleting, and it names the offending table.
+
+**Red Persimmon's transactional state was reset to zero on July 31, 2026** (0 customers, 0 bookings, 0 walk-in queue rows, 0 payments) ahead of the Kristy handover. Configuration was untouched: 10 technicians, 67 active services. Four archived test technicians (`a1`, `a2`, `t1`, `t1`) were also hard-deleted after verifying zero references across all seven tables that point at `technicians` — an exception to the never-delete lifecycle rule, justified only because they held no history. **Real staff must be archived, never deleted.**
 
 ---
 
@@ -76,8 +80,9 @@ An earlier version of this doc listed `bookings` before `walkin_queue`. That ord
 - Dashboard and website deployed together on Cloudflare Workers with GitHub auto-deploy — no manual file uploads.
 - The dashboard authorization layer is live, deployed, and validated (§7).
 - The Aivy chat widget's rate limiting + Turnstile bot protection is live, deployed, and validated (§13).
+- Public booking is bot-protected end to end: the website books through the Turnstile-verified `booking-create` Edge Function, and `create_booking` is no longer executable with the public anon key (§8.2). Live and validated against production.
 
-**Not yet live** — see §14: any dashboard-managed website content (hero image, gallery, testimonials, promotions, homepage copy, social links, SEO metadata). All website content today is hardcoded in `website/index.html` itself, including some placeholder/fake content (reviews, promotions) slated for removal — see `NEXT_PROJECT_ROADMAP.md`.
+**Correction — this section previously said dashboard-managed website content was "not yet live." That is wrong.** The Website CMS is built and live; see §14 for what it covers and §14.3 for what remains unverified. Do not reintroduce a "CMS is unbuilt" claim here.
 
 ---
 
@@ -87,7 +92,7 @@ An earlier version of this doc listed `bookings` before `walkin_queue`. That ord
 
 Three structurally separate trust boundaries exist, and they must never be conflated:
 
-1. **The public website** (`website.html`) — anon key, governed entirely by Postgres RLS policies for data reads. No Edge Function involvement for reads. `create_booking` and the token-based Manage Appointment RPCs (`get_booking_by_token`, `cancel_booking_by_token`) are called directly with the anon key; their own internal logic (or, for tokens, the unguessable token itself) is the security boundary, not RLS. The Aivy chat widget on this same page calls `aivy-chat` (§13), which has its own independent security boundary (Turnstile + rate limiting + salon/origin allowlisting) — separate from both RLS and the dashboard's passcode model.
+1. **The public website** (`website.html`) — anon key, governed entirely by Postgres RLS policies for data reads. No Edge Function involvement for reads. The token-based Manage Appointment RPCs (`get_booking_by_token`, `cancel_booking_by_token`) are still called directly with the anon key — the unguessable token is itself the authorization, not RLS. **`create_booking` is no longer in this category.** As of July 31, 2026 its `EXECUTE` grant to `PUBLIC`/`anon`/`authenticated` is revoked; the only caller is the `booking-create` Edge Function, which carries its own independent boundary (Turnstile + salon/origin allowlist) — see §8.2. The Aivy chat widget on this same page calls `aivy-chat` (§13), which has its own independent security boundary (Turnstile + rate limiting + salon/origin allowlisting) — separate from both RLS and the dashboard's passcode model.
 2. **The passcode-gated dashboard** (`dashboard.html`) — service-role key held server-side in two Edge Functions (`dashboard-read`, `dashboard-write`), never exposed to the client. RLS is irrelevant to this boundary (service-role bypasses it by design); **the Edge Functions themselves are the entire security boundary.**
 3. **Owner-Aivy** (`owner-aivy`) — structurally different from both of the above: a single global passcode with no salon scoping at all. This is known, tracked technical debt (§16), not a frozen or endorsed design.
 
@@ -189,6 +194,45 @@ Note the per-person limit interacts with families sharing one phone number — `
 `set_queue_status(p_salon_id, p_queue_id, p_status, p_booking_id)` — SECURITY DEFINER, granted to `service_role` only (dashboard path, never public).
 
 **Website Manage Appointment (`?manage=<token>`):** `get_booking_by_token(p_token)` (read), `cancel_booking_by_token(p_token)` (the only mutation available from this surface). **"Reschedule" on the website calls the same `cancel_booking_by_token` RPC as "Cancel"**, then redirects to the booking flow — cancel-then-rebook by design, not atomic. Intentional, but see §16 item on product decision.
+
+### 8.2 Public booking security — Turnstile gate + revoked public grant
+
+**Status: COMPLETE, deployed (`booking-create` v1), validated live against production.** A real booking succeeded through the new path, and `has_function_privilege` confirms `anon` and `authenticated` can no longer execute `create_booking`.
+
+**The problem.** Any visitor could read the publishable anon key out of the website source and call `create_booking` directly, repeatedly, from a script. One fake booking costs a single slot and is cancellable in two taps; an automated one could consume a salon's entire week. That second case was the only genuinely catastrophic abuse path, and it is what this closes.
+
+**Design — layer 1 of a planned 3:**
+
+- **`booking-create` is an auth gate, not a second validation layer.** Every booking business rule — service validity, availability, double-booking, business hours, technician assignment — stays in `create_booking`, unchanged. No booking logic moved.
+- **Order of checks:** (1) `salon_id` allowlist plus a check that the request's `Origin` header matches that salon's known origin; (2) Turnstile verification; (3) only then, call `create_booking` with the service-role key.
+- **A fresh Turnstile token per booking.** No trust token is minted or accepted here. A booking is a one-shot action, not a conversation, so §13's trust-token mechanism deliberately does not apply — reusing it would have added plumbing for no gain.
+- **Client fields are whitelisted, never blind-passed.** Only the 11 fields the public form needs are forwarded. `p_salon` is overwritten with the validated `salon_id` and `p_source` is forced to `'website'`, so a caller cannot book into another salon, forge a source, or inject `p_customer_id`/`p_created_by`.
+- **Error passthrough.** `create_booking`'s exception messages (`SLOT_TAKEN`, `NO_TECH_AVAILABLE`, `SALON_CLOSED`, `OUTSIDE_BUSINESS_HOURS`) are returned verbatim, so the website's existing customer-facing messages kept working with zero changes to them.
+- **Fail-open vs. fail-closed — the same deliberate asymmetry as §13.** Cloudflare's siteverify unreachable → fail OPEN (log it, allow the booking). A token that is present but explicitly invalid → fail CLOSED. A broken safety check must never block real revenue.
+- **Client-side fallback.** If no token can be obtained at all (script blocked, ad-blocker), the website throws `VERIFICATION_REQUIRED` and shows a message pointing at the salon's phone number — never a dead button, never a silently lost booking.
+
+**The grant revoke — the part that actually closes it.** Turnstile on the form is theatre while the RPC stays publicly callable. Applied July 31, 2026:
+
+```sql
+REVOKE EXECUTE ON FUNCTION public.create_booking(
+  uuid, text, text, text, uuid, date,
+  time without time zone, time without time zone,
+  integer, numeric, text, jsonb, text, uuid, text
+) FROM PUBLIC, anon, authenticated;
+```
+
+ACL before: `=X/postgres | postgres | anon | authenticated | service_role`. After: `postgres | service_role`. The dashboard's Admin Booking is unaffected — `dashboard-write` holds the service-role key.
+
+**Sequencing that must be repeated for every future salon:** deploy the website change and confirm a real booking works *before* revoking the grant. Reversed, every booking breaks instantly with no fallback. Rollback is a single `GRANT EXECUTE ... TO anon`.
+
+**Residual risk, stated honestly.** A human with a fresh browser session, a VPN, and new fake details can still book one appointment at a time by hand. No booking system without a card hold prevents this — Square, Fresha, and GlossGenius all permit it (verified directly: a booking on Square's own flow with a fake number succeeded, with no sign-in and no card). Velour records payments rather than processing them, so a deposit or card-hold control is **structurally unavailable**, not merely unbuilt. The answer to the residual sliver is owner visibility and fast cancellation, not prevention — and that is the honest thing to tell a salon owner.
+
+**Layers 2 and 3 — scoped, deliberately not built:**
+
+- **Layer 2, rate limiting on booking.** The generic `check_and_increment_rate_limit` RPC (§13) already supports this with zero schema change; `booking-create` needs only to pass its own action name and limits. Deferred to keep this change small and independently testable, not because it isn't wanted.
+- **Layer 3, per-identity open-booking cap.** Limit how many open future bookings one phone or email with no completed visit history may hold. Not built. Note its real limit: it is defeated by rotating identity, which is why it is ranked third rather than first.
+
+Both are tracked in §16 as deferred, not forgotten.
 
 ---
 
@@ -344,23 +388,26 @@ Velour's stated long-term goal is "each salon is configuration, not custom code"
 ## 16. Current Technical Debt (consolidated)
 
 1. **Owner-Aivy briefing data is caller-supplied, not server-computed.** ~~Global passcode, no salon scoping~~ — **CLOSED July 28, 2026.** `owner-aivy` v4 verifies per-salon via the `verify_dashboard_passcode` RPC with an owner-role check, pulls the salon name from the database instead of hardcoding it, and locks CORS to the dashboard origin (verified correct). The remaining limitation: the briefing JSON is still supplied by the caller rather than independently computed server-side the way `aivy-chat` now builds its own facts. Lower exposure than the public chat since it is passcode-gated; worth doing when there is more than one dashboard-access person.
-2. **Double-`unlock()` freezes the dashboard tab.** Calling `unlock()` a second time without a page reload stacks overlapping `boot()`/`loadAll()` cycles with no in-flight guard. No known normal user path triggers this. Low priority.
-3. **`_shared/authz.ts` duplicated, not truly shared** (§6.5) — both dashboard Edge Functions carry an identical inline copy.
-4. **Website "Reschedule" is cancel-then-rebook, not atomic** (§8) — product decision needed on whether this should become a true reschedule-by-token RPC.
-5. ~~**`payments`/`payment_line_items` RLS disabled**~~ — **CLOSED.** Verified July 28, 2026: both tables have RLS enabled, with no public policies, which is correct for service-role-only access. Every table in `public` now has RLS enabled.
-6. **`mark_booking_status`'s cancellation-notify call not exception-guarded.**
-7. **Business Hours conflict banner reads from `store.bookings` (always empty)** instead of `store.assembled` — root cause confirmed, fix proposed, not applied.
-8. **Hardcoded origin allowlists are duplicated and fragile.** `aivy-chat` (`SALON_ORIGINS`) and `owner-aivy` (`ALLOWED_ORIGIN`) each carry their own hardcoded copy of the deployment's origins. This has already caused one silent production outage (§18). Every new salon means editing every function holding a copy, and a mistake fails closed with no visible error to the owner.
-9. **Dev-mode flags can ship to production.** The dashboard's "View website" button pointed at a local dev file (`website_preview.html`) because `WS_DEV_MODE` was left `true` in a production deploy. Fixed July 28, 2026. Add "no dev-mode flags left enabled" to the pre-deploy checklist.
-10. **One Demo sandbox booking has a cross-salon technician mismatch** (Kevin, a Red Persimmon technician, linked to a Demo booking) — sandbox-only, deliberately left alone.
-9. **`close_salon_day` doesn't backfill time-off rows** for technicians added/reactivated after a closure.
-10. **`booking_services.service_id` still not populated** by `create_booking` (name-matching used throughout instead).
-11. **Website inline email/phone validation not built** (server already validates; UX polish item).
-12. **Payment line item correction/void UI** — schema ready, nothing built.
-13. **Stale booking-wizard state bug** on the website — pre-existing, not investigated.
-14. **`aivy-chat` Turnstile renders lazily** on first message rather than on chat-open (§13.7) — minor first-message latency, not a correctness issue.
-15. **No scheduled cleanup job for `rate_limit_counters`** — correctness doesn't depend on it (§13.3), but the table will grow unbounded without one. Acceptable at current traffic scale; revisit if it becomes a real cost/performance concern.
-16. **Website content is hardcoded per deployment, not dashboard-managed** — the core problem §14 (Website CMS) exists to solve. Includes some currently-placeholder content (fake reviews, promotions) slated for removal per `NEXT_PROJECT_ROADMAP.md`.
+2. **The dashboard is a single shared passcode, not per-person accounts.** Everyone at the salon uses the same code; it cannot be revoked for one person, and it gates customers, revenue, and payroll. This is the highest *real-world* risk in the system for a live salon — higher than booking abuse — and the honest thing to tell an owner is to keep the code to herself and to say when someone leaves. Per-salon user accounts are the fix.
+3. **Booking rate limiting (layer 2 of §8.2) not applied.** The generic RPC and table already exist; `booking-create` simply doesn't call them yet. Small, no schema change.
+4. **Per-identity open-booking cap (layer 3 of §8.2) not built.** Would stop the lazy repeat-booker; defeated by identity rotation, so it ranks below layers 1 and 2.
+5. **Double-`unlock()` freezes the dashboard tab.** Calling `unlock()` a second time without a page reload stacks overlapping `boot()`/`loadAll()` cycles with no in-flight guard. No known normal user path triggers this. Low priority.
+6. **`_shared/authz.ts` duplicated, not truly shared** (§6.5) — both dashboard Edge Functions carry an identical inline copy.
+7. **Website "Reschedule" is cancel-then-rebook, not atomic** (§8) — product decision needed on whether this should become a true reschedule-by-token RPC.
+8. ~~**`payments`/`payment_line_items` RLS disabled**~~ — **CLOSED.** Verified July 28, 2026: both tables have RLS enabled, with no public policies, which is correct for service-role-only access. Every table in `public` now has RLS enabled.
+9. **`mark_booking_status`'s cancellation-notify call not exception-guarded.**
+10. **Business Hours conflict banner reads from `store.bookings` (always empty)** instead of `store.assembled` — root cause confirmed, fix proposed, not applied.
+11. **Hardcoded origin allowlists are duplicated and fragile — now across three functions.** `aivy-chat` (`SALON_ORIGINS`), `owner-aivy` (`ALLOWED_ORIGIN`), and now `booking-create` (`SALON_ORIGINS`, a deliberate copy of Aivy's) each carry their own hardcoded copy of the deployment's origins. This has already caused one silent production outage (§18). Every new salon means editing every function holding a copy, and a mistake fails closed with no visible error to the owner. **This grew worse on July 31, 2026 and should be consolidated before salon two, not after.**
+12. **Dev-mode flags can ship to production.** The dashboard's "View website" button pointed at a local dev file (`website_preview.html`) because `WS_DEV_MODE` was left `true` in a production deploy. Fixed July 28, 2026. Add "no dev-mode flags left enabled" to the pre-deploy checklist.
+13. **One Demo sandbox booking has a cross-salon technician mismatch** (Kevin, a Red Persimmon technician, linked to a Demo booking) — sandbox-only, deliberately left alone.
+14. **`close_salon_day` doesn't backfill time-off rows** for technicians added/reactivated after a closure.
+15. **`booking_services.service_id` still not populated** by `create_booking` (name-matching used throughout instead).
+16. **Website inline email/phone validation not built** (server already validates; UX polish item).
+17. **Payment line item correction/void UI** — schema ready, nothing built.
+18. **Stale booking-wizard state bug** on the website — pre-existing, not investigated.
+19. **`aivy-chat` Turnstile renders lazily** on first message rather than on chat-open (§13.7) — minor first-message latency, not a correctness issue. Note `booking-create` has the same property by design and it matters less there: the visitor is already committing to a form submit, not typing a first message.
+20. **No scheduled cleanup job for `rate_limit_counters`** — correctness doesn't depend on it (§13.3), but the table will grow unbounded without one. Acceptable at current traffic scale; revisit if it becomes a real cost/performance concern.
+21. ~~**Website content is hardcoded per deployment**~~ — **SUPERSEDED.** The Website CMS is built and live (§14). Whatever content remains hardcoded is enumerated in §14, which is the single place to track it. Do not re-add a blanket "website content is hardcoded" claim here.
 
 **Resolved, no longer debt:** the dashboard broken-access-control vulnerability (§6.2), and `aivy-chat` rate limiting/Turnstile (§13) — both formerly listed here, now complete.
 
@@ -387,6 +434,15 @@ These decisions were reached through explicit design review and should not be re
 - **No analytics/conversation-history table was built.** Deliberately deferred — there's no proven question yet that such a table would answer, and speculative analytics tables become stale, privacy-sensitive maintenance burden. Build one only when Aivy improvement work (roadmap item 9) has a real question to ask of it.
 - Session message limit lives in exactly one place (`LIMITS` const in `aivy-chat`) — validated in practice when it was changed from 30 to 15 with a single-line edit and no other file touched.
 
+**Public booking security (§8.2):**
+- **An Edge Function gate in front of `create_booking`, rather than validation inside the RPC.** The RPC already enforces every booking rule correctly; bot-detection is a different concern with a different failure mode and belongs at the edge, not mixed into business logic.
+- **Revoking the public `EXECUTE` grant, not just adding Turnstile.** A gate that can be walked around is decoration. This was the deciding argument: half-closing it would have meant explaining a known bypass to a paying customer.
+- **Fresh Turnstile token per booking; no trust token.** §13's trust token exists because a chat is many messages; a booking is one action. Reusing the mechanism would add plumbing and a reuse window for no benefit.
+- **No temporary slot holds with a timed release.** Explicitly rejected during design. It would add a new booking state, require a cleanup job that does not exist, and create a new way for a real customer's slot to vanish mid-flow — multiplying the system's existing worst failure mode (cancel-then-rebook, §8). Rejected on risk, not effort.
+- **No OTP / phone verification.** It proves a number exists, not that anyone will show up; it is blocked on A2P 10DLC registration regardless; and it introduces SMS-pumping cost exposure, converting an empty-chair problem into a billing problem. If Twilio capacity arrives, reminder texts (which raise revenue) come before verification texts (which lower conversion).
+- **No deposits or card holds.** Not deferred — **structurally unavailable.** Velour records payments rather than processing them; a deposit control would require a processor integration, refund handling, and dispute exposure. Any future revisit is a business-model decision, not a feature.
+- **Layered, in a deliberate order:** Turnstile (stops automation) → rate limits (stop speed) → identity caps (stop the lazy repeat). Ordered by ratio of abuse stopped to friction added, which is why the identity cap — the most obvious-sounding control — ranks last.
+
 **Website / CMS (§14, forward-looking):**
 - The CMS, when built, should follow the same salon-scoped-from-day-one discipline as §7 and §13 — the dashboard authorization retrofit was costly specifically because scoping wasn't designed in from the start; that mistake should not be repeated for the CMS.
 - No page-builder or theming system — structured content fields only, scoped to the specific blocks in §14.2, expanded only on real need.
@@ -402,6 +458,9 @@ These decisions were reached through explicit design review and should not be re
 - During the Aivy chat security deployment, a real sequencing risk was caught before it caused a customer-facing outage: deploying the new `aivy-chat` before the frontend sent the new required fields would have silently degraded live chat to the fallback message for every customer. This was caught, and the two deploys were explicitly sequenced (frontend first, confirmed live, then the Edge Function) to close the gap to zero.
 - Full regression matrices were executed against the **live deployed system** with a real connected browser in both major projects — not simulated.
 - **Renaming a Cloudflare project silently breaks every hardcoded origin allowlist that references it.** After the Worker was renamed away from `velour-platform`, `aivy-chat`'s `SALON_ORIGINS` still pointed at the old domain. Because the origin check is a hard string match, **every customer chat message on the live site was rejected with a 403** — with no error visible to the owner — until it was found and corrected. Any future rename must be treated as a change to every function holding an origin constant.
+- **A downloaded copy of a repo file may be behind `main`, and pushing it silently reverts work.** On July 31, 2026 an `index.html` was uploaded as "the current file" for patching. It contained the Website CMS work but *not* that morning's booking-security edits — while the live site was demonstrably booking through `booking-create`, proving `main` had them. Pushing that file would have reverted the change and, because the public grant was already revoked, broken **every** booking with no fallback. **Before pushing a replacement file, read the diff GitHub shows: if it removes anything you don't recognise, stop.** Prefer patching a file pulled fresh from `main` over one from a local downloads folder.
+- **A foreign key error is the safety net working, and it names the fix.** During the July 31 test-data wipe, a `bookings` delete failed with `23503 ... walkin_queue_booking_id_fkey`. Nothing was half-deleted. The error identified the exact blocking table, and a single query against it found the cause: a delete step earlier in the sequence had been cancelled at the confirmation dialog rather than run. Read the constraint name before assuming the query is wrong.
+- **Verifying a fix needs the right instrument.** Fetching the deployed site's HTML could not confirm whether a JavaScript change had shipped (the fetch sees pre-execution markup), and a first attempt to flag "missing" About copy was wrong for exactly this reason — the text was rendered live by the CMS. What did settle it: one real booking, then the Edge Function logs, then `has_function_privilege` for the permission claim. Match the instrument to the claim.
 - **A stale source-of-truth document actively causes wrong decisions.** On July 28, 2026 this file wrongly listed Owner-Aivy's authentication as broken (fixed months earlier) and the Website CMS as unbuilt (shipped). Both led to real misdiagnosis in a working session before the live system was checked directly. Prefer checking the live system over trusting this document, and update it the same day a milestone lands.
 
 ---
