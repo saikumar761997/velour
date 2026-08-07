@@ -255,6 +255,21 @@
   .ledger .v{font-family:"Fraunces",serif;font-size:29px;color:var(--ink);margin-top:6px;line-height:1}
   .ledger .v.money{color:var(--persimmon)}
   .ledger .cell .note{font-size:12px;color:var(--muted);margin-top:6px}
+  .ledger .cell.open{background:var(--surface-2,#faf7f4);box-shadow:inset 0 -3px 0 var(--persimmon)}
+
+  /* ---------- Today's completed drawer ---------- */
+  .drawer{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:-18px 0 30px}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+    font-size:13px;color:var(--muted);font-weight:600}
+  .drawer-empty{padding:18px 16px;font-size:14px;color:var(--muted);background:var(--surface)}
+  .drawer-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);
+    border-bottom:1px solid var(--line);cursor:pointer;min-height:52px}
+  .drawer-row:last-child{border-bottom:none}
+  .drawer-time{width:64px;flex:none;font-size:13px;color:var(--muted)}
+  .drawer-who{flex:1;font-size:15px;color:var(--ink)}
+  .drawer-tech{font-size:13px;color:var(--muted);margin-left:8px}
+  .drawer-amt{font-size:15px;color:var(--ink);flex:none}
 
   /* ---------- Schedule / timeline ---------- */
   .sched{display:flex;flex-direction:column}
@@ -684,6 +699,7 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
         </div>
       </div>
       <div class="ledger" id="ledger"></div>
+      <div id="todayDrawer"></div>
       <div id="walkinsWrap"></div>
       <div id="schedWrap"></div>
     </section>
@@ -1310,6 +1326,49 @@ function sourceChip(src){
   return ` <span class="chip" style="background:${m[1]};color:${m[2]}">${m[0]}</span>`;
 }
 
+/* Today's "what's finished" drawer.
+   Opened by tapping the Appointments or Walk-ins card; tapping the same
+   card again closes it. Deliberately starts closed and is reset whenever
+   the Today tab is left, because the default question at the front desk
+   is "what's left", not "what's done". */
+let todayDrawer = null; // null | "appts" | "walkins"
+
+function toggleTodayDrawer(which){
+  todayDrawer = (todayDrawer === which) ? null : which;
+  renderToday();
+}
+
+function renderTodayDrawer(apptDone, walkinDone){
+  const el = document.getElementById("todayDrawer");
+  if(!el) return;
+  if(!todayDrawer){ el.innerHTML = ""; return; }
+
+  const rows = todayDrawer === "appts" ? apptDone : walkinDone;
+  const label = todayDrawer === "appts" ? "Appointments completed" : "Walk-ins completed";
+  const total = rows.reduce((s,a)=>s+(a.total||0),0);
+
+  if(!rows.length){
+    el.innerHTML = `<div class="drawer">
+      <div class="drawer-head"><span>${label}</span>
+        <button class="act cancel" onclick="toggleTodayDrawer('${todayDrawer}')">Close</button></div>
+      <div class="drawer-empty">Nothing finished yet today.</div></div>`;
+    return;
+  }
+
+  const list = rows.map(a => `
+    <div class="drawer-row" onclick="openBookingDetail('${a.id}')">
+      <div class="drawer-time tnum">${timeFmt(a.when)}</div>
+      <div class="drawer-who">${esc(a.customer)}${sourceChip(a.source)}
+        ${a.tech?`<span class="drawer-tech">${esc(a.tech)}</span>`:""}</div>
+      <div class="drawer-amt tnum">${a.total?usd(a.total):"—"}</div>
+    </div>`).join("");
+
+  el.innerHTML = `<div class="drawer">
+    <div class="drawer-head"><span>${label} · ${rows.length} · ${usd(total)}</span>
+      <button class="act cancel" onclick="toggleTodayDrawer('${todayDrawer}')">Close</button></div>
+    ${list}</div>`;
+}
+
 function renderToday(){
   renderWalkins();
   const t0=startOfToday(), t1=endOfToday(), w0=startOfWeek();
@@ -1325,22 +1384,50 @@ function renderToday(){
   const queuedBookingIds = new Set(
     (store.queue||[]).filter(q => q.booking_id).map(q => q.booking_id)
   );
-  const todays = store.assembled
+  let todays = store.assembled
     .filter(a => a.when && a.when>=t0 && a.when<t1 && matchTech(a) && !queuedBookingIds.has(a.id))
     .sort((a,b)=>a.when-b.when);
   const active = todays.filter(a => a.status!=="cancelled" && a.status!=="no_show");
   const offCount = todays.length - active.length;
 
+  // Split by where the visit came from, so the two summary cards can be
+  // read separately. A walk-in only reaches `todays` once it has left the
+  // queue, so every walk-in counted here is a finished one.
+  const apptRows  = active.filter(a => a.source !== "walk_in");
+  const walkinRows = active.filter(a => a.source === "walk_in");
+  const isDone = a => a.status === "completed";
+
+  const apptDone   = apptRows.filter(isDone);
+  const apptOpen   = apptRows.filter(a => !isDone(a));
+  const walkinDone = walkinRows.filter(isDone);
+  const walkinOpen = (store.queue||[]).length; // still waiting or in a chair
+
   const revToday = store.assembled.filter(a=>a.when&&a.when>=t0&&a.when<t1&&a.counts&&matchTech(a)).reduce((s,a)=>s+a.total,0);
-  const revWeek  = store.assembled.filter(a=>a.when&&a.when>=w0&&a.when<t1&&a.counts&&matchTech(a)).reduce((s,a)=>s+a.total,0);
+  const earnedToday = store.assembled.filter(a=>a.when&&a.when>=t0&&a.when<t1&&a.status==="completed"&&matchTech(a)).reduce((s,a)=>s+a.total,0);
 
   document.getElementById("todaySub").textContent =
     active.length ? `${active.length} booked${offCount?` · ${offCount} cancelled/no-show`:""}` : "";
 
+  // Only the two count cards open a drawer. "Expected today" has nothing
+  // to list, so it is deliberately not tappable -- a card that looks
+  // clickable and does nothing is worse than one that plainly isn't.
+  const cardCls = k => `cell${todayDrawer===k?" open":""}`;
   document.getElementById("ledger").innerHTML = `
-    <div class="cell"><div class="k">Appointments</div><div class="v tnum">${active.length}</div><div class="note">today, all sources</div></div>
-    <div class="cell"><div class="k">Expected today</div><div class="v money tnum">${usd(revToday)}</div><div class="note">booked services</div></div>
-    <div class="cell"><div class="k">Expected this week</div><div class="v money tnum">${usd(revWeek)}</div><div class="note">since Monday</div></div>`;
+    <div class="${cardCls("appts")}" role="button" tabindex="0" onclick="toggleTodayDrawer('appts')" style="cursor:pointer">
+      <div class="k">Appointments</div><div class="v tnum">${apptRows.length}</div>
+      <div class="note">${apptDone.length} done · ${apptOpen.length} upcoming</div></div>
+    <div class="${cardCls("walkins")}" role="button" tabindex="0" onclick="toggleTodayDrawer('walkins')" style="cursor:pointer">
+      <div class="k">Walk-ins</div><div class="v tnum">${walkinDone.length + walkinOpen}</div>
+      <div class="note">${walkinDone.length} done${walkinOpen?` · ${walkinOpen} waiting`:""}</div></div>
+    <div class="cell"><div class="k">Expected today</div><div class="v money tnum">${usd(revToday)}</div>
+      <div class="note">${usd(earnedToday)} earned</div></div>`;
+
+  renderTodayDrawer(apptDone, walkinDone);
+
+  // Finished work leaves the main list entirely -- it lives in the drawer
+  // above now. The list below is only "what still needs doing", which is
+  // the question anyone standing at the front desk is actually asking.
+  todays = todays.filter(a => a.status !== "completed");
 
   const wrap = document.getElementById("schedWrap");
   if(!todays.length){
@@ -5002,6 +5089,7 @@ function switchView(name){
     name = "today"; // defensive only — server-side owner-only checks are the real boundary
   }
   document.querySelectorAll(".navlink").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
+  if(name !== "today") todayDrawer = null; // always come back to "what's left"
   document.getElementById("view-today").classList.toggle("on", name==="today");
   document.getElementById("view-aivy").classList.toggle("on", name==="aivy");
   document.getElementById("view-week").classList.toggle("on", name==="week");
