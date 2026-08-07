@@ -958,6 +958,7 @@ async function loadAll(){
   ]);
   store.salon = (Array.isArray(salonRows) && salonRows[0]) ? salonRows[0] : null;
   applyBrandSalonName();
+  applySalonFeatureFlags();
   store.websiteSettings = (Array.isArray(websiteSettingsRows) && websiteSettingsRows[0]) || null;
   store.websiteGallery = Array.isArray(websiteGalleryRows) ? websiteGalleryRows : [];
   store.categoryImages = Object.fromEntries((Array.isArray(categoryImageRows) ? categoryImageRows : []).map(c => [c.category, c.image_url]));
@@ -1410,7 +1411,112 @@ function ckServiceIdByName(name){
   return match ? match.id : null;
 }
 
+/* ---------- Per-salon feature switches (see salons.checkout_enabled / payroll_enabled) ----------
+   Red Persimmon runs its own POS and card terminal, so money is collected
+   there, not here. For that salon the checkout screen is noise: the tech
+   just needs to say "this one is finished".
+
+   Nothing about checkout is deleted. openCheckout() is still the full
+   flow and is still the ONLY path that writes payments + payment_line_items
+   -- it just isn't reached when a salon has checkout switched off. A salon
+   without an existing POS flips the flag back on and gets all of it.
+
+   Important: revenue does NOT depend on this. "Earned" is derived from
+   bookings marked completed at their own price (see renderInsights /
+   weekEarned / monthEarned), not from the payments table. A salon with
+   checkout off still gets working Insights, VIP tags and Owner-Aivy
+   figures -- what it gives up is tips and actual-amount-collected, which
+   live in that salon's own POS anyway.
+
+   Defaults are ON so a missing/failed salon row behaves exactly as before. */
+function checkoutEnabled(){ return !(store.salon && store.salon.checkout_enabled === false); }
+function payrollEnabled(){ return !(store.salon && store.salon.payroll_enabled === false); }
+
+function applySalonFeatureFlags(){
+  const nav = document.querySelector('.navlink[data-view="payroll"]');
+  if(nav) nav.style.display = payrollEnabled() ? "" : "none";
+}
+
+/* Lightweight confirm used in place of checkout. Two taps, no typing.
+   The customer name is shown deliberately -- on a tablet, at the front
+   desk, the realistic mistake is tapping the wrong ROW, not tapping Done
+   by accident. */
+let sd = { bookingId:null };
+
+function openSimpleDone(id){
+  const a = store.assembled.find(x=>x.id===id);
+  if(!a) return;
+  sd.bookingId = id;
+  let el = document.getElementById("sdmodal");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "sdmodal";
+    el.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:900;padding:16px";
+    el.innerHTML = '<div style="background:#fff;border-radius:14px;padding:22px 24px;width:100%;max-width:340px;text-align:center">'
+      + '<div style="font-size:18px;font-weight:600;margin-bottom:8px">Mark as done?</div>'
+      + '<div id="sdWho" style="font-size:15px;color:#555;line-height:1.6;margin-bottom:18px"></div>'
+      + '<div id="sdErr" style="color:#b00;font-size:13px;min-height:16px;margin-bottom:6px"></div>'
+      + '<div style="display:flex;gap:10px">'
+      + '<button id="sdCancel" class="act cancel" style="flex:1;min-height:46px;font-size:15px">Cancel</button>'
+      + '<button id="sdYes" class="act done" style="flex:1;min-height:46px;font-size:15px">Yes, done</button>'
+      + '</div></div>';
+    document.body.appendChild(el);
+    el.addEventListener("click", ev => { if(ev.target === el) closeSimpleDone(); });
+    el.querySelector("#sdCancel").addEventListener("click", closeSimpleDone);
+    el.querySelector("#sdYes").addEventListener("click", confirmSimpleDone);
+  }
+  const svc = (a.services && a.services.length) ? a.services.join(", ") : "Service TBD";
+  document.getElementById("sdWho").innerHTML =
+    esc(a.customer || "This customer")
+    + (a.when ? ` &middot; ${esc(timeFmt(a.when))}` : "")
+    + `<br>${esc(svc)}`
+    + (a.total ? ` &middot; ${usd(a.total)}` : "");
+  document.getElementById("sdErr").textContent = "";
+  document.getElementById("sdYes").disabled = false;
+  document.getElementById("sdYes").textContent = "Yes, done";
+  el.style.display = "flex";
+}
+
+function closeSimpleDone(){
+  const el = document.getElementById("sdmodal");
+  if(el) el.style.display = "none";
+  sd.bookingId = null;
+}
+
+async function confirmSimpleDone(){
+  const id = sd.bookingId;
+  if(!id) return;
+  const yes = document.getElementById("sdYes");
+  const err = document.getElementById("sdErr");
+  yes.disabled = true; yes.textContent = "Saving...";
+  err.textContent = "";
+  try{
+    const res = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/dashboard-write`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", apikey:CONFIG.SUPABASE_ANON_KEY, Authorization:`Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+      body: JSON.stringify({ action:"mark_status", args:{ p_booking:id, p_status:"completed", p_reason:null, p_by:"salon" }, passcode: window.__VELOUR_PASS || "", salon_id: CONFIG.SALON_ID })
+    });
+    const data = await res.json().catch(()=>null);
+    if(!res.ok || !data || data.ok===false) throw new Error((data && data.error) || ("HTTP "+res.status));
+    const item = store.assembled.find(a=>a.id===id);
+    if(item){ item.status = "completed"; item.counts = true; }
+    closeSimpleDone();
+    renderToday();
+    renderCustomers(document.getElementById("custSearch")?.value || "");
+    if(document.getElementById("view-week").classList.contains("on")) renderWeek();
+  }catch(e){
+    console.error(e);
+    // Stay open on failure -- a silently-closed modal reads as success.
+    err.textContent = "Couldn't save that. Please try again.";
+    yes.disabled = false; yes.textContent = "Yes, done";
+  }
+}
+
 function openCheckout(id){
+  // Single entry point for "this appointment is finished". When the salon
+  // has checkout switched off, that means one tap; otherwise it means the
+  // full payment screen below. Every call site stays unchanged.
+  if(!checkoutEnabled()) return openSimpleDone(id);
   const a = store.assembled.find(x=>x.id===id);
   if(!a) return;
   const origLines = store.bookingServices[id] || [];
