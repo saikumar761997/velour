@@ -642,10 +642,10 @@ input.nb-input:focus, select.nb-input:focus{border-color:var(--persimmon);box-sh
     <div class="datestack lbl" id="dateStack"></div>
     <nav>
       <button class="navlink active" data-view="today" title="Today"><span class="dot"></span><span class="lbl">Today</span></button>
-      <button class="navlink navlink-aivy" data-view="aivy" title="Aivy"><span class="dot"></span><span class="lbl">Aivy ✨</span></button>
       <button class="navlink" data-view="week" title="Week"><span class="dot"></span><span class="lbl">Week</span></button>
-      <button class="navlink" data-view="insights" title="Insights"><span class="dot"></span><span class="lbl">Insights</span></button>
       <button class="navlink" data-view="customers" title="Customers"><span class="dot"></span><span class="lbl">Customers</span></button>
+      <button class="navlink" data-view="insights" title="Insights"><span class="dot"></span><span class="lbl">Insights</span></button>
+      <button class="navlink navlink-aivy" data-view="aivy" title="Aivy"><span class="dot"></span><span class="lbl">Aivy ✨</span></button>
       <button class="navlink" data-view="payroll" title="Payroll"><span class="dot"></span><span class="lbl">Payroll</span></button>
       <button class="navlink" data-view="settings" title="Settings"><span class="dot"></span><span class="lbl">Settings</span></button>
     </nav>
@@ -1296,14 +1296,37 @@ setInterval(async ()=>{
   }catch(e){ /* silent — same reasoning as the queue poll above */ }
 }, 20000);
 
+/* Where a booking came from, as a small chip. Three real sources exist
+   today: website, phone, walk_in. Anything unrecognised renders nothing
+   rather than an "undefined" chip. */
+function sourceChip(src){
+  const map = {
+    website: ["online",  "#E6F1FB", "#0C447C"],
+    phone:   ["phone",   "#E1F5EE", "#0F6E56"],
+    walk_in: ["walk-in", "#FDEBE4", "#993C1D"]
+  };
+  const m = map[src];
+  if(!m) return "";
+  return ` <span class="chip" style="background:${m[1]};color:${m[2]}">${m[0]}</span>`;
+}
+
 function renderToday(){
   renderWalkins();
   const t0=startOfToday(), t1=endOfToday(), w0=startOfWeek();
-  // Walk-ins (source='walk_in') never appear here, at any status — their
-  // entire lifecycle (waiting, being serviced, checked out) lives in the
-  // Walk-ins section instead, so the same visit never shows in two places.
+  // Walk-ins are hidden here only while they are STILL IN THE QUEUE --
+  // waiting, called, or in a chair. That is what the Walk-ins section is
+  // for, and it keeps the same visit from showing in two places at once.
+  //
+  // Once a walk-in is finished it leaves the queue entirely, and used to
+  // vanish from this screen too: its money still counted in the revenue
+  // totals, but the owner could not see how many walk-ins she had done.
+  // A finished walk-in now rejoins this list, tagged with where it came
+  // from, so end of day is one list with everything in it.
+  const queuedBookingIds = new Set(
+    (store.queue||[]).filter(q => q.booking_id).map(q => q.booking_id)
+  );
   const todays = store.assembled
-    .filter(a => a.when && a.when>=t0 && a.when<t1 && matchTech(a) && a.source!=="walk_in")
+    .filter(a => a.when && a.when>=t0 && a.when<t1 && matchTech(a) && !queuedBookingIds.has(a.id))
     .sort((a,b)=>a.when-b.when);
   const active = todays.filter(a => a.status!=="cancelled" && a.status!=="no_show");
   const offCount = todays.length - active.length;
@@ -1315,7 +1338,7 @@ function renderToday(){
     active.length ? `${active.length} booked${offCount?` · ${offCount} cancelled/no-show`:""}` : "";
 
   document.getElementById("ledger").innerHTML = `
-    <div class="cell"><div class="k">Appointments</div><div class="v tnum">${active.length}</div><div class="note">scheduled today</div></div>
+    <div class="cell"><div class="k">Appointments</div><div class="v tnum">${active.length}</div><div class="note">today, all sources</div></div>
     <div class="cell"><div class="k">Expected today</div><div class="v money tnum">${usd(revToday)}</div><div class="note">booked services</div></div>
     <div class="cell"><div class="k">Expected this week</div><div class="v money tnum">${usd(revWeek)}</div><div class="note">since Monday</div></div>`;
 
@@ -1346,7 +1369,7 @@ function renderToday(){
       <div class="${cls}" data-id="${a.id}">
         <div class="time tnum">${timeFmt(a.when)}</div>
         <div class="who">
-          <div class="name">${esc(a.customer)}${a.source==="walk_in"?` <span class="chip" style="background:#FDEBE4;color:var(--persimmon-deep)">walk-in</span>`:""}</div>
+          <div class="name">${esc(a.customer)}${sourceChip(a.source)}</div>
           <div class="svc">${chips}</div>
           ${a.tech?`<div class="tech">with ${esc(a.tech)}</div>`:""}
         </div>
