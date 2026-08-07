@@ -270,6 +270,10 @@
   .drawer-who{flex:1;font-size:15px;color:var(--ink)}
   .drawer-tech{font-size:13px;color:var(--muted);margin-left:8px}
   .drawer-amt{font-size:15px;color:var(--ink);flex:none}
+  .drawer-sub{padding:9px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+    font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .drawer-row.drawer-off{opacity:.65}
+  .drawer-row.drawer-off .drawer-amt{font-size:13px;color:var(--muted)}
 
   /* ---------- Schedule / timeline ---------- */
   .sched{display:flex;flex-direction:column}
@@ -1338,35 +1342,48 @@ function toggleTodayDrawer(which){
   renderToday();
 }
 
-function renderTodayDrawer(apptDone, walkinDone){
+function renderTodayDrawer(apptDone, walkinDone, apptOff, walkinOff){
   const el = document.getElementById("todayDrawer");
   if(!el) return;
   if(!todayDrawer){ el.innerHTML = ""; return; }
 
-  const rows = todayDrawer === "appts" ? apptDone : walkinDone;
-  const label = todayDrawer === "appts" ? "Appointments completed" : "Walk-ins completed";
-  const total = rows.reduce((s,a)=>s+(a.total||0),0);
+  const isAppts = todayDrawer === "appts";
+  const done = isAppts ? apptDone : walkinDone;
+  const off  = (isAppts ? apptOff : walkinOff) || [];
+  const label = isAppts ? "Appointments" : "Walk-ins";
+  const total = done.reduce((s,a)=>s+(a.total||0),0);
 
-  if(!rows.length){
-    el.innerHTML = `<div class="drawer">
-      <div class="drawer-head"><span>${label}</span>
-        <button class="act cancel" onclick="toggleTodayDrawer('${todayDrawer}')">Close</button></div>
-      <div class="drawer-empty">Nothing finished yet today.</div></div>`;
-    return;
-  }
-
-  const list = rows.map(a => `
+  const row = a => `
     <div class="drawer-row" onclick="openBookingDetail('${a.id}')">
       <div class="drawer-time tnum">${timeFmt(a.when)}</div>
       <div class="drawer-who">${esc(a.customer)}${sourceChip(a.source)}
         ${a.tech?`<span class="drawer-tech">${esc(a.tech)}</span>`:""}</div>
       <div class="drawer-amt tnum">${a.total?usd(a.total):"—"}</div>
-    </div>`).join("");
+    </div>`;
+
+  const offRow = a => `
+    <div class="drawer-row drawer-off" onclick="openBookingDetail('${a.id}')">
+      <div class="drawer-time tnum">${timeFmt(a.when)}</div>
+      <div class="drawer-who">${esc(a.customer)}${sourceChip(a.source)}
+        ${a.tech?`<span class="drawer-tech">${esc(a.tech)}</span>`:""}</div>
+      <div class="drawer-amt">${a.status === "no_show" ? "no-show" : "cancelled"}</div>
+    </div>`;
+
+  let body = "";
+  if(done.length){
+    body += `<div class="drawer-sub">Completed · ${done.length} · ${usd(total)}</div>`
+          + done.map(row).join("");
+  }
+  if(off.length){
+    body += `<div class="drawer-sub">Didn't happen · ${off.length}</div>`
+          + off.map(offRow).join("");
+  }
+  if(!body) body = `<div class="drawer-empty">Nothing finished yet today.</div>`;
 
   el.innerHTML = `<div class="drawer">
-    <div class="drawer-head"><span>${label} · ${rows.length} · ${usd(total)}</span>
+    <div class="drawer-head"><span>${label} today</span>
       <button class="act cancel" onclick="toggleTodayDrawer('${todayDrawer}')">Close</button></div>
-    ${list}</div>`;
+    ${body}</div>`;
 }
 
 function renderToday(){
@@ -1402,6 +1419,14 @@ function renderToday(){
   const walkinDone = walkinRows.filter(isDone);
   const walkinOpen = (store.queue||[]).length; // still waiting or in a chair
 
+  // Cancelled and no-show are not "active", so they were never counted --
+  // but they were still sitting in the working list taking up space for
+  // something nobody can act on. They move into the drawer instead, kept
+  // visible (repeat no-shows matter to an owner) but out of the way.
+  const offRows       = todays.filter(a => a.status==="cancelled" || a.status==="no_show");
+  const apptOff       = offRows.filter(a => a.source !== "walk_in");
+  const walkinOff     = offRows.filter(a => a.source === "walk_in");
+
   const revToday = store.assembled.filter(a=>a.when&&a.when>=t0&&a.when<t1&&a.counts&&matchTech(a)).reduce((s,a)=>s+a.total,0);
   const earnedToday = store.assembled.filter(a=>a.when&&a.when>=t0&&a.when<t1&&a.status==="completed"&&matchTech(a)).reduce((s,a)=>s+a.total,0);
 
@@ -1415,19 +1440,19 @@ function renderToday(){
   document.getElementById("ledger").innerHTML = `
     <div class="${cardCls("appts")}" role="button" tabindex="0" onclick="toggleTodayDrawer('appts')" style="cursor:pointer">
       <div class="k">Appointments</div><div class="v tnum">${apptRows.length}</div>
-      <div class="note">${apptDone.length} done · ${apptOpen.length} upcoming</div></div>
+      <div class="note">${apptDone.length} done · ${apptOpen.length} upcoming${apptOff.length?` · ${apptOff.length} off`:""}</div></div>
     <div class="${cardCls("walkins")}" role="button" tabindex="0" onclick="toggleTodayDrawer('walkins')" style="cursor:pointer">
       <div class="k">Walk-ins</div><div class="v tnum">${walkinDone.length + walkinOpen}</div>
-      <div class="note">${walkinDone.length} done${walkinOpen?` · ${walkinOpen} waiting`:""}</div></div>
+      <div class="note">${walkinDone.length} done${walkinOpen?` · ${walkinOpen} waiting`:""}${walkinOff.length?` · ${walkinOff.length} off`:""}</div></div>
     <div class="cell"><div class="k">Expected today</div><div class="v money tnum">${usd(revToday)}</div>
       <div class="note">${usd(earnedToday)} earned</div></div>`;
 
-  renderTodayDrawer(apptDone, walkinDone);
+  renderTodayDrawer(apptDone, walkinDone, apptOff, walkinOff);
 
   // Finished work leaves the main list entirely -- it lives in the drawer
   // above now. The list below is only "what still needs doing", which is
   // the question anyone standing at the front desk is actually asking.
-  todays = todays.filter(a => a.status !== "completed");
+  todays = todays.filter(a => a.status !== "completed" && a.status !== "cancelled" && a.status !== "no_show");
 
   const wrap = document.getElementById("schedWrap");
   if(!todays.length){
