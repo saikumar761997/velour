@@ -1138,7 +1138,7 @@ function renderWalkins(){
         <span class="price tnum">${a.total?usd(a.total):"—"}</span>
       </div>
       <div class="appt-actions">
-        <button class="act done" onclick="openCheckout('${a.id}')">✓ Checkout</button>
+        <button class="act done" onclick="openCheckout('${a.id}')">${checkoutEnabled() ? "✓ Checkout" : "✓ Done"}</button>
       </div>
     </div>`;
   }).join("");
@@ -1501,6 +1501,18 @@ async function confirmSimpleDone(){
     const item = store.assembled.find(a=>a.id===id);
     if(item){ item.status = "completed"; item.counts = true; }
     closeSimpleDone();
+    // If this booking came from the walk-in queue, close that loop too --
+    // otherwise the row sits in Walk-ins forever even though the booking is
+    // finished. Same step the full checkout already does after charging.
+    const linkedQueueEntry = (store.queue||[]).find(q => q.booking_id === id);
+    if(linkedQueueEntry){
+      try{
+        await payrollWrite("set_queue_status", { p_queue_id: linkedQueueEntry.id, p_status: "done" });
+        await reloadQueue();
+      }catch(e){
+        console.warn("Marked done, but couldn't close the queue entry:", e.message);
+      }
+    }
     renderToday();
     renderCustomers(document.getElementById("custSearch")?.value || "");
     if(document.getElementById("view-week").classList.contains("on")) renderWeek();
