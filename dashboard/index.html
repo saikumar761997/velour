@@ -1245,6 +1245,27 @@ async function doWalkinRemove(queueId, kind){
 // checkout already lets the owner add/edit services, price, and
 // technician per line, so a separate "assign" step first would just be
 // asking the same question twice.
+/* Turns a database error code into something a person at the front desk
+   can act on. Each one names the obstacle and the way out. */
+function walkinStartError(msg, q){
+  const who = (store.technicians||[]).find(t => t.id === (q && q.preferred_technician_id));
+  const name = who ? who.name : "That technician";
+  if(msg.includes("SLOT_TAKEN"))
+    return `${name} is already with another customer right now, so this can't start yet. Use + Add Booking to pick a different technician or a later time.`;
+  if(msg.includes("NO_TECH_AVAILABLE"))
+    return `${name} isn't set up to do one of these services. Use + Add Booking to choose someone else, or add the service to their list in Settings.`;
+  if(msg.includes("TECHNICIAN_OUTSIDE_HOURS"))
+    return `${name} isn't scheduled to work at this time. Use + Add Booking to pick someone who is in today.`;
+  if(msg.includes("SERVICE_NOT_AVAILABLE"))
+    return "One of the requested services isn't on the menu any more. Use + Add Booking to choose a current service.";
+  if(msg.includes("SALON_CLOSED") || msg.includes("OUTSIDE_BUSINESS_HOURS"))
+    return "The salon is closed at this time, so a booking can't start now. Check your hours in Settings if that looks wrong.";
+  if(msg.includes("INVALID_PHONE"))  return "That phone number doesn't look right. Fix it and try again.";
+  if(msg.includes("INVALID_EMAIL"))  return "That email address doesn't look right. Fix it and try again.";
+  if(msg.includes("MISSING_FIELDS")) return "Some details are missing from this walk-in. Use + Add Booking to enter them.";
+  return "Couldn't start this walk-in. Use + Add Booking to enter it manually.";
+}
+
 async function doWalkinDone(queueId, btn){
   const q = (store.queue||[]).find(x=>x.id===queueId);
   if(!q) return;
@@ -1276,9 +1297,10 @@ async function doWalkinDone(queueId, btn){
     openCheckout(newBookingId);
   }catch(e){
     console.error(e);
-    const msg = String(e.message||"");
-    if(msg.includes("NO_TECH_AVAILABLE")) alert("No technician is currently free and qualified for that request. Use Add Booking instead to pick manually.");
-    else alert("Couldn't start checkout for this walk-in. Please try again.");
+    // "Please try again" was the old catch-all, and it was actively
+    // misleading: none of these errors are transient. Every one of them
+    // needs a person to change something, so say which thing.
+    alert(walkinStartError(String(e.message||""), q));
     renderWalkins(); // rebuilds the row from scratch — button is clickable again, not stuck on "Starting…"
   }
 }
