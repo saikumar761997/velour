@@ -680,15 +680,25 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     width: 100vw !important;
     right: 0 !important;
     left: 0 !important;
-    bottom: 0 !important;
     top: auto !important;
     border-radius: 18px 18px 0 0;
-    /* dvh tracks the visible viewport when the keyboard opens, so the
-       conversation stays visible instead of being pushed off-screen. */
-    height: 76dvh;
-    max-height: 76dvh;
+    /* --ivy-sheet-h / -b are published by keyboardSafeChat() from
+       visualViewport. The dvh values are the fallback when that API is
+       missing. Never set height/bottom inline here -- that was the bug. */
+    bottom: var(--ivy-sheet-b, 0px) !important;
+    height: var(--ivy-sheet-h, 88dvh);
+    max-height: none;
     transform: translateY(100%);
   }
+  /* Tap-outside-to-close, standard bottom-sheet behaviour. Mobile only --
+     on desktop the panel is small enough to ignore. */
+  #ivy-backdrop {
+    position: fixed; inset: 0; z-index: 996;
+    background: rgba(0,0,0,0.45);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+  #ivy-backdrop.ivy-open { opacity: 1; pointer-events: auto; }
   #ivy-widget.ivy-open { transform: translateY(0) scale(1); }
   /* Messages area flexes to fill whatever height remains — no fixed vh,
      so an open keyboard shrinks it gracefully instead of clipping input. */
@@ -1330,6 +1340,8 @@ let ivyChatOpen = false;
 function openIvyChat() {
   const w = document.getElementById('ivy-widget');
   if (w) w.classList.add('ivy-open');
+  const bd = document.getElementById('ivy-backdrop');
+  if (bd) bd.classList.add('ivy-open');
   const fab = document.getElementById('ivy-fab');
   if (fab) fab.classList.add('ivy-hidden');
   ivyChatOpen = true;
@@ -1339,10 +1351,15 @@ function openIvyChat() {
 function closeIvyChat() {
   const w = document.getElementById('ivy-widget');
   if (w) w.classList.remove('ivy-open');
+  const bd = document.getElementById('ivy-backdrop');
+  if (bd) bd.classList.remove('ivy-open');
   const fab = document.getElementById('ivy-fab');
   if (fab) fab.classList.remove('ivy-hidden');
   ivyChatOpen = false;
   if (w) { w.style.height = ''; w.style.bottom = ''; }
+  document.documentElement.style.removeProperty('--ivy-sheet-h');
+  document.documentElement.style.removeProperty('--ivy-sheet-b');
+  window.dispatchEvent(new Event('ivy-chat-closed'));
 }
 
 // BUG 4: on mobile the on-screen keyboard shrinks the visible viewport but
@@ -1353,17 +1370,30 @@ function closeIvyChat() {
 (function keyboardSafeChat(){
   const vv = window.visualViewport;
   if(!vv) return; // older browsers keep the dvh-based CSS fallback
+  // This used to write inline height/bottom onto the panel. Inline styles beat
+  // the media query, so the handler was overriding the bottom-sheet layout and
+  // leaving the panel floating mid-page. It now publishes CSS variables that
+  // the stylesheet consumes, so CSS stays in charge of layout.
   function fit(){
-    const w = document.getElementById('ivy-widget');
-    if(!w || !ivyChatOpen) return;
-    if(window.innerWidth > 640){ w.style.height = ''; return; }
-    // Cap at 88% of what's actually visible, and sit it on the visible bottom.
-    w.style.height = Math.round(vv.height * 0.88) + 'px';
-    w.style.bottom = Math.round(window.innerHeight - vv.height - vv.offsetTop) + 'px';
+    const root = document.documentElement;
+    if(window.innerWidth > 640 || !ivyChatOpen){
+      root.style.removeProperty('--ivy-sheet-h');
+      root.style.removeProperty('--ivy-sheet-b');
+      return;
+    }
+    // The gap between the layout and visual viewports is the keyboard --
+    // but browser chrome (iOS Safari's toolbars) also produces a small gap.
+    // Only lift the sheet when the gap is big enough to actually be a
+    // keyboard, or the panel floats above the bottom edge for no reason.
+    const gap = Math.round(window.innerHeight - vv.height - vv.offsetTop);
+    const keyboardOpen = gap > 120;
+    root.style.setProperty('--ivy-sheet-h', Math.round(vv.height * 0.92) + 'px');
+    root.style.setProperty('--ivy-sheet-b', (keyboardOpen ? gap : 0) + 'px');
   }
   vv.addEventListener('resize', fit);
   vv.addEventListener('scroll', fit);
   window.addEventListener('ivy-chat-opened', fit);
+  window.addEventListener('ivy-chat-closed', fit);
 })();
 function toggleIvyChat() { ivyChatOpen ? closeIvyChat() : openIvyChat(); }
 
@@ -1389,6 +1419,9 @@ let ivyFabDidDrag = false;
   let startX=0, startY=0, originLeft=0, originTop=0, dragging=false;
 
   function onDown(e){
+    // Dragging the launcher is a desktop affordance. On mobile it competes
+    // with page scrolling and can strand the button off-screen.
+    if(window.innerWidth <= 640) return;
     const pt = e.touches ? e.touches[0] : e;
     const r = fab.getBoundingClientRect();
     originLeft = r.left; originTop = r.top;
@@ -3463,6 +3496,8 @@ document.addEventListener('DOMContentLoaded', initDrag);
 <!-- Aivy floating launcher — always-accessible chat entry point, bottom-right.
      CSS (#ivy-fab) and toggleIvyChat() already existed; the button element
      itself was missing from the markup, so the launcher never rendered. -->
+<div id="ivy-backdrop" onclick="closeIvyChat()" aria-hidden="true"></div>
+
 <button id="ivy-fab" onclick="if(!ivyFabDidDrag) toggleIvyChat();" aria-label="Ask Aivy">
   <svg class="ivy-fab-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
   <span class="ivy-fab-label">Ask Aivy</span>
