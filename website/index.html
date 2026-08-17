@@ -676,29 +676,30 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 }
 .msg-booking-btn:hover { background: var(--gold-lt); }
 @media (max-width: 640px) {
+  /* Full-screen takeover on mobile. A floating panel over a scrolling page
+     meant the conversation and the page fought for the same screen; at phone
+     width the chat should simply BE the screen, like opening a messaging app.
+     --ivy-sheet-h is published by keyboardSafeChat() from visualViewport, so
+     the panel matches what is actually visible when the keyboard is up. */
   #ivy-widget {
     width: 100vw !important;
-    right: 0 !important;
     left: 0 !important;
-    top: auto !important;
-    border-radius: 18px 18px 0 0;
-    /* --ivy-sheet-h / -b are published by keyboardSafeChat() from
-       visualViewport. The dvh values are the fallback when that API is
-       missing. Never set height/bottom inline here -- that was the bug. */
-    bottom: var(--ivy-sheet-b, 0px) !important;
-    height: var(--ivy-sheet-h, 88dvh);
+    right: 0 !important;
+    top: 0 !important;
+    bottom: auto !important;
+    height: var(--ivy-sheet-h, 100dvh);
     max-height: none;
+    border-radius: 0;
+    z-index: 1000;
     transform: translateY(100%);
   }
-  /* Tap-outside-to-close, standard bottom-sheet behaviour. Mobile only --
-     on desktop the panel is small enough to ignore. */
-  #ivy-backdrop {
-    position: fixed; inset: 0; z-index: 996;
-    background: rgba(0,0,0,0.45);
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.22s ease;
-  }
-  #ivy-backdrop.ivy-open { opacity: 1; pointer-events: auto; }
+  /* No "outside" to tap in a full-screen view -- the close button and the
+     device back gesture are the ways out. */
+  #ivy-backdrop { display: none; }
+  /* Header needs to clear the phone's status bar / browser chrome. */
+  .ivy-widget-hdr { padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
+  .chat-footer { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+  .ivy-close-btn { width: 36px; height: 36px; font-size: 16px; }
   #ivy-widget.ivy-open { transform: translateY(0) scale(1); }
   /* Messages area flexes to fill whatever height remains — no fixed vh,
      so an open keyboard shrinks it gracefully instead of clipping input. */
@@ -1337,11 +1338,25 @@ RULES:
 let ivyHistory = [];
 let ivyChatOpen = false;
 
+// On mobile the chat is a full-screen view, so two things follow:
+// the page behind it must stop scrolling, and the device back gesture
+// should dismiss the chat rather than navigating away from the site.
+let ivyLockedScroll = false;
+let ivyPushedHistory = false;
+
 function openIvyChat() {
   const w = document.getElementById('ivy-widget');
   if (w) w.classList.add('ivy-open');
   const bd = document.getElementById('ivy-backdrop');
   if (bd) bd.classList.add('ivy-open');
+  if (window.innerWidth <= 640) {
+    // Only lock if nothing else already did (the booking modal also locks).
+    if (document.body.style.overflow !== 'hidden') {
+      document.body.style.overflow = 'hidden';
+      ivyLockedScroll = true;
+    }
+    try { history.pushState({ ivy: 1 }, ''); ivyPushedHistory = true; } catch (e) {}
+  }
   const fab = document.getElementById('ivy-fab');
   if (fab) fab.classList.add('ivy-hidden');
   ivyChatOpen = true;
@@ -1359,8 +1374,16 @@ function closeIvyChat() {
   if (w) { w.style.height = ''; w.style.bottom = ''; }
   document.documentElement.style.removeProperty('--ivy-sheet-h');
   document.documentElement.style.removeProperty('--ivy-sheet-b');
+  // Only release the scroll lock we set ourselves, never someone else's.
+  if (ivyLockedScroll) { document.body.style.overflow = ''; ivyLockedScroll = false; }
+  if (ivyPushedHistory) { ivyPushedHistory = false; try { history.back(); } catch (e) {} }
   window.dispatchEvent(new Event('ivy-chat-closed'));
 }
+
+// Back gesture closes the chat instead of leaving the site.
+window.addEventListener('popstate', function () {
+  if (ivyChatOpen) { ivyPushedHistory = false; closeIvyChat(); }
+});
 
 // BUG 4: on mobile the on-screen keyboard shrinks the visible viewport but
 // not the layout viewport, so the panel kept its full height and its top
@@ -1381,14 +1404,10 @@ function closeIvyChat() {
       root.style.removeProperty('--ivy-sheet-b');
       return;
     }
-    // The gap between the layout and visual viewports is the keyboard --
-    // but browser chrome (iOS Safari's toolbars) also produces a small gap.
-    // Only lift the sheet when the gap is big enough to actually be a
-    // keyboard, or the panel floats above the bottom edge for no reason.
-    const gap = Math.round(window.innerHeight - vv.height - vv.offsetTop);
-    const keyboardOpen = gap > 120;
-    root.style.setProperty('--ivy-sheet-h', Math.round(vv.height * 0.92) + 'px');
-    root.style.setProperty('--ivy-sheet-b', (keyboardOpen ? gap : 0) + 'px');
+    // Full-screen: the panel is exactly the visible viewport. When the
+    // keyboard opens, vv.height shrinks and the panel shrinks with it, so
+    // the input row stays just above the keys instead of behind them.
+    root.style.setProperty('--ivy-sheet-h', Math.round(vv.height) + 'px');
   }
   vv.addEventListener('resize', fit);
   vv.addEventListener('scroll', fit);
