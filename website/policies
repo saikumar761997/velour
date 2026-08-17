@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon Policies — Red Persimmon Nails &amp; Spa</title>
+<meta name="description" content="Cancellation, group bookings, arrival, pricing, and salon policies for Red Persimmon Nails &amp; Spa.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://redpersimmonnailspanh.com/policies">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson:#8B1A1A; --crimson-dk:#5C0F0F; --crimson-lt:#C04040; --crimson-xs:#F5E8E8;
+  --gold:#C9963A; --gold-lt:#E8C27A; --gold-pale:#FAF0DC; --gold-xs:#FDF8EE;
+  --cream:#FBF8F4; --warm-white:#FFFDF9; --charcoal:#1C1A18;
+  --text-mid:#4A3F35; --text-muted:#8A7A6A;
+  --border:rgba(139,26,26,0.10); --border-gold:rgba(201,150,58,0.20);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--text-mid); line-height:1.75; font-size:15px; -webkit-font-smoothing:antialiased; }
+.legal-nav { background:var(--crimson-dk); padding:16px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.legal-nav a.brand { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--gold-lt); text-decoration:none; font-weight:600; letter-spacing:.02em; }
+.legal-nav .navlinks { display:flex; gap:20px; flex-wrap:wrap; }
+.legal-nav .navlinks a { font-size:12px; color:rgba(255,255,255,.75); text-decoration:none; letter-spacing:.08em; text-transform:uppercase; }
+.legal-nav .navlinks a:hover, .legal-nav .navlinks a[aria-current="page"] { color:var(--gold-lt); }
+.legal-wrap { max-width:760px; margin:0 auto; padding:64px 24px 80px; }
+.legal-eyebrow { font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+.legal-wrap h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,46px); font-weight:500; color:var(--crimson-dk); line-height:1.15; letter-spacing:-.3px; margin-bottom:8px; }
+.legal-meta { font-size:13px; color:var(--text-muted); margin-bottom:12px; }
+.legal-entity { background:var(--warm-white); border:1px solid var(--border); border-left:3px solid var(--crimson); border-radius:0 4px 4px 0; padding:16px 18px; font-size:14px; line-height:1.7; margin-bottom:40px; }
+.legal-entity strong { color:var(--charcoal); }
+.legal-wrap h2 { font-family:'Cormorant Garamond',serif; font-size:27px; font-weight:600; color:var(--crimson-dk); margin:44px 0 12px; line-height:1.25; }
+.legal-wrap h3 { font-size:14px; font-weight:600; color:var(--charcoal); margin:26px 0 8px; letter-spacing:.01em; }
+.legal-wrap p { margin-bottom:16px; }
+.legal-wrap ul { margin:0 0 18px 20px; }
+.legal-wrap li { margin-bottom:8px; }
+.legal-wrap strong { color:var(--charcoal); font-weight:600; }
+.legal-wrap a { color:var(--crimson); text-decoration:underline; text-underline-offset:2px; }
+.legal-rule { height:1px; background:linear-gradient(to right,transparent,var(--border-gold),transparent); margin:40px 0; border:0; }
+.legal-note { background:var(--gold-xs); border:1px solid var(--border-gold); border-radius:6px; padding:18px 20px; margin:24px 0; font-size:14.5px; }
+.legal-note p:last-child { margin-bottom:0; }
+table.legal-tbl { width:100%; border-collapse:collapse; margin:18px 0 24px; font-size:13.5px; }
+table.legal-tbl th { text-align:left; background:var(--crimson-xs); color:var(--crimson-dk); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:10px 12px; font-weight:600; }
+table.legal-tbl td { padding:11px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+.legal-foot { border-top:1px solid var(--border); margin-top:56px; padding-top:28px; font-size:14px; }
+.legal-foot .backlink { display:inline-block; margin-top:18px; background:var(--crimson); color:#fff; text-decoration:none; padding:11px 24px; border-radius:4px; font-size:13px; font-weight:600; letter-spacing:.03em; }
+@media(max-width:560px){ .legal-wrap{padding:44px 20px 60px} table.legal-tbl{font-size:12.5px} table.legal-tbl th,table.legal-tbl td{padding:8px} }
+</style>
+</head>
+<body>
+<nav class="legal-nav">
+  <a class="brand" href="/">Red Persimmon</a>
+  <div class="navlinks">
+    <a href="/">Home</a>
+    <a href="/policies" aria-current="page">Salon Policies</a>
+    <a href="/terms">Booking Terms</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+</nav>
+<main class="legal-wrap">
+<div class="legal-eyebrow">Salon Policies</div>
+<h1>How we run<br>the salon.</h1>
+<div class="legal-meta">Effective August 16, 2026 &nbsp;·&nbsp; Version 2026-08-16</div>
+<div class="legal-entity">
+<strong>Red Persimmon Nails &amp; Spa</strong><br>
+1500 South Willow Street, Manchester, NH 03103 &nbsp;·&nbsp; <a href="tel:+16036217469">(603) 621-7469</a>
+</div>
+
+<p>We want every visit to feel unhurried and easy. These are the few things that help us keep it that way — please have a read before your appointment.</p>
+
+<h2>Booking and walk-ins</h2>
+<p>Walk-ins are always welcome. Booking ahead guarantees your time and your preferred technician, which we'd recommend for weekends and evenings.</p>
+<p>You can book online up to 28 days ahead, and at least 2 hours before your appointment. For anything sooner, just call us.</p>
+
+<h2>Coming as a group</h2>
+<div class="legal-note">
+<p><strong>For three or more people, please call us at <a href="tel:+16036217469">(603) 621-7469</a> rather than booking online.</strong></p>
+<p>A group needs several technicians free at the same time. We arrange that by hand so you're all seated together and nobody is left waiting — the booking form can't do that for you. Give us a little notice and we'll set it up properly.</p>
+</div>
+<p>For yourself or two of you, book online as normal.</p>
+
+<h2>Arriving</h2>
+<p>Please come a few minutes early so we can get you settled and talk through what you'd like.</p>
+<p>If you're running late, call us — we'll do whatever we can. If you arrive <strong>more than 15 minutes late</strong>, we may need to shorten your service or find you another time, because the person booked after you is waiting. We'll always talk it through with you first.</p>
+
+<h2>Prices</h2>
+<p><strong>About half our services are priced "from" a starting figure</strong>, because the final cost depends on what you choose — nail length and shape, how detailed a design is, whether you need a soak-off or repair first, and the condition of your natural nails.</p>
+<p>The price you see when booking is an estimate, not a fixed quote. Here's our promise:</p>
+<ul>
+<li>Your technician tells you the cost <strong>before starting</strong></li>
+<li>If you change your mind partway through, they tell you what it adds <strong>before doing it</strong></li>
+<li><strong>Nothing appears on your bill that you weren't told about first</strong></li>
+</ul>
+<p>Change your mind as often as you like. It's never a problem and it never costs you anything.</p>
+
+<h2>Paying</h2>
+<p>We take payment in the salon at the end of your appointment — card or cash.</p>
+<p><strong>No deposit is needed to book, and nothing is charged when you make a booking online.</strong></p>
+
+<h2>Changing or cancelling</h2>
+<p>Use the link in your confirmation email, or call us.</p>
+<p><strong>We don't charge cancellation or no-show fees.</strong> We only ask that you tell us as early as you can. An empty slot is an hour a technician doesn't earn, so a quick call genuinely makes a difference to us.</p>
+<p>If you need to change the <em>services</em> rather than the time, please call — we'll need to set aside the right amount of time.</p>
+<p><strong>One thing about rescheduling online:</strong> it releases your original slot to book the new one. If your appointment is soon, or you're attached to a particular time, call us instead and we'll move it safely for you.</p>
+
+<h2>Allergies, sensitivities, and health</h2>
+<p>Please tell us about anything that might affect your service — allergies, sensitive skin, an infection or injury, or if you're pregnant or diabetic. Put it in the booking notes or simply tell your technician when you arrive. Either is fine.</p>
+<p>Occasionally we may need to adjust or decline a service if we don't think it's safe for you — an active nail or skin infection, for example. We'll always explain why. It's about looking after you.</p>
+<p>Our services are cosmetic, not medical. If something about your nails or skin worries you, please see a doctor.</p>
+
+<h2>Children</h2>
+<p>We offer manicures ($20) and pedicures ($35) for children aged 10 and under — they're very welcome.</p>
+<p>Please book on their behalf and stay with them in the salon during the appointment.</p>
+
+<h2>Gift certificates</h2>
+<p>Available in any amount, and <strong>they never expire.</strong> Use them for any service. They can't be exchanged for cash, and we're not able to replace a lost certificate.</p>
+
+<h2>Photos</h2>
+<p>We love showing off our work, and we may ask to photograph your nails for our website or social media.</p>
+<p><strong>We'll always ask you first, and "no" is a perfectly good answer</strong> — it makes no difference to your service. If we've shared a photo and you'd like it taken down, just email us.</p>
+
+<h2>If you're not happy</h2>
+<p>Please tell us. Come back within <strong>7 days</strong> and we'll put it right, normally by redoing the work at no charge.</p>
+<p>We'd far rather hear from you directly than read about it later. We take it seriously when someone leaves unhappy.</p>
+
+<h2>Looking after each other</h2>
+<p>Our technicians are skilled professionals and we ask that they're treated with respect, as they'll treat you. We reserve the right to decline service to anyone who is abusive to our staff or other guests.</p>
+
+<h2>Questions</h2>
+<p>Call <a href="tel:+16036217469">(603) 621-7469</a> or email <a href="mailto:redpersimmon.bookings@gmail.com">redpersimmon.bookings@gmail.com</a>. You can also ask Aivy, our website assistant — though for anything important, we'd rather you spoke to a person.</p>
+
+<div class="legal-foot">
+<p><strong>RPN - Perfection LLC</strong><br>
+Red Persimmon Nails &amp; Spa<br>
+1500 South Willow Street, Manchester, NH 03103<br>
+<a href="tel:+16036217469">(603) 621-7469</a> &nbsp;·&nbsp; <a href="mailto:redpersimmon.bookings@gmail.com">redpersimmon.bookings@gmail.com</a></p>
+<a class="backlink" href="/">&larr; Back to Red Persimmon</a>
+</div>
+</main>
+</body>
+</html>
