@@ -2703,6 +2703,17 @@ function bmBuildSummary(){
   document.getElementById('bm-s-price').textContent=bm.price>0?'From $'+bm.price.toFixed(2):'Varies by service';
   var pe=document.getElementById('bm-s-party');
   if(pe) pe.textContent = bm.party===2 ? '2 people' : 'Just me';
+  // Notes were never surfaced on the review step. A customer who typed
+  // a request had no way to confirm it was captured before confirming.
+  // Row stays hidden when empty rather than showing a blank line.
+  var ntEl=document.getElementById('bm-notes');
+  var nt=(ntEl && ntEl.value ? ntEl.value.trim() : '');
+  var nRow=document.getElementById('bm-s-notes-row');
+  var nVal=document.getElementById('bm-s-notes');
+  if(nRow && nVal){
+    nVal.textContent = nt;
+    nRow.style.display = nt ? '' : 'none';
+  }
 }
 
 // Confirm
@@ -3546,6 +3557,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
         <div class="bm-sum-row"><span class="bm-sum-lbl">Party</span><span class="bm-sum-val" id="bm-s-party"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Email</span><span class="bm-sum-val" id="bm-s-email"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Est. price</span><span class="bm-sum-val bm-sum-price" id="bm-s-price"></span></div>
+        <div class="bm-sum-row" id="bm-s-notes-row" style="display:none"><span class="bm-sum-lbl">Notes</span><span class="bm-sum-val" id="bm-s-notes"></span></div>
       </div>
       <div id="bm-turnstile"></div>
       <div class="bm-cerr" id="bm-confirm-err"></div>
