@@ -129,6 +129,9 @@
   .wk-time{font-size:11px;font-weight:700;color:var(--plum)}
   .wk-name{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .wk-tech{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wk-party{display:block;font-size:10px;font-weight:700;color:var(--persimmon-deep);letter-spacing:.02em}
+  .appt-notes{grid-column:1/-1;margin-top:6px;padding:7px 9px;background:var(--persimmon-wash,#FCF3EF);border-left:2px solid var(--persimmon-deep);border-radius:0 4px 4px 0;font-size:12px;line-height:1.5;color:var(--ink,#2A1B26)}
+  .appt-notes b{font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-size:10px;color:var(--persimmon-deep);display:block;margin-bottom:2px}
   .wk-empty{text-align:center;color:var(--line);font-size:18px;padding:6px 0}
   .wk-gap{font-size:10.5px;font-weight:600;color:var(--sage);background:#F0F6F2;border:1px dashed #CFE4D8;border-radius:6px;padding:3px 8px;text-align:center}
   .tech-filter{border:1px solid var(--line);background:#fff;color:var(--plum);border-radius:9px;padding:6px 10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;outline:none;max-width:170px}
@@ -1076,6 +1079,11 @@ async function loadAll(){
       isPaid: !!paid,
       status,
       source,
+      // Notes and party size were recorded but never surfaced anywhere the
+      // salon could see them. A customer's request reached the database and
+      // stopped there. Both are read-only on this screen.
+      notes: (firstOf(b,["notes"]) || "").trim() || null,
+      partySize: (function(){ const n=Number(firstOf(b,["party_size"])); return Number.isFinite(n)&&n>0?n:1; })(),
       counts: !CONFIG.NON_REVENUE_STATUSES.includes(status),
     };
   });
@@ -1100,11 +1108,12 @@ async function reloadQueue(){
 // looks exactly as it did before. Number() guards against an older row or a
 // null slipping through; anything that isn't a real count above 1 renders
 // nothing rather than "party of undefined".
-function partyChip(q){
-  const n = Number(q && q.party_size);
+function partyChipN(n){
+  n = Number(n);
   if(!Number.isFinite(n) || n <= 1) return "";
   return ` <span class="chip" style="background:var(--persimmon-deep);color:#fff;font-weight:700">party of ${n}</span>`;
 }
+function partyChip(q){ return partyChipN(q && q.party_size); }
 
 function renderWalkins(){
   const wrap = document.getElementById("walkinsWrap");
@@ -1503,7 +1512,7 @@ function renderToday(){
       <div class="${cls}" data-id="${a.id}">
         <div class="time tnum">${timeFmt(a.when)}</div>
         <div class="who">
-          <div class="name">${esc(a.customer)}${sourceChip(a.source)}</div>
+          <div class="name">${esc(a.customer)}${sourceChip(a.source)}${partyChipN(a.partySize)}</div>
           <div class="svc">${chips}</div>
           ${a.tech?`<div class="tech">with ${esc(a.tech)}</div>`:""}
         </div>
@@ -1512,6 +1521,7 @@ function renderToday(){
           <span class="price tnum">${a.total?usd(a.total):"—"}</span>
           ${statusPill(a.status)}
         </div>
+        ${a.notes?`<div class="appt-notes"><b>Customer note</b>${esc(a.notes)}</div>`:""}
         ${actions}
       </div>`;
   });
@@ -2163,6 +2173,7 @@ function renderWeek(){
         <span class="wk-time tnum">${timeFmt(a.when)}</span>
         <span class="wk-name">${esc(a.customer)}</span>
         <span class="wk-tech">${a.tech?esc(a.tech):(a.source==="walk_in"?"No preference":"")}</span>
+        ${a.partySize>1?`<span class="wk-party">party of ${a.partySize}</span>`:""}
       </button>`}));
     gaps.forEach(g=>items.push({t:g.start, o:-1, html:
       `<div class="wk-gap">↳ ${gapLabel(g.end-g.start)} open</div>`}));
