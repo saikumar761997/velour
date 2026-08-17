@@ -878,6 +878,11 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 .bm-suc-det { background: var(--crimson-xs); border-radius: 8px; padding: 12px 14px; text-align: left; margin-bottom: 20px; font-size: 13px; color: var(--charcoal); line-height: 1.9; }
 .bm-suc-spam { font-size: 12px; color: #999; line-height: 1.6; margin: 0 0 20px 0; font-style: italic; }
 .bm-confirm-hint { font-size: 13px; color: #777; line-height: 1.5; margin: -8px 0 16px 0; }
+.ws-legal-links { margin-top: 26px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.10); display: flex; gap: 22px; flex-wrap: wrap; }
+.ws-legal-links a { font-size: 12px; color: rgba(255,255,255,0.55); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.15s; }
+.ws-legal-links a:hover { color: var(--gold-lt); }
+.bm-consent { font-size: 11.5px; color: #777; line-height: 1.55; margin: 14px 0 10px; }
+.bm-consent a { color: var(--crimson); text-decoration: underline; text-underline-offset: 2px; }
 .bm-party-lbl { font-size: 12px; color: #777; margin-bottom: 7px; }
 .bm-party-opts { display: flex; gap: 6px; margin-bottom: 14px; }
 .bm-party-opt { flex: 1; text-align: center; padding: 9px 0; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; color: #777; background: #fff; transition: all 0.15s; font-family: 'Inter', sans-serif; }
@@ -1921,6 +1926,7 @@ function renderTechDropdownOptions(){
 }
 
 // State
+(function(){ var y=document.getElementById('wsFooterYear'); if(y) y.textContent=new Date().getFullYear(); })();
 let bm = { step:1, techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null, party:1 };
 let calOff = 0;
 
@@ -3418,7 +3424,12 @@ document.addEventListener('DOMContentLoaded', initDrag);
         <a href="https://maps.google.com/?q=1500+S+Willow+Street+Manchester+NH" target="_blank" class="btn-gold" id="wsFindUsMapsLink2">Get Directions →</a>
       </div>
       <p id="wsFooterSocial" style="display:none;margin-top:24px;"></p>
-      <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,0.4);">© 2025 <span id="wsFooterCopyrightName">Red Persimmon Nails &amp; Spa</span>. All rights reserved.</p>
+      <div class="ws-legal-links">
+        <a href="/policies">Salon Policies</a>
+        <a href="/terms">Booking Terms</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+      <p style="margin-top:18px;font-size:12px;color:rgba(255,255,255,0.4);">© <span id="wsFooterYear">2026</span> <span id="wsFooterCopyrightName">Red Persimmon Nails &amp; Spa</span>. All rights reserved.<br><span style="color:rgba(255,255,255,0.3)">Operated by RPN - Perfection LLC · Manchester, NH</span></p>
     </div>
   </div>
 </div>
@@ -3561,6 +3572,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
       </div>
       <div id="bm-turnstile"></div>
       <div class="bm-cerr" id="bm-confirm-err"></div>
+      <p class="bm-consent">By confirming, you agree to our <a href="/terms" target="_blank" rel="noopener">Booking Terms</a> and <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</p>
       <div class="bm-nav">
         <button class="bm-btn-back" onclick="bmShowPane(3)">← Back</button>
         <button class="bm-btn-next" id="bm-confirm-btn" onclick="bmConfirm()">Confirm Booking</button>
