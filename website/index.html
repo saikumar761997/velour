@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>Red Persimmon Nails & Spa — Manchester, NH</title>
 <meta name="description" content="Red Persimmon Nails & Spa in Manchester, NH — premium nail care, lash extensions, waxing, and spa treatments. Walk-ins welcome. Call (603) 621-7469.">
 <meta name="keywords" content="nail salon Manchester NH, nail spa Manchester, lash extensions Manchester NH, waxing Manchester NH, pedicure Manchester, manicure Manchester">
@@ -679,15 +679,18 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
   /* Full-screen takeover on mobile. A floating panel over a scrolling page
      meant the conversation and the page fought for the same screen; at phone
      width the chat should simply BE the screen, like opening a messaging app.
-     --ivy-sheet-h is published by keyboardSafeChat() from visualViewport, so
-     the panel matches what is actually visible when the keyboard is up. */
+     Sizing is pure CSS -- see the top/bottom pinning below. */
   #ivy-widget {
     width: 100vw !important;
     left: 0 !important;
     right: 0 !important;
-    top: var(--ivy-sheet-t, 0px) !important;
-    bottom: auto !important;
-    height: var(--ivy-sheet-h, 100dvh);
+    /* Pinned to both edges instead of a JS-computed height. With
+       interactive-widget=resizes-content the layout viewport shrinks when the
+       keyboard opens, so a fixed top:0/bottom:0 box fits the remaining space
+       on its own. Every JS attempt at this left a gap somewhere. */
+    top: 0 !important;
+    bottom: 0 !important;
+    height: auto !important;
     max-height: none;
     border-radius: 0;
     z-index: 1000;
@@ -1377,9 +1380,6 @@ function closeIvyChat() {
   if (fab) fab.classList.remove('ivy-hidden');
   ivyChatOpen = false;
   if (w) { w.style.height = ''; w.style.bottom = ''; }
-  document.documentElement.style.removeProperty('--ivy-sheet-h');
-  document.documentElement.style.removeProperty('--ivy-sheet-b');
-  document.documentElement.style.removeProperty('--ivy-sheet-t');
   // Only release the scroll lock we set ourselves, never someone else's.
   if (ivyLockedScroll) { document.body.style.overflow = ''; ivyLockedScroll = false; }
   if (ivyPushedHistory) { ivyPushedHistory = false; try { history.back(); } catch (e) {} }
@@ -1399,24 +1399,16 @@ window.addEventListener('popstate', function () {
 (function keyboardSafeChat(){
   const vv = window.visualViewport;
   if(!vv) return; // older browsers keep the dvh-based CSS fallback
-  // This used to write inline height/bottom onto the panel. Inline styles beat
-  // the media query, so the handler was overriding the bottom-sheet layout and
-  // leaving the panel floating mid-page. It now publishes CSS variables that
-  // the stylesheet consumes, so CSS stays in charge of layout.
+  // Earlier versions of this computed the panel's height and offset in JS.
+  // Every variant left a gap somewhere, because it was racing the browser's
+  // own viewport handling. CSS owns the layout now; this only fixes scroll.
   function fit(){
-    const root = document.documentElement;
-    if(window.innerWidth > 640 || !ivyChatOpen){
-      root.style.removeProperty('--ivy-sheet-h');
-      root.style.removeProperty('--ivy-sheet-b');
-      root.style.removeProperty('--ivy-sheet-t');
-      return;
-    }
-    // Full-screen: the panel must both SIZE to the visible viewport and be
-    // POSITIONED from it. Sizing alone left the panel anchored to the layout
-    // viewport, so the page showed through in the gap between the panel's
-    // bottom edge and the top of the keyboard.
-    root.style.setProperty('--ivy-sheet-h', Math.round(vv.height) + 'px');
-    root.style.setProperty('--ivy-sheet-t', Math.round(vv.offsetTop) + 'px');
+    if(window.innerWidth > 640 || !ivyChatOpen) return;
+    // Layout is CSS's job now. All this does is keep the newest message
+    // visible -- when the panel resized around the keyboard, the scroll
+    // position stayed put and the last reply ended up below the fold.
+    const box = document.getElementById('ivyMessages');
+    if (box) requestAnimationFrame(function(){ box.scrollTop = box.scrollHeight; });
   }
   vv.addEventListener('resize', fit);
   vv.addEventListener('scroll', fit);
