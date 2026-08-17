@@ -600,25 +600,26 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 /* ===== IVY FLOATING WIDGET ===== */
 #ivy-fab {
   position: fixed; bottom: 96px; right: 24px; z-index: 998;
-  width: 56px; height: 56px;
-  background: var(--crimson); border: none; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 24px;
-  box-shadow: 0 4px 20px rgba(139,26,26,0.45);
-  transition: transform 0.2s, background 0.2s;
+  height: 58px; padding: 0 22px 0 18px;
+  background: #1A0A0A; border: 1.5px solid var(--gold); border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
-#ivy-fab:hover { transform: scale(1.1); background: var(--crimson-dk); }
+#ivy-fab .ivy-fab-icon { width: 23px; height: 23px; flex: 0 0 auto; display: block; }
+#ivy-fab .ivy-fab-icon path { stroke: var(--gold-lt); }
+#ivy-fab .ivy-fab-label {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 18px; color: #F3E4C8; line-height: 1; white-space: nowrap;
+}
+#ivy-fab:hover { transform: scale(1.04); background: var(--gold); border-color: var(--gold-lt); }
+#ivy-fab:hover .ivy-fab-icon path { stroke: #3D0B0B; }
+#ivy-fab:hover .ivy-fab-label { color: #3D0B0B; }
 /* While the chat is open the launcher is redundant and was overlapping the
    chat's own buttons — hide it entirely rather than layering it on top. */
 #ivy-fab.ivy-hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
 #ivy-fab.ivy-fab-open { background: var(--crimson-dk); }
-.ivy-fab-dot {
-  position: absolute; top: 3px; right: 3px;
-  width: 13px; height: 13px;
-  background: #4ade80; border-radius: 50%;
-  border: 2px solid var(--cream);
-  animation: pulse 2s infinite;
-}
 #ivy-widget {
   position: fixed; bottom: 168px; right: 24px; z-index: 997;
   width: 370px; height: min(560px, calc(100vh - 200px));
@@ -693,7 +694,8 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
      so an open keyboard shrinks it gracefully instead of clipping input. */
   #ivyMessages { height: auto !important; max-height: none !important; flex: 1 1 auto; min-height: 0; }
   /* Launcher sits clear of the sticky booking bar and page CTAs. */
-  #ivy-fab { right: 14px; bottom: 120px; width: 50px; height: 50px; }
+  #ivy-fab { right: 14px; bottom: 120px; width: 54px; height: 54px; padding: 0; gap: 0; }
+  #ivy-fab .ivy-fab-label { display: none; }
 
   /* --- Mobile polish pass --- */
   /* Tighter, more even section rhythm; desktop padding felt cramped-then-empty. */
@@ -1135,8 +1137,8 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     <a href="#team" onclick="closeMenu()">Our Team</a>
     <a href="#faq" onclick="closeMenu()">FAQ</a>
     <a href="#visit" onclick="closeMenu()">Visit Us</a>
-    <a href="#" class="nav-ivy" onclick="openIvyChat();closeMenu();return false;">Ask Aivy</a>
-    <a href="#" class="nav-book" onclick="closeMenu();openIvyChat();startWizard();return false;">Book Appointment</a>
+    <a href="#" class="nav-ivy" onclick="closeMenu();openIvyChat();return false;">Ask Aivy</a>
+    <a href="#" class="nav-book" onclick="closeMenu();goBooking();return false;">Book Appointment</a>
   </div>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1166,8 +1168,7 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
       <h1 id="wsHeroHeadline">Where every nail<br>tells <em>your story.</em></h1>
       <p class="hero-sub" id="wsHeroSubheadline">Premium nail care, lash extensions, waxing, and spa treatments. Expert technicians, warm atmosphere, results that speak for themselves.</p>
       <div class="hero-actions">
-        <a href="#" class="btn-gold" onclick="openIvyChat();startWizard();return false;">Book Appointment</a>
-        <a href="#services" class="btn-ghost">View Services</a>
+        <a href="#" class="btn-gold" onclick="goBooking();return false;">Book Appointment &rarr;</a>
         <div class="hero-badges" id="wsHeroBadges">
           <!-- populated live from business hours: today's hours + open/closed -->
         </div>
@@ -1366,6 +1367,18 @@ function closeIvyChat() {
 })();
 function toggleIvyChat() { ivyChatOpen ? closeIvyChat() : openIvyChat(); }
 
+// Booking entry point for the nav and hero buttons. These used to open Aivy
+// and start the wizard, which put a chatbot between the customer and the
+// thing they had just said they wanted to do. A booking needs at least one
+// service, so: if services are already chosen, go straight to the modal;
+// otherwise send them to Services, where choosing is step one.
+function goBooking() {
+  closeIvyChat();
+  if (typeof bbServices !== 'undefined' && bbServices.length > 0) { openBookingModal(); return; }
+  const sec = document.getElementById('services');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // Draggable Aivy launcher — the person can move it anywhere on screen if it
 // covers something. Distinguishes a drag from a tap so dragging never
 // accidentally opens the chat. Position is remembered for the session only.
@@ -1546,7 +1559,13 @@ function toggleFaq(el) {
   el.nextElementSibling.classList.toggle('open');
 }
 function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
-function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+function closeMenu() {
+  document.getElementById('navLinks').classList.remove('open');
+  // Navigating away from the chat should dismiss it -- it used to sit open
+  // over whatever the person scrolled to. The Ask Aivy link calls closeMenu
+  // BEFORE openIvyChat for this reason; reversing that order reopens the bug.
+  if (typeof closeIvyChat === 'function') closeIvyChat();
+}
 
 // ============================================================
 // VELOUR BOOKING ENGINE
@@ -2347,6 +2366,7 @@ function dateStr(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStar
 
 // Open/close
 async function openBookingModal() {
+  if (typeof closeIvyChat === 'function') closeIvyChat();
   const sel = document.getElementById('bb-tech-select');
   if (sel.value === 'no_preference' || !sel.value) {
     bm.techId   = null;
@@ -3090,6 +3110,11 @@ async function startWizard() {
     wizardActive = false;
     return;
   }
+  // Every call used to append another identical prompt, so clicking a
+  // booking entry point N times produced N stacked copies of the same
+  // question. Clear any previous wizard blocks so only the live one shows.
+  const prevBox = document.getElementById('ivyMessages');
+  if (prevBox) prevBox.querySelectorAll('.wizard-msg').forEach(function(el){ el.remove(); });
   appendWizardMsg('category', null);
 }
 
@@ -3438,9 +3463,9 @@ document.addEventListener('DOMContentLoaded', initDrag);
 <!-- Aivy floating launcher — always-accessible chat entry point, bottom-right.
      CSS (#ivy-fab) and toggleIvyChat() already existed; the button element
      itself was missing from the markup, so the launcher never rendered. -->
-<button id="ivy-fab" onclick="if(!ivyFabDidDrag) toggleIvyChat();" aria-label="Chat with Aivy">
-  <span style="color:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;line-height:1;">A</span>
-  <span class="ivy-fab-dot"></span>
+<button id="ivy-fab" onclick="if(!ivyFabDidDrag) toggleIvyChat();" aria-label="Ask Aivy">
+  <svg class="ivy-fab-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <span class="ivy-fab-label">Ask Aivy</span>
 </button>
 
 <div id="ivy-widget">
