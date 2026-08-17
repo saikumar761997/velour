@@ -878,6 +878,16 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 .bm-suc-det { background: var(--crimson-xs); border-radius: 8px; padding: 12px 14px; text-align: left; margin-bottom: 20px; font-size: 13px; color: var(--charcoal); line-height: 1.9; }
 .bm-suc-spam { font-size: 12px; color: #999; line-height: 1.6; margin: 0 0 20px 0; font-style: italic; }
 .bm-confirm-hint { font-size: 13px; color: #777; line-height: 1.5; margin: -8px 0 16px 0; }
+.bm-party-lbl { font-size: 12px; color: #777; margin-bottom: 7px; }
+.bm-party-opts { display: flex; gap: 6px; margin-bottom: 14px; }
+.bm-party-opt { flex: 1; text-align: center; padding: 9px 0; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; color: #777; background: #fff; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+.bm-party-opt:hover { border-color: var(--crimson-lt); }
+.bm-party-opt.on { border: 2px solid var(--crimson); color: var(--crimson); font-weight: 600; }
+.bm-party-call { display: none; background: var(--crimson-xs); border-radius: 6px; padding: 16px; text-align: center; }
+.bm-party-call.on { display: block; }
+.bm-party-call h4 { font-family: 'Cormorant Garamond',serif; font-size: 18px; color: var(--crimson-dk); margin-bottom: 6px; }
+.bm-party-call p { font-size: 13px; color: var(--text-mid); line-height: 1.55; margin-bottom: 12px; }
+.bm-party-call a { display: block; background: var(--crimson); color: #fff; text-decoration: none; padding: 11px; border-radius: 4px; font-size: 14px; font-weight: 600; }
 .bm-done-btn { background: var(--crimson); color: #fff; border: none; border-radius: 6px; padding: 12px 32px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
 @media (max-width: 480px) {
   #bm-overlay { align-items: flex-end; padding: 0; }
@@ -1292,7 +1302,8 @@ COMMON Q&A:
 - Walk-ins: "Walk-ins are always welcome — no appointment needed!"
 - Reschedule: "Please call us at (603) 621-7469 or email redpersimmon.bookings@gmail.com to reschedule"
 - Parking: "Free and convenient parking at our location — we're on S. Willow St, right across from American Eagle and close to the Food Court. Easy to find!"
-- Allergies: "Please mention allergies in the booking notes — our techs will take great care of you 💅"
+- Allergies: "Just let your technician know when you arrive, or add a note when you book — either way we'll take great care of you 💅"
+- Groups: "For 3 or more people, please call us at (603) 621-7469 so we can seat you all together — online booking is for 1-2 guests"
 - Kids: "Yes! Children's manicure $20, pedicure $35 for ages 10 and under — great for a mother-daughter visit!"
 
 NATURAL UPSELLS (once, gently, when relevant):
@@ -1910,7 +1921,7 @@ function renderTechDropdownOptions(){
 }
 
 // State
-let bm = { step:1, techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null };
+let bm = { step:1, techId:'', techName:'', services:[], dur:0, price:0, date:null, slot:null, slotRaw:null, party:1 };
 let calOff = 0;
 
 // DB helpers
@@ -2594,6 +2605,22 @@ async function bmLoadSlots(){
 }
 
 // Validate + next
+// Party size. 1-2 book online; 3+ are arranged by phone, because the
+// scheduler holds ONE technician for ONE slot -- booking a group online
+// would promise chairs the salon hasn't actually reserved. The server
+// enforces this too (create_booking raises PARTY_TOO_LARGE); this is
+// only the friendly version.
+function bmSetParty(n){
+  bm.party = n;
+  [1,2,3].forEach(function(i){
+    var el = document.getElementById('bm-party-'+i);
+    if(el) el.classList.toggle('on', i===n);
+  });
+  var call = document.getElementById('bm-party-call');
+  var form = document.getElementById('bm-party-form');
+  if(call) call.classList.toggle('on', n===3);
+  if(form) form.style.display = (n===3) ? 'none' : 'block';
+}
 function bmNext(){
   if(bm.step===3){
     if(!bmValidate()) return;
@@ -2674,6 +2701,8 @@ function bmBuildSummary(){
   document.getElementById('bm-s-name').textContent=document.getElementById('bm-name').value;
   document.getElementById('bm-s-email').textContent=document.getElementById('bm-email').value;
   document.getElementById('bm-s-price').textContent=bm.price>0?'From $'+bm.price.toFixed(2):'Varies by service';
+  var pe=document.getElementById('bm-s-party');
+  if(pe) pe.textContent = bm.party===2 ? '2 people' : 'Just me';
 }
 
 // Confirm
@@ -2715,6 +2744,7 @@ async function bmConfirm(){
           p_tech: bm.techId || null, p_date: ds,
           p_start: m2t24(startM)+':00', p_end: m2t24(endM)+':00',
           p_duration: bm.dur, p_price: bm.price, p_notes: notes,
+          p_party_size: bm.party,
           p_services: services
         }
       })
@@ -3475,14 +3505,30 @@ document.addEventListener('DOMContentLoaded', initDrag);
     <div class="bm-pane" id="bm-pane-3">
       <h3>Your details</h3>
       <p class="bm-sub">We'll send your confirmation here</p>
-      <input class="bm-inp" id="bm-name" type="text" placeholder="Full name *">
-      <input class="bm-inp" id="bm-email" type="email" placeholder="Email address *" oninput="bmCheckEmailTypo()" onblur="bmCheckEmailTypo()">
-      <div class="bm-email-suggest" id="bm-email-suggest" style="display:none"></div>
-      <input class="bm-inp" id="bm-phone" type="tel" placeholder="Phone number *">
-      <textarea class="bm-inp bm-ta" id="bm-notes" placeholder="Allergies, design ideas, any notes... (optional)"></textarea>
-      <div class="bm-nav">
-        <button class="bm-btn-back" onclick="bmShowPane(2)">← Back</button>
-        <button class="bm-btn-next" onclick="bmNext()">Review Booking →</button>
+
+      <div class="bm-party-lbl">How many people are coming?</div>
+      <div class="bm-party-opts">
+        <button type="button" class="bm-party-opt on" id="bm-party-1" onclick="bmSetParty(1)">Just me</button>
+        <button type="button" class="bm-party-opt" id="bm-party-2" onclick="bmSetParty(2)">2 people</button>
+        <button type="button" class="bm-party-opt" id="bm-party-3" onclick="bmSetParty(3)">3 or more</button>
+      </div>
+
+      <div class="bm-party-call" id="bm-party-call">
+        <h4>Groups are booked by phone</h4>
+        <p>So we can seat everyone together, please call us and we'll arrange the right technicians for your group.</p>
+        <a href="tel:+16036217469">Call (603) 621-7469</a>
+      </div>
+
+      <div id="bm-party-form">
+        <input class="bm-inp" id="bm-name" type="text" placeholder="Full name *">
+        <input class="bm-inp" id="bm-email" type="email" placeholder="Email address *" oninput="bmCheckEmailTypo()" onblur="bmCheckEmailTypo()">
+        <div class="bm-email-suggest" id="bm-email-suggest" style="display:none"></div>
+        <input class="bm-inp" id="bm-phone" type="tel" placeholder="Phone number *">
+        <textarea class="bm-inp bm-ta" id="bm-notes" placeholder="Design ideas or requests... (optional)"></textarea>
+        <div class="bm-nav">
+          <button class="bm-btn-back" onclick="bmShowPane(2)">&larr; Back</button>
+          <button class="bm-btn-next" onclick="bmNext()">Review Booking &rarr;</button>
+        </div>
       </div>
     </div>
 
@@ -3497,6 +3543,7 @@ document.addEventListener('DOMContentLoaded', initDrag);
         <div class="bm-sum-row"><span class="bm-sum-lbl">Services</span><span class="bm-sum-val" id="bm-s-svcs"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Duration</span><span class="bm-sum-val" id="bm-s-dur"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Name</span><span class="bm-sum-val" id="bm-s-name"></span></div>
+        <div class="bm-sum-row"><span class="bm-sum-lbl">Party</span><span class="bm-sum-val" id="bm-s-party"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Email</span><span class="bm-sum-val" id="bm-s-email"></span></div>
         <div class="bm-sum-row"><span class="bm-sum-lbl">Est. price</span><span class="bm-sum-val bm-sum-price" id="bm-s-price"></span></div>
       </div>
