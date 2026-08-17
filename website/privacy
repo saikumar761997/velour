@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Red Persimmon Nails &amp; Spa</title>
+<meta name="description" content="How Red Persimmon Nails &amp; Spa collects, uses, and protects your personal information.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://redpersimmonnailspanh.com/privacy">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson:#8B1A1A; --crimson-dk:#5C0F0F; --crimson-lt:#C04040; --crimson-xs:#F5E8E8;
+  --gold:#C9963A; --gold-lt:#E8C27A; --gold-pale:#FAF0DC; --gold-xs:#FDF8EE;
+  --cream:#FBF8F4; --warm-white:#FFFDF9; --charcoal:#1C1A18;
+  --text-mid:#4A3F35; --text-muted:#8A7A6A;
+  --border:rgba(139,26,26,0.10); --border-gold:rgba(201,150,58,0.20);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--text-mid); line-height:1.75; font-size:15px; -webkit-font-smoothing:antialiased; }
+.legal-nav { background:var(--crimson-dk); padding:16px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.legal-nav a.brand { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--gold-lt); text-decoration:none; font-weight:600; letter-spacing:.02em; }
+.legal-nav .navlinks { display:flex; gap:20px; flex-wrap:wrap; }
+.legal-nav .navlinks a { font-size:12px; color:rgba(255,255,255,.75); text-decoration:none; letter-spacing:.08em; text-transform:uppercase; }
+.legal-nav .navlinks a:hover, .legal-nav .navlinks a[aria-current="page"] { color:var(--gold-lt); }
+.legal-wrap { max-width:760px; margin:0 auto; padding:64px 24px 80px; }
+.legal-eyebrow { font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+.legal-wrap h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(32px,5vw,46px); font-weight:500; color:var(--crimson-dk); line-height:1.15; letter-spacing:-.3px; margin-bottom:8px; }
+.legal-meta { font-size:13px; color:var(--text-muted); margin-bottom:12px; }
+.legal-entity { background:var(--warm-white); border:1px solid var(--border); border-left:3px solid var(--crimson); border-radius:0 4px 4px 0; padding:16px 18px; font-size:14px; line-height:1.7; margin-bottom:40px; }
+.legal-entity strong { color:var(--charcoal); }
+.legal-wrap h2 { font-family:'Cormorant Garamond',serif; font-size:27px; font-weight:600; color:var(--crimson-dk); margin:44px 0 12px; line-height:1.25; }
+.legal-wrap h3 { font-size:14px; font-weight:600; color:var(--charcoal); margin:26px 0 8px; letter-spacing:.01em; }
+.legal-wrap p { margin-bottom:16px; }
+.legal-wrap ul { margin:0 0 18px 20px; }
+.legal-wrap li { margin-bottom:8px; }
+.legal-wrap strong { color:var(--charcoal); font-weight:600; }
+.legal-wrap a { color:var(--crimson); text-decoration:underline; text-underline-offset:2px; }
+.legal-rule { height:1px; background:linear-gradient(to right,transparent,var(--border-gold),transparent); margin:40px 0; border:0; }
+.legal-note { background:var(--gold-xs); border:1px solid var(--border-gold); border-radius:6px; padding:18px 20px; margin:24px 0; font-size:14.5px; }
+.legal-note p:last-child { margin-bottom:0; }
+table.legal-tbl { width:100%; border-collapse:collapse; margin:18px 0 24px; font-size:13.5px; }
+table.legal-tbl th { text-align:left; background:var(--crimson-xs); color:var(--crimson-dk); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:10px 12px; font-weight:600; }
+table.legal-tbl td { padding:11px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+.legal-foot { border-top:1px solid var(--border); margin-top:56px; padding-top:28px; font-size:14px; }
+.legal-foot .backlink { display:inline-block; margin-top:18px; background:var(--crimson); color:#fff; text-decoration:none; padding:11px 24px; border-radius:4px; font-size:13px; font-weight:600; letter-spacing:.03em; }
+@media(max-width:560px){ .legal-wrap{padding:44px 20px 60px} table.legal-tbl{font-size:12.5px} table.legal-tbl th,table.legal-tbl td{padding:8px} }
+</style>
+</head>
+<body>
+<nav class="legal-nav">
+  <a class="brand" href="/">Red Persimmon</a>
+  <div class="navlinks">
+    <a href="/">Home</a>
+    <a href="/policies">Salon Policies</a>
+    <a href="/terms">Booking Terms</a>
+    <a href="/privacy" aria-current="page">Privacy</a>
+  </div>
+</nav>
+<main class="legal-wrap">
+<div class="legal-eyebrow">Privacy</div>
+<h1>Your privacy,<br>in plain English.</h1>
+<div class="legal-meta">Effective August 16, 2026 &nbsp;·&nbsp; Version 2026-08-16</div>
+<div class="legal-entity">
+<strong>Red Persimmon Nails &amp; Spa</strong> is operated by <strong>RPN - Perfection LLC</strong>,<br>
+1500 South Willow Street, Manchester, NH 03103.
+</div>
+
+<p>This policy explains what personal information we collect through our website and in our salon, why we collect it, who we share it with, and what choices you have.</p>
+<p>Questions? Contact us at <a href="mailto:redpersimmon.bookings@gmail.com">redpersimmon.bookings@gmail.com</a> or <a href="tel:+16036217469">(603) 621-7469</a>.</p>
+
+<h2>What we collect</h2>
+
+<h3>When you book an appointment online</h3>
+<ul>
+<li>Your name</li>
+<li>Your email address</li>
+<li>Your phone number</li>
+<li>The services you selected, the date and time, and the technician you chose, if you chose one</li>
+<li>How many people are in your party</li>
+<li>Anything you choose to type into the notes field</li>
+</ul>
+
+<h3>When you join the walk-in queue on our in-salon tablet</h3>
+<ul>
+<li>Your name and phone number</li>
+<li>Your email address, if you give one</li>
+<li>The service you're waiting for, and your preferred technician if you have one</li>
+</ul>
+
+<h3>When you visit the salon</h3>
+<ul>
+<li>A record of your appointments, the services performed, and which technician performed them</li>
+<li>The total amount you have spent with us across your visits, so we can recognise our regular customers</li>
+</ul>
+
+<div class="legal-note">
+<p><strong>We do not process your payment, and we never see or store your card number.</strong> Payment happens on the salon's own card terminal, which is entirely separate from this website and our booking system. No card numbers, expiry dates, or security codes exist anywhere in our records — not encrypted, not partially, not at all.</p>
+</div>
+
+<h3>When you use Aivy, our website assistant</h3>
+<ul>
+<li>The messages you send during your conversation</li>
+<li>A temporary session identifier stored in your browser, deleted when you close the tab</li>
+</ul>
+
+<h3>Automatically, when you use the website</h3>
+<ul>
+<li>A one-way scrambled version of your IP address, used only to stop spam and abuse of our booking form and chat. We cannot recover your real IP address from it.</li>
+<li>Basic information about your browser</li>
+</ul>
+
+<hr class="legal-rule">
+
+<h2>A note about the notes field</h2>
+<p>Our booking form has an optional notes box for design ideas or requests. You are free to leave it blank.</p>
+<p>Some people choose to tell us about allergies or skin sensitivities so we can look after them properly. We're glad to have that information and we use it only to serve you safely during your visit. But please understand that <strong>anything you type there is stored with your appointment and is included in the confirmation email sent through our email provider.</strong> Share only what you're comfortable sharing — you can always tell your technician in person instead.</p>
+
+<h2>Why we collect it</h2>
+<ul>
+<li>To confirm, remind you about, reschedule, or cancel your appointment</li>
+<li>To match you with a technician who performs the services you want</li>
+<li>To keep a record of your visits so we can serve you better next time</li>
+<li>To answer your questions through Aivy, by email, or by phone</li>
+<li>To keep our own business records — revenue, payroll, and scheduling</li>
+<li>To protect our website from spam and automated abuse</li>
+</ul>
+<p><strong>We do not sell your personal information. We do not share it with advertisers. We do not use it to build advertising profiles.</strong></p>
+
+<h2>Who we share it with</h2>
+<p>We use a small number of outside companies to run this website and our booking system. Each receives only what it needs.</p>
+<table class="legal-tbl">
+<tr><th>Company</th><th>What it does</th><th>What it receives</th></tr>
+<tr><td>Supabase</td><td>Stores our database</td><td>Your booking details, contact information, and visit history</td></tr>
+<tr><td>Cloudflare</td><td>Hosts our website, blocks bots</td><td>Your browser requests and the scrambled version of your IP address</td></tr>
+<tr><td>Make.com</td><td>Sends your confirmation emails</td><td>Your name, email, phone, appointment details, and anything in the notes field</td></tr>
+<tr><td>Anthropic</td><td>Powers the Aivy assistant</td><td>The messages you send to Aivy</td></tr>
+</table>
+<p>These companies process this information on our behalf and may not use it for their own purposes. We share your information with no one else, except where the law requires it, or to protect the safety of our customers or staff.</p>
+
+<h2>About Aivy, our AI assistant</h2>
+<p>Aivy is artificial intelligence, not a person.</p>
+<ul>
+<li><strong>Aivy can be wrong.</strong> Prices, availability, and service details from Aivy are not a guarantee. Anything that matters is confirmed by the salon.</li>
+<li><strong>Aivy cannot book, change, or cancel anything by itself.</strong> It can only point you to the booking form.</li>
+<li><strong>Please don't share sensitive information with Aivy</strong> — health details, financial information, or anything you wouldn't want kept in a chat record.</li>
+</ul>
+
+<h2>Text messages</h2>
+<div class="legal-note">
+<p><strong>We do not currently send marketing or promotional text messages.</strong> If that ever changes, we will ask your permission first — clearly, and separately from booking. We will never add you to a text list simply because you made an appointment.</p>
+</div>
+<p>The confirmation and reminder emails we send are about appointments you actually booked, and every one includes links to reschedule or cancel.</p>
+
+<h2>Cookies and tracking</h2>
+<p>We use no advertising cookies, no tracking pixels, and no third-party analytics that follow you around other websites.</p>
+<p>Our website stores a small amount of information in your browser so the Aivy chat works — a session identifier and a short-lived security token. Both are deleted when you close the tab. Cloudflare also sets a security token to tell real visitors apart from automated bots.</p>
+
+<h2>How long we keep your information</h2>
+<p>We keep your appointment and customer records for as long as you remain a customer, so your technician can see your history and serve you better next visit.</p>
+<p>If you ask us to delete your information, we will — with one exception: we keep the minimum financial records the law requires us to keep for tax and accounting. Those do not include your notes, your email address, or your phone number.</p>
+<p>Aivy conversations are not kept in our records after your session ends.</p>
+
+<h2>Your choices</h2>
+<p>You can ask us to:</p>
+<ul>
+<li><strong>See</strong> the information we hold about you</li>
+<li><strong>Correct</strong> anything that's wrong</li>
+<li><strong>Delete</strong> your customer record</li>
+<li><strong>Stop emailing you</strong></li>
+</ul>
+<p>Email <a href="mailto:redpersimmon.bookings@gmail.com">redpersimmon.bookings@gmail.com</a> or call <a href="tel:+16036217469">(603) 621-7469</a>. We'll respond within 30 days, we won't charge you, and we won't treat you any differently for asking.</p>
+
+<h2>Children</h2>
+<p>We offer manicures and pedicures for children aged 10 and under, and we're happy to have them.</p>
+<p>Appointments for children must be booked by a parent or guardian. Our website is not directed at children, and we do not knowingly collect personal information online from anyone under 13. If you believe a child has given us information through this website, contact us and we will delete it.</p>
+
+<h2>Keeping your information secure</h2>
+<p>We protect your information with encrypted connections, database access controls, and bot protection on our forms. Our staff dashboard is password-protected, and our customer records are not publicly readable.</p>
+<p>No system is perfectly secure. If a breach affects your personal information, we will notify you and the New Hampshire Attorney General as required by New Hampshire law (RSA 359-C:20).</p>
+
+<h2>Changes to this policy</h2>
+<p>If we change this policy we'll post the new version here with a new effective date, and say so clearly on our website if the change is significant. The version number at the top tells you which version was in effect when you booked.</p>
+
+<div class="legal-foot">
+<p><strong>RPN - Perfection LLC</strong><br>
+Red Persimmon Nails &amp; Spa<br>
+1500 South Willow Street, Manchester, NH 03103<br>
+<a href="tel:+16036217469">(603) 621-7469</a> &nbsp;·&nbsp; <a href="mailto:redpersimmon.bookings@gmail.com">redpersimmon.bookings@gmail.com</a></p>
+<a class="backlink" href="/">&larr; Back to Red Persimmon</a>
+</div>
+</main>
+</body>
+</html>
