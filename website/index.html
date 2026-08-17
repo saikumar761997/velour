@@ -685,7 +685,7 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
     width: 100vw !important;
     left: 0 !important;
     right: 0 !important;
-    top: 0 !important;
+    top: var(--ivy-sheet-t, 0px) !important;
     bottom: auto !important;
     height: var(--ivy-sheet-h, 100dvh);
     max-height: none;
@@ -1361,7 +1361,12 @@ function openIvyChat() {
   if (fab) fab.classList.add('ivy-hidden');
   ivyChatOpen = true;
   window.dispatchEvent(new Event('ivy-chat-opened'));
-  setTimeout(() => { const i = document.getElementById('ivyInput'); if (i) i.focus(); }, 250);
+  // Autofocus is a desktop convenience. On a phone it throws the keyboard up
+  // before the person has decided to type, covering half the conversation
+  // and shrinking the panel the moment it opens.
+  if (window.innerWidth > 640) {
+    setTimeout(() => { const i = document.getElementById('ivyInput'); if (i) i.focus(); }, 250);
+  }
 }
 function closeIvyChat() {
   const w = document.getElementById('ivy-widget');
@@ -1374,6 +1379,7 @@ function closeIvyChat() {
   if (w) { w.style.height = ''; w.style.bottom = ''; }
   document.documentElement.style.removeProperty('--ivy-sheet-h');
   document.documentElement.style.removeProperty('--ivy-sheet-b');
+  document.documentElement.style.removeProperty('--ivy-sheet-t');
   // Only release the scroll lock we set ourselves, never someone else's.
   if (ivyLockedScroll) { document.body.style.overflow = ''; ivyLockedScroll = false; }
   if (ivyPushedHistory) { ivyPushedHistory = false; try { history.back(); } catch (e) {} }
@@ -1402,12 +1408,15 @@ window.addEventListener('popstate', function () {
     if(window.innerWidth > 640 || !ivyChatOpen){
       root.style.removeProperty('--ivy-sheet-h');
       root.style.removeProperty('--ivy-sheet-b');
+      root.style.removeProperty('--ivy-sheet-t');
       return;
     }
-    // Full-screen: the panel is exactly the visible viewport. When the
-    // keyboard opens, vv.height shrinks and the panel shrinks with it, so
-    // the input row stays just above the keys instead of behind them.
+    // Full-screen: the panel must both SIZE to the visible viewport and be
+    // POSITIONED from it. Sizing alone left the panel anchored to the layout
+    // viewport, so the page showed through in the gap between the panel's
+    // bottom edge and the top of the keyboard.
     root.style.setProperty('--ivy-sheet-h', Math.round(vv.height) + 'px');
+    root.style.setProperty('--ivy-sheet-t', Math.round(vv.offsetTop) + 'px');
   }
   vv.addEventListener('resize', fit);
   vv.addEventListener('scroll', fit);
