@@ -898,6 +898,14 @@ footer p { font-size: 13px; color: rgba(255,255,255,0.3); }
 .ws-legal-links a { font-size: 12px; color: rgba(255,255,255,0.55); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.15s; }
 .ws-legal-links a:hover { color: var(--gold-lt); }
 .bm-consent { font-size: 11.5px; color: #777; line-height: 1.55; margin: 14px 0 10px; }
+.ivy-bcard { background: rgba(255,255,255,0.06); border: 1px solid var(--gold); border-radius: 10px; padding: 14px 15px; margin: 4px 0 10px 34px; }
+.ivy-bcard-ttl { font-family: 'Cormorant Garamond',serif; font-size: 17px; color: var(--gold-lt); margin-bottom: 9px; }
+.ivy-bcard-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: rgba(255,255,255,0.9); padding: 4px 0; }
+.ivy-bcard-row span:first-child { color: rgba(255,255,255,0.55); }
+.ivy-bcard-miss { color: var(--gold-lt); font-style: italic; }
+.ivy-bcard-btn { display: block; width: 100%; margin-top: 12px; background: var(--gold); color: #3D0B0B; border: none; border-radius: 6px; padding: 11px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+.ivy-bcard-btn:hover { background: var(--gold-lt); }
+.ivy-bcard-note { font-size: 11.5px; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.5; text-align: center; }
 .bm-consent a { color: var(--crimson); text-decoration: underline; text-underline-offset: 2px; }
 .bm-party-lbl { font-size: 12px; color: #777; margin-bottom: 7px; }
 .bm-party-opts { display: flex; gap: 6px; margin-bottom: 14px; }
@@ -1525,7 +1533,107 @@ async function callClaude(userMessage, history, isRetry) {
     return callClaude(userMessage, history, true);
   }
 
+  // Aivy now returns a validated booking intent alongside her reply. It is
+  // stashed rather than returned so the existing string-based call sites
+  // keep working untouched.
+  ivyLastBooking = data.booking || null;
   return data.reply || "I'm having a moment! Please call (603) 621-7469 — we'd love to help 💅";
+}
+let ivyLastBooking = null;
+
+// Aivy proposes; the booking form still decides. The card shows what she
+// understood BEFORE anything opens, so a misunderstanding costs a glance
+// rather than hijacking the screen -- which matters on mobile, where the
+// chat is full-screen and an auto-opening modal would yank the person out
+// of the conversation. Confirm carries the details into the real form,
+// which keeps ownership of availability, capacity and consent.
+function ivyFmtDate(iso){
+  if(!iso) return null;
+  const p = iso.split('-').map(Number);
+  const d = new Date(p[0], p[1]-1, p[2]);
+  return d.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+}
+function ivyFmtTime(hhmm){
+  if(!hhmm) return null;
+  const p = hhmm.split(':').map(Number);
+  const ap = p[0] >= 12 ? 'PM' : 'AM';
+  const h = p[0] % 12 === 0 ? 12 : p[0] % 12;
+  return h + ':' + String(p[1]).padStart(2,'0') + ' ' + ap;
+}
+function renderBookingCard(b, container){
+  if(!b) return;
+  const svc  = b.service || null;
+  const date = ivyFmtDate(b.date);
+  const time = ivyFmtTime(b.time);
+  const tech = b.technician || 'Best available';
+  const party = b.party_size === 2 ? '2 people' : 'Just me';
+
+  const card = document.createElement('div');
+  card.className = 'ivy-bcard';
+  const row = (label, value, missing) =>
+    '<div class="ivy-bcard-row"><span>' + label + '</span><span' +
+    (missing ? ' class="ivy-bcard-miss"' : '') + '>' + value + '</span></div>';
+
+  card.innerHTML =
+    '<div class="ivy-bcard-ttl">Ready to book</div>' +
+    row('Service', svc || 'Choose on next step', !svc) +
+    (date ? row('Date', date) : '') +
+    (time ? row('Time', time) : '') +
+    row('With', tech) +
+    row('Party', party) +
+    '<button class="ivy-bcard-btn" type="button">Confirm details &rarr;</button>' +
+    '<div class="ivy-bcard-note">Real availability is shown on the next step.</div>';
+
+  card.querySelector('.ivy-bcard-btn').addEventListener('click', function(){
+    ivyStartBooking(b);
+  });
+  container.appendChild(card);
+  container.scrollTop = container.scrollHeight;
+}
+
+function ivyStartBooking(b){
+  // Only pre-select a service Aivy matched exactly. A vague "pedicure"
+  // arrives as null and the person picks it themselves rather than having
+  // the wrong one chosen for them.
+  if (b.service) {
+    const real = svcByName(b.service);
+    if (real && !bbServices.some(function(s){ return s.name === real.name; })) {
+      bbServices.push({ name: real.name, price: '$' + Number(real.price).toFixed(0) });
+      document.querySelectorAll('.svc-add-btn').forEach(function(btn){
+        if (btn.title && btn.title.indexOf(real.name) !== -1 && !btn.classList.contains('svc-added')) {
+          btn.innerHTML = '✓';
+          btn.classList.add('svc-added');
+          btn.title = 'Remove ' + real.name + ' from booking';
+        }
+      });
+      bookingBarUpdate();
+    }
+  }
+
+  const sel = document.getElementById('bb-tech-select');
+  if (sel) {
+    let matched = false;
+    if (b.technician) {
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].text.split('—')[0].trim().toLowerCase() === b.technician.toLowerCase()) {
+          sel.value = sel.options[i].value; matched = true; break;
+        }
+      }
+    }
+    if (!matched) sel.value = 'no_preference';
+  }
+
+  bm.party = (b.party_size === 2) ? 2 : 1;
+  if (typeof bmSetParty === 'function') bmSetParty(bm.party);
+
+  closeIvyChat();
+
+  if (bbServices.length > 0) {
+    openBookingModal();
+  } else {
+    const secEl = document.getElementById('services');
+    if (secEl) secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function renderMessage(text, role, container) {
@@ -1580,11 +1688,16 @@ async function sendIvyMessage() {
     ivyHistory.push({ role: 'assistant', content: reply });
     typing.style.display = 'none';
     renderMessage(reply, 'bot', msgBox);
+    if (ivyLastBooking) { renderBookingCard(ivyLastBooking, msgBox); ivyLastBooking = null; }
   } catch(e) {
     typing.style.display = 'none';
     renderMessage("Sorry! Please call (603) 621-7469 — we're here to help!", 'bot', msgBox);
   } finally {
-    input.disabled = false; input.focus();
+    input.disabled = false;
+    // Refocusing after every reply re-opens the phone keyboard unprompted,
+    // covering the answer the person just asked for. On desktop a focused
+    // input costs nothing, so keep it there only.
+    if (window.innerWidth > 640) input.focus();
   }
 }
 function sendIvySuggestion(btn) {
