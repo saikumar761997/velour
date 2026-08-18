@@ -1562,6 +1562,11 @@ function ivyFmtTime(hhmm){
 }
 function renderBookingCard(b, container){
   if(!b) return;
+  // Only show a card once it carries something the person actually chose.
+  // A card with neither a service nor a time is just a link to the form,
+  // and it was appearing after every turn while Aivy was still asking
+  // questions -- repeated noise in the middle of a conversation.
+  if(!b.service && !b.time) return;
   const svc  = b.service || null;
   const date = ivyFmtDate(b.date);
   const time = ivyFmtTime(b.time);
@@ -1689,6 +1694,7 @@ async function sendIvyMessage() {
     typing.style.display = 'none';
     renderMessage(reply, 'bot', msgBox);
     if (ivyLastBooking) { renderBookingCard(ivyLastBooking, msgBox); ivyLastBooking = null; }
+
   } catch(e) {
     typing.style.display = 'none';
     renderMessage("Sorry! Please call (603) 621-7469 — we're here to help!", 'bot', msgBox);
